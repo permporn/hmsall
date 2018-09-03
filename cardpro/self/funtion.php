@@ -38,8 +38,6 @@ function DateThaiDMY($strDate)
 		return "$strDay $strMonthThai $strYear";
 	}
 
-?>
-<?php
 function DateThai($strDate)
 	{
 		$strYear = date("Y",strtotime($strDate))+543;

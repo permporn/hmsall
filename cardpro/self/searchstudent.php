@@ -1,19 +1,20 @@
-<? 
+<?php
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<? include("script_link.php");?>
+<?php include("script_link.php");?>
 </head>
 <body>
 
 <!-- START PAGE SOURCE -->
 <div id="container">
-<? include('menu.php');?>
+<?php include('menu.php');?>
 <div id="content">
 <h1>ทะเบียนนักเรียน</h1>
 <p>
@@ -24,7 +25,7 @@ include("ck_session_self.php");
     <input name="h_arti_id" type="hidden" id="h_arti_id" value="<?=$_GET["h_arti_id"];?>" />
     <a href="#" onClick="document.getElementById('search-form').submit()">ค้นหา</a>
   </form>
-  <?
+  <?php
   if($objResultSTT["status"] =="admin" || $objResultSTT["status"] =="admin_hms"){?>
   <form action="searchstudent.php" method="get" id="search-form-acc">
     <label >ค้นหาAccount:</label>
@@ -32,15 +33,15 @@ include("ck_session_self.php");
     <input name="h_arti_id_acc" type="hidden" id="h_arti_id_acc" value="<?=$_GET["h_arti_id_acc"];?>" />
     <a href="#" onClick="document.getElementById('search-form-acc').submit()">ค้นหา</a>
   </form>
-  <? }?>
+  <?php }?>
 </div>
 <?php
-  include("config.incself.php");
-    if($_GET["h_arti_id"] != ""){
+
+if($_GET["h_arti_id"] != ""){
       //echo "0";
       $strSQL_student = "SELECT * FROM student WHERE name = '".$_GET["h_arti_id"]."'";
-      $objQuery_student = mysql_query($strSQL_student) or die ("Error Query [".$strSQL_student."]");
-      $objResult_student = mysql_fetch_array($objQuery_student);
+      $objQuery_student = mysqli_query($con_ajtongmath_self, $strSQL_student) or die ("Error Query [".$strSQL_student."]");
+      $objResult_student = mysqli_fetch_array($objQuery_student);
       $std = $objResult_student["studentid"];
       $stdname = $objResult_student["name"];
       $tel = $objResult_student["tel"];
@@ -72,14 +73,14 @@ include("ck_session_self.php");
                     ON account.status = branch.branchid
 
                     WHERE studentid = ".$std." AND status != 'out'";
-      $objQuery_account = mysql_query($strSQL_account) or die ("Error Query [".$strSQL_account."]");
+      $objQuery_account = mysqli_query($con_ajtongmath_self ,$strSQL_account) or die ("Error Query [".$strSQL_account."]");
       $l = 1;
     ?>
 <br>
 <table class="tbl-border" cellpadding="0" cellspacing="1" width="90%" align="center">
   <tr>
-    <? if($objResultSTT["status"]=="Manager" or $objResultSTT["status"]=="ADMIN") {$a = 9;$b = 2;$c = 7;?>
-    <? }else{$a = 8;$b = 2;$c = 6;} ?>
+    <?php if($objResultSTT["status"]=="Manager" or $objResultSTT["status"]=="ADMIN") {$a = 9;$b = 2;$c = 7;?>
+    <?php }else{$a = 8;$b = 2;$c = 6;} ?>
     <td colspan="<?=$a?>" class="tbl2" style="white-space: nowrap;" align="center"  height="">ข้อมูลนักเรียน <a href="EditProfileStudent.php?IdStudent=<?=$std;?>&Type=Edit&show_arti_topic=<?=$show_arti_topic?>&h_arti_id=<?=$h_arti_id?>">แก้ไขข้อมูล</a></td>
   </tr>
   <tr>
@@ -153,8 +154,8 @@ include("ck_session_self.php");
       </font></td>
   </tr>
   <tr>
-    <? if($objResultSTT["status"]=="Manager" or $objResultSTT["status"]=="ADMIN") {$a = 9;$b = 2;$c = 7;?>
-    <? }else{$a = 8;$b = 2;$c = 6;} ?>
+    <?php if($objResultSTT["status"]=="Manager" or $objResultSTT["status"]=="ADMIN") {$a = 9;$b = 2;$c = 7;?>
+    <?php }else{$a = 8;$b = 2;$c = 6;} ?>
     <td colspan="<?=$a?>" class="tbl2" style="white-space: nowrap;" align="left"  height=""> + ข้อมูลวิชาเรียนทั้งหมด ของ <font color="#0099FF">
       <?=$objResult_student["studentname"];?>
       </font></td>
@@ -181,10 +182,8 @@ include("ck_session_self.php");
       Edit account
       </td>
   </tr>
-  <?
- 
-  while($objResult_account = mysql_fetch_array($objQuery_account))
-  { 
+  <?php
+  while($objResult_account = mysqli_fetch_array($objQuery_account)){ 
     $id_branch = $objResult_account['id_branch'];
 
     $strSQL_credit = "SELECT *
@@ -197,10 +196,9 @@ include("ck_session_self.php");
                 ON subject.teacherid = teacher.teacherid 
                 LEFT JOIN type_self  ON credit.type_self = type_self.type_id 
                 ORDER BY credit.creditid ASC ";
-    $objQuery_credit = mysql_query($strSQL_credit);
+    $objQuery_credit = mysqli_query($con_ajtongmath_self, $strSQL_credit) or die( mysqli_error($con_ajtongmath_self) ) ;
     $i++;
       if ($i % 2 == 0){$tblyy = "tblyy2";}else{$tblyy = "tblyy";}
-    
   ?>
   <tr>
     <td align="center"  class="<?=$tblyy?>"><center>
@@ -209,8 +207,8 @@ include("ck_session_self.php");
     <td align="center"  class="<?=$tblyy?>"><?=$objResult_account["username"];?>(<?=$objResult_account['branch_name']?>)</td>    
     <td align="left"  class="<?=$tblyy?>">
     <?php 
-    $n = 1; 
-    while($objResult_credit = mysql_fetch_array($objQuery_credit)){
+    $n = 1;
+    while($objResult_credit = mysqli_fetch_array($objQuery_credit)){
       if($objResult_credit['id_subject_real'] == 0  || $objResult_credit['id_subject_real'] == ''){
           $name_subject = $objResult_credit["subname"];
         }else{
@@ -220,21 +218,20 @@ include("ck_session_self.php");
     </td>
 
     <td align="center"  class="<?=$tblyy?>">
-    <?
+    <?php
     if($objResultSTT["status"] =="manager_franchise" || $objResultSTT["status"] =="user_franchise" || $objResultSTT["status"] =="pre_end"){
-    if($id_branch == 2 && $id_branch_self == 9){?>
-    <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">
-    <?}
-    else if($id_branch == $id_branch_self){?>
-    <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">
-    <? }}else{?>
-    <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">
-      <? }?>
+      if($id_branch == 2 && $id_branch_self == 9){ ?>
+        <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">
+      <?php } else if($id_branch == $id_branch_self){ ?>
+        <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">
+      <?php }
+    }else{ ?>
+      <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">
+    <?php } ?>
     </td>
   </tr>
-  <? } ?> </table>
-  <? }
-  if($_GET["h_arti_id_acc"] != ""){
+<?php } } 
+if($_GET["h_arti_id_acc"] != ""){
 
       $strSQL_account = "SELECT
                     account.accid,
@@ -259,11 +256,11 @@ include("ck_session_self.php");
                     ON account.status = branch.branchid
                     WHERE account.username = '".$_GET["h_arti_id_acc"]."'";
 
-      $objQuery_account = mysql_query($strSQL_account) or die ("Error Query [".$strSQL_account."]");
-      $objResult_account = mysql_fetch_array($objQuery_account);
+      $objQuery_account = mysqli_query($con_ajtongmath_self,$strSQL_account) or die ("Error Query [".$strSQL_account."]");
+      $objResult_account = mysqli_fetch_array($objQuery_account);
       //echo $strSQL_account;
-    ?>
-    <br>
+?>
+<br>
 <table class="tbl-border" cellpadding="0" cellspacing="1" width="90%" align="center">
  <tr>
     <td width="5%" height="35" class="tbl2" style="white-space: nowrap;"><center>Account ที่</td>
@@ -273,8 +270,7 @@ include("ck_session_self.php");
   </tr> 
   <tr>
     <td align="center" class="tbl1"><center>1.</center></td>
-    <?
-    
+    <?php
       if($objResult_account['branch_name'] == ""){
         $objResult_account['branch_name'] = "account นี้ถูกลบ";
       }
@@ -293,8 +289,8 @@ include("ck_session_self.php");
                 LEFT JOIN student  ON account.studentid = student.studentid
                 ORDER BY credit.creditid ASC ";
     //echo $strSQL_credit;
-    $objQuery_credit = mysql_query($strSQL_credit); 
-    while($objResult_credit = mysql_fetch_array($objQuery_credit)){
+    $objQuery_credit = mysqli_query($con_ajtongmath_self, $strSQL_credit); 
+    while($objResult_credit = mysqli_fetch_array($objQuery_credit)){
       if($objResult_credit['id_subject_real'] == 0  || $objResult_credit['id_subject_real'] == ''){
           $name_subject = $objResult_credit["subname"];
         }else{
@@ -306,25 +302,25 @@ include("ck_session_self.php");
     }?>
     </td>
     <td align="center"  class="tbl1">
-      <?
+      <?php
       if($objResultSTT["status"] =="manager_franchise" || $objResultSTT["status"] =="user_franchise" || $objResultSTT["status"] =="pre_end"){
-      if($id_branch == 2 && $id_branch_self == 9){?>
+        if($id_branch == 2 && $id_branch_self == 9){ ?>
+        <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">แก้ไข account</a>
+        <?php }else if($id_branch == $id_branch_self){ ?>
+        <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">แก้ไข account</a>
+        <?php }
+      }else{?>
       <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">แก้ไข account</a>
-      <?}
-      else if($id_branch == $id_branch_self){?>
-      <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">แก้ไข account</a>
-      <? }}else{?>
-      <a href="viewaccount.php?accid=<?=$objResult_account["accid"];?>&studenname=<?=$stdname?>&std=<?=$std?>"><img src="../images/13.png" width="24" height="24">แก้ไข account</a>
-      <? }?>
+      <?php }?>
       <br><br>
       <a href="delaccount.php?accid=<?=$objResult_account["accid"]?>&staffid=<?=$id_account_self?>&h_arti_id_acc=<?=$_GET["h_arti_id_acc"]?>" style="text-decoration:none"><img src="../images/116.png" width="15" height="15" >ลบ account</a>
       <br><br>
       <a href="EditProfileStudent.php?IdStudent=<?=$std;?>&Type=Edit&show_arti_topic=<?=$show_arti_topic?>&h_arti_id=<?=$h_arti_id?>&accid=<?=$objResult_account["accid"];?>">แก้ไขชื่อนักเรียน</a>
     </td>
-  </tr>
-</table>  
-<? } ?>
-<? mysql_close();?>
+</tr>
+</table>
+<?php }?>
+<?php mysqli_close($con_ajtongmath_self);?>
 
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
