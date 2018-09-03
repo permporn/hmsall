@@ -1,0 +1,71 @@
+<html>  
+<head>  
+<title>�� Autocomplete �����ʴ�������㹰ҹ�����ŵ����褹�١�͡ ���Ѻ Textbox</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script type="text/javascript" src="autocomplete/autocomplete.js"></script>  
+<link rel="stylesheet" href="autocomplete/autocomplete.css"  type="text/css"/>  
+
+<STYLE type=text/css>
+  A:link { color: #0000cc; text-decoration:none}
+  A:visited {color: #0000cc; text-decoration: none}
+  A:hover {color: red; text-decoration: none}
+</STYLE>
+<style type="text/css">
+<!--
+small { font-family: Arial, Helvetica, sans-serif; font-size: 8pt; } 
+input, textarea { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; } 
+b { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; } 
+big { font-family: Arial, Helvetica, sans-serif; font-size: 18pt; } 
+strong { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; font-weight : extra-bold; } 
+font, td { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; } 
+BODY { font-size: 11pt; font-family: Arial, Helvetica, sans-serif; } 
+-->
+</style>
+
+</head>  
+
+<body bgcolor="#FCAEDE">
+
+<center><big>:: �� Autocomplete �����ʴ�������㹰ҹ�����ŵ����褹�١�͡ ���Ѻ Textbox ::</big></center>
+
+<br><br>
+<center>
+
+<form id="form1" name="form1" method="post" action="send_data.php">  
+  �����ŧ : <input name="show_arti_topic" type="text" id="show_arti_topic" size="50" />  
+  <input name="h_arti_id" type="hidden" id="h_arti_id" value="" />
+<input type="submit" name="submit_bt" value="Submit"> <input type="reset" name="reset_bt" value="Reset">
+</form>  
+<script type="text/javascript">  
+    function make_autocom(autoObj,showObj){  
+        var mkAutoObj=autoObj;   
+        var mkSerValObj=showObj;   
+        new Autocomplete(mkAutoObj, function() {  
+            this.setValue = function(id) {        
+                document.getElementById(mkSerValObj).value = id;  
+            }  
+            if ( this.isModified )  
+                this.setValue("");  
+            if ( this.value.length < 1 && this.isNotClick )   
+                return ;      
+            return "autocomplete/gdata.php?q=" +encodeURIComponent(this.value);  
+        });   
+    }     
+       
+    // �����ҹ  
+    // make_autocom(" id �ͧ input ��Ƿ���ͧ��á�˹� "," id �ͧ input ��Ƿ���ͧ����Ѻ���");  
+    make_autocom("show_arti_topic","h_arti_id");  
+</script>
+
+<br>
+<hr width="75%" color="red">
+<br><b>�Ѳ���� : <a href="http://www.ninenik.com/content.php?arti_id=209" target="_blank">http://www.ninenik.com/content.php?arti_id=209</a></b>
+<br><b>��Ѻ��ا & ����� ������� : <a href="http://www.codetukyang.com" target="_blank">http://www.codetukyang.com</a></b>
+<br><br>
+<hr width="75%" color="red">
+</center>
+
+</body>  
+</html>  

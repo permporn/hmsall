@@ -1,0 +1,33 @@
+a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, body, center, canvas, caption, cite, code, command, datalist, dd, del, details, dfn, dl, div, dt, em, embed, fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, keygen, label, legend, li, meter, nav, object, ol, output, p, pre, progress, q, s, samp, section, small, span, source, strike, strong, sub, sup, table, tbody, tfoot, thead, th, tr, tdvideo, tt, u, ul, var {
+	background:transparent;
+	border:0 none;
+	font-size:100%;
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	vertical-align:top;
+}
+ol, ul {
+	list-style:none;
+}
+
+blockquote, q {
+	quotes:none;
+}
+table, table td {
+}
+.tbl-border { background-color:/*#EFEFEF*/ #FFF;  /* -webkit-box-shadow: #AAA 0px 0px 15px;*/ } 
+.tbl1 { font-size:13px; color:#000; background-color:#fff; padding:4px; }  
+.tbl2 { font-size:13px;	color:#000000; background-color:#F8F8F8; padding:4px }  
+.tbl3 { font-size:13px; color:#000000; background-color:#fff; padding:4px; }  
+.tbl4 { font-size:13px;	color:#000000; background-color:#FFFF66; padding:4px } 
+.tblx { font-size:13px; color:#000; /*background-color:#fff;*/ padding:4px;  border: 1px solid #F1F1F1; }
+.tblyy { font-size:13px; border-bottom: 1px solid #ccc; color: #666; background: #fff; padding: 5px; } 
+.tblx1 { font-size:13px; color:#555; background-color:#FC6; padding:4px;  border: 1px solid #F1F1F1;}
+img, embed {
+	vertical-align:top;
+}
+* {
+	border:none;
+}

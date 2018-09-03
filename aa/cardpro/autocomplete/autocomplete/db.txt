@@ -1,0 +1,26 @@
+CREATE TABLE `test_tb1` (
+  `id` int(5) NOT NULL auto_increment primary key,
+  `subject` varchar(200) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=tis620
+
+
+INSERT INTO `test_tb1` VALUES (1, 'สะพานสายรุ้ง - ชมพู่ ปอ OST.ละคร ต้มยำลำซิ่ง');
+INSERT INTO `test_tb1` VALUES (2, 'ลูกผู้ชายใจเสาะ - ทรงกรด ฌามา อาร์ สยาม');
+INSERT INTO `test_tb1` VALUES (3, 'ประจาน - เอ ม็อบ อาร์ สยาม');
+INSERT INTO `test_tb1` VALUES (4, 'คนที่ขอแยกทาง - ปอ ปริชาต อาร์สยาม');
+INSERT INTO `test_tb1` VALUES (5, 'ติดประชุม - บลูเบอร์รี่ อาร์ สยาม');
+INSERT INTO `test_tb1` VALUES (6, 'ตอบข้อไหนก็ผิด - ตั๊กแตน ชลดา');
+INSERT INTO `test_tb1` VALUES (7, 'ฉันไม่ใช่หรือเธอไม่พอ - ตั๊กแตน ชลดา');
+INSERT INTO `test_tb1` VALUES (8, 'เธอไม่จบฉันก็เจ็บ - ใบเตย อาร์สยาม');
+INSERT INTO `test_tb1` VALUES (9, 'ธนาคารสำราญใจ - จินตหรา พูนลาภ');
+INSERT INTO `test_tb1` VALUES (10, 'อยากกอดพ่อ - ธันวา อาร์สยาม');
+INSERT INTO `test_tb1` VALUES (11, 'กระสือ - ธันวา อาร์สยาม');
+INSERT INTO `test_tb1` VALUES (12, 'สงสารมันเถอะ - บิว กัลยาณี');
+INSERT INTO `test_tb1` VALUES (13, 'เทพีบ้านไพร - กุ้ง สุธิราช อาร์ สยาม');
+INSERT INTO `test_tb1` VALUES (14, 'คนใกล้ๆที่อ้ายฮัก - ร็อกแปดแสน');
+INSERT INTO `test_tb1` VALUES (15, 'เมื่อดอกแคร์บาน - ทราย อาร์ สยาม');
+INSERT INTO `test_tb1` VALUES (16, 'แฟนฉันเอง - เอ้ ศิริลักษณ์');
+INSERT INTO `test_tb1` VALUES (17, 'สกัดดาวยั่ว - ใบเตย อาร์สยาม');
+INSERT INTO `test_tb1` VALUES (18, 'ฮักโขง ชี มูล - รวมศิลปิน');
+INSERT INTO `test_tb1` VALUES (19, 'สาวนาสั่งแฟน - เปาวลี พรพิมล');
+INSERT INTO `test_tb1` VALUES (20, 'เราจะสู้ไปด้วยกันรู้ - หนู มิเตอร์');

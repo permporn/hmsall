@@ -1,0 +1,18 @@
+@charset "utf-8";
+/* CSS Document */
+
+.tbl-border { background-color:#EFEFEF;   -webkit-box-shadow: #AAA 0px 0px 15px; } 
+.tbl1 { font-size:13px; color:#333; background-color:#fff; padding:4px;  }  
+.tbl2 { font-size:13px;	color:#000000; background-color:#F8F8F8; padding:4px }  
+.tbl3 { font-size:13px; color:#000000; background-color:#fff; padding:4px;  border:1px dashed #ccc;}   
+.tbl4 { font-size:13px;	color:#000000; background-color:#FFFF66; padding:4px } 
+.tblx { font-size:13px; color:#000; background-color:#fff; padding:4px; border:#DDDDDD; }
+.tblyy { font-size:13px; border-top:1px dashed #ccc;  border-bottom: 1px dashed #ccc; color: #990033; background-color:#F8F8F8; padding: 5px;
+background-image: url('images/backgrounds/backgrounds/034.jpg');
+    background-position: top center;
+    background-repeat: repeat;
+    background-attachment: fixed ; border:1px dotted #CCC;}
+.tblyy2 { font-size:13px; border-top:1px dashed #ccc;  border-bottom: 1px dashed #ccc; color:#000; background-color:#F8F8F8; padding: 5px; } 
+.tblx1 { font-size:13px; color:#666; background-color:#fff; padding:4px;border:1px groove #CCC; } 
+.tblx2 { font-size:13px; color:#333; padding:4px; border:1px dotted #CCC; height:25px;} 
+.tblx3 { font-size:13px; color:#333; padding:4px; border:1px dotted #CCC; height:25px;  background-color:#F8F8F8;} 
