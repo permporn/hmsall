@@ -1,10 +1,10 @@
-<?
-include ("config.inc.php");
+<?php
+include ("../config.inc.php");
 ob_start();
 include("funtion.php");
 	$strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["stid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self, $strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 
 $staffid=$_POST["staffid"];
 $studenname=$_POST["studenname"];
@@ -24,7 +24,7 @@ $no_petition_staff = $_POST["no_petition_staff"];
 	$strSQL .=",no_petition = '".$noptt."' ";
 	$strSQL .=",no_petition_staff = '".$no_petition_staff."' ";
 	$strSQL .="WHERE accid = '".$_GET["accid"]."' ";
-	$objQuery = mysql_query($strSQL);
+	$objQuery = mysqli_query($con_ajtongmath_self, $strSQL);
 	$k=$_GET["accid"];
 	header("location:viewaccount.php?accid=$k&studenname=$studenname&std=$studentid");
 

@@ -1,18 +1,19 @@
-<? 
+<?php
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<? include("script_link.php");?>
+<?php include("script_link.php");?>
 </head>
 <body>
 
 <!-- START PAGE SOURCE -->
 <div id="container">
-  <? include('menu.php');?>
+  <?php  include('menu.php');?>
   <div id="content">
     <h1>+ admin แก้ไขวิชา</h1>
     <p>
@@ -44,12 +45,11 @@ else
   background:url(images/editstudent.png) no-repeat left top;
 }
 </style>
-         <?
-     include("config.incself.php");
+      <?php 
       $strSQL = "SELECT * FROM account WHERE accid = ".$_GET["accid"]." ";
-      $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-      $Num_Rows = mysql_num_rows($objQuery); 
-      $objResult = mysql_fetch_array($objQuery);?>
+      $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+      $Num_Rows = mysqli_num_rows($objQuery); 
+      $objResult = mysqli_fetch_array($objQuery);?>
             
          <form action="saveacc.php?accid=<?=$_GET["accid"];?>" method="post" name="frm1">
           
@@ -86,12 +86,12 @@ else
                <td width="" class="tblyy" height="35" colspan="2">
                  <select name="status" id="status" >
                  <!-- <option value="<?=$objResult["status"]?>" selected>
-         <? if($objResult["status"]==1){?>เรียนได้ทุกสาขา<? }
-         else if($objResult["status"]==2){ ?>เฉพาะวงเวียนใหญ่<? } 
-         else if($objResult["status"]==3) { ?>เฉพาะวิสุทธานี<? } 
-         else if($objResult["status"]==6){ ?> เฉพาะสระบุรี <?  } 
-                 else if($objResult["status"]==7){ ?>เฉพาะชลบุรี<? } 
-         else if($objResult["status"]==8) { ?>เฉพาะราชบุรี<? }?>
+         <?php if($objResult["status"]==1){?>เรียนได้ทุกสาขา<?php }
+         else if($objResult["status"]==2){ ?>เฉพาะวงเวียนใหญ่<?php } 
+         else if($objResult["status"]==3) { ?>เฉพาะวิสุทธานี<?php } 
+         else if($objResult["status"]==6){ ?> เฉพาะสระบุรี <?php  } 
+                 else if($objResult["status"]==7){ ?>เฉพาะชลบุรี<?php } 
+         else if($objResult["status"]==8) { ?>เฉพาะราชบุรี<?php }?>
                  </option>
                  <option value="1">เรียนได้ทุกสาขา</option>
                  <option value="2">เฉพาะวงเวียนใหญ่</option>
@@ -99,25 +99,25 @@ else
                  <option value="6">เฉพาะสระบุรี</option>
                  <option value="7">เฉพาะชลบุรี</option>
                  <option value="8">เฉพาะราชบุรี</option> -->
-                 <?
+                 <?php 
                     $strSQL_branch = "SELECT * FROM branch";
-                    $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                    while ( $result_branch = mysql_fetch_array($objQuery_branch)){
+                    $objQuery_branch = mysqli_query($con_ajtongmath_self, $strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                    while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
                         //if($result_branch['branchid'] == $id_branch_self){?>
-                            <option value="<?=$result_branch['branchid']?>" <? if($result_branch['branchid']==$id_branch_self){?> selected <? }?>><?=$result_branch['name'];?></option>
-                    <? }//}?>
+                            <option value="<?=$result_branch['branchid']?>" <?php if($result_branch['branchid']==$id_branch_self){?> selected <?php }?>><?=$result_branch['name'];?></option>
+                    <?php }//}?>
                </select></td>
              </tr>
-              <?
+              <?php
         $strSQL1 = "SELECT * FROM credit WHERE accid = '".$objResult["accid"]."'";
-        $objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
-        $objResult1 = mysql_fetch_array($objQuery1);
+        $objQuery1 = mysqli_query($con_ajtongmath_self, $strSQL1) or die ("Error Query [".$strSQL1."]");
+        $objResult1 = mysqli_fetch_array($objQuery1);
          ?>
          
-                <?
+                <?php 
         $strSQL2 = "SELECT * FROM account WHERE accid = '".$objResult["accid"]."'";
-        $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL2."]");
-        $objResult2 = mysql_fetch_array($objQuery2);
+        $objQuery2 = mysqli_query($con_ajtongmath_self, $strSQL2) or die ("Error Query [".$strSQL2."]");
+        $objResult2 = mysqli_fetch_array($objQuery2);
         $studentid = $objResult2['studentid'];
         //echo $studentid;
         ?>
@@ -129,17 +129,17 @@ else
              <!--<tr>
                  <td width="117" height="53">จ่ายเงินโดย:</td>
                  <td colspan="3">
-                 <input name="type_pay" type="radio" value="transfer" class="input4" <? if($objResult1["type_pay"]=='transfer'){?>checked="checked" <? } ?> />โอน&nbsp;     
-                 <input name="type_pay" type="radio" value="cradit" class="input4" <? if($objResult1["type_pay"]=='cradit'){?> checked="checked" <? } ?>/> บัตรเคดิต 
-                 <input name="type_pay" type="radio" value="money" class="input4" <? if($objResult1["type_pay"]=='money'){?> checked="checked" <? } ?>/> เงินสด 
-                 <input name="type_pay" type="radio" value="free" class="input4" <? if($objResult1["type_pay"]=='free'){?> checked="checked" <? } ?>/> ฟรี
+                 <input name="type_pay" type="radio" value="transfer" class="input4" <?php if($objResult1["type_pay"]=='transfer'){?>checked="checked" <?php } ?> />โอน&nbsp;     
+                 <input name="type_pay" type="radio" value="cradit" class="input4" <?php if($objResult1["type_pay"]=='cradit'){?> checked="checked" <?php } ?>/> บัตรเคดิต 
+                 <input name="type_pay" type="radio" value="money" class="input4" <?php if($objResult1["type_pay"]=='money'){?> checked="checked" <?php } ?>/> เงินสด 
+                 <input name="type_pay" type="radio" value="free" class="input4" <?php if($objResult1["type_pay"]=='free'){?> checked="checked" <?php } ?>/> ฟรี
                  </td>
              </tr>-->
             
-              <?
-          $strSQL13 = "SELECT * FROM staff WHERE stid = '".$objResult2["no_petition_staff"]."' ";
-        $objQuery13 = mysql_query($strSQL13) or die ("Error Query [".$strSQL13."]");
-        $objResult13 = mysql_fetch_array($objQuery13);
+        <?php 
+        $strSQL13 = "SELECT * FROM staff WHERE stid = '".$objResult2["no_petition_staff"]."' ";
+        $objQuery13 = mysqli_query($con_ajtongmath_self, $strSQL13) or die ("Error Query [".$strSQL13."]");
+        $objResult13 = mysqli_fetch_array($objQuery13);
         ?>
              <tr>
                  <td width="" class="tblyy2" height="35">ผู้ร้องขอ</td>
@@ -147,13 +147,13 @@ else
                  <select name="no_petition_staff" id="no_petition_staff">
                  
                  <option value="<?=$objResult2["no_petition_staff"]?>" selected='selected' ><?=$objResult13["stname"]?></option>
-                 <?
+        <?php
          $strSQL_staff = "SELECT staff.stname ,staff.stid FROM staff";
-         $objQuery_staff = mysql_query($strSQL_staff);
-          while ($objResult_staff = mysql_fetch_array($objQuery_staff)) {
-         ?>
+         $objQuery_staff = mysqli_query($con_ajtongmath_self, $strSQL_staff);
+          while ($objResult_staff = mysqli_fetch_array($objQuery_staff)) {
+        ?>
                  <option value="<?=$objResult_staff["stid"]?>"><?=$objResult_staff["stname"]?></option>
-                 <? } ?>
+                 <?php } ?>
                  </select>
                 </td>
              </tr>
@@ -169,7 +169,7 @@ else
            </form>
            </p>
 </div>
-<? mysql_close();?>
+<?php mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
   var mkAutoObj=autoObj; 

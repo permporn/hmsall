@@ -1,18 +1,19 @@
-<? 
+<?php 
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<? include("script_link.php");?>
+<?php include("script_link.php");?>
 </head>
 <body>
 
 <!-- START PAGE SOURCE -->
 <div id="container">
-  <? include('menu.php');?>
+  <?php include('menu.php');?>
   <div id="content">
     <h1>จัดการ account </h1>
     <p>
@@ -86,9 +87,8 @@ function checkForm3(){
 }
 </script>
 
-<? 
-    include("config.incself.php");
-    if($objResultSTT['status'] == 'admin' && $objResultSTT['stid'] = 2) {
+<?php 
+    if($objResultSTT['status'] == 'admin' && $objResultSTT['stid'] = '2') {
     if($_GET['type'] == "Add"){?>
          <form name="addstudentForm" method="post" action="addsub.php?accid=<?=$_GET["accid"]?>&type=Add&id_hms=<?=$_GET['id_hms']?>" onSubmit="return checkForm3();">
          <p><strong>+ admin เพิ่มวิชา</strong></p>
@@ -98,12 +98,12 @@ function checkForm3(){
                  <td width="60%" class="tblyy" height="35">
                  <select name="type_self" id="type_self">
                         <option value="0" disabled="disabled" selected="selected">เลือก</option>
-                        <?
+                        <?php
                         $strSQL_type = "SELECT * FROM type_self WHERE type_id != 2 AND type_id != 3";
-                        $objQuery_type = mysql_query($strSQL_type) or die ("Error Query [".$strSQL_type."]");
-                        while ( $result_type = mysql_fetch_array($objQuery_type)){?>
+                        $objQuery_type = mysqli_query($con_ajtongmath_self,$strSQL_type) or die ("Error Query [".$strSQL_type."]");
+                        while ( $result_type = mysqli_fetch_array($objQuery_type)){?>
                                 <option value="<?=$result_type['type_id']?>" ><?=$result_type['type_name'];?></option>
-                        <? }?>
+                        <?php } ?>
                     </select>
                     <input name="show_arti_topic_subj" type="text" id="show_arti_topic_subj" size="30" value="" placeholder="ค้นหาวิชา" />
                     <input name="h_arti_id_subj" type="hidden" id="h_arti_id_subj" value="" />
@@ -153,13 +153,13 @@ function checkForm3(){
                  <td width="60%" class="tblyy" height="35">
                  <select name="no_petition_staff" id="no_petition_staff">
                  <option value="" selected='selected' >เลือก</option>
-                 <?
+                 <?php
                  $strSQL_staff = "SELECT staff.stname ,staff.stid FROM staff";
-                 $objQuery_staff = mysql_query($strSQL_staff);
-                    while ($objResult_staff = mysql_fetch_array($objQuery_staff)) {
+                 $objQuery_staff = mysqli_query($con_ajtongmath_self,$strSQL_staff);
+                    while ($objResult_staff = mysqli_fetch_array($objQuery_staff)) {
                  ?>
                  <option value="<?=$objResult_staff["stid"]?>"><?=$objResult_staff["stname"]?></option>
-                 <? } ?>
+                 <?php } ?>
                  </select>
                 </td>
              </tr>
@@ -171,36 +171,35 @@ function checkForm3(){
                  </td>
             </tr>
              
-            <? 
+            <?php 
                 $i=1;
                 $strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$_GET["accid"]."' ";
-                $objQuery1 = mysql_query($strSQL1);
-                while ($objResult1 = mysql_fetch_array($objQuery1)) {
+                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                while ($objResult1 = mysqli_fetch_array($objQuery1)) {
                 if($i==1){}else {} $i++; }
             ?>
             
              
            </table>
            </form>
-           <? }if($_GET['type'] == "Edit"){?>
+           <?php }if($_GET['type'] == "Edit"){?>
            <form name="addstudentForm" method="post" action="updatesub.php?accid=<?=$_GET["accid"]?>&type=update" onSubmit="return checkForm2();">
             <p><strong>+ admin แก้ไขไฟล์เรียน</strong></p>
            <table class="tbl-border" cellpadding="0" cellspacing="1" width="80%" align="center">
-           <?
+           <?php
                 $strSQL = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = ".$_GET["accid"]." ";
-                $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-                $Num_Rows = mysql_num_rows($objQuery); 
-                $objQuery  = mysql_query($strSQL);
+                $objQuery = mysqli_query($con_ajtongmath_self, $strSQL) or die ("Error Query [".$strSQL."]");
+                $Num_Rows = mysqli_num_rows($objQuery); 
             ?>
-            <? $i=0;?>
-            <? while($objResult = mysql_fetch_array($objQuery)){ ?>
+            <?php $i=0;?>
+            <?php while($objResult = mysqli_fetch_array($objQuery)){ ?>
             <tr>
                 <input type="hidden" name="staffid" value="<?=$_SESSION["mapid"]?>"/>
                 <td width="20%" class="tblyy2" height="35">เลือกวิชาที่ต้องการแก้ไข : </td>
                 <td width="60%" class="tblyy" height="35">
                 <input type="radio" name="chk" id="chk" value="<?=$objResult["creditid"]?>"><?=$objResult["subname"]?></td>
             </tr>
-            <? $i++; } ?>
+            <?php $i++; } ?>
            
             <tr>
                  <td width="20%" class="tblyy2" height="35">ค้นหาวิชาใหม่ :</td>
@@ -209,12 +208,12 @@ function checkForm3(){
                  <input type="hidden" name="staffid" value="<?=$_SESSION["mapid"]?>"/>
                  <select name="type_self" id="type_self">
                         <option value="0" disabled="disabled" selected="selected">เลือก</option>
-                        <?
+                        <?php
                         $strSQL_type = "SELECT * FROM type_self WHERE type_id != 2 AND type_id != 3";
-                        $objQuery_type = mysql_query($strSQL_type) or die ("Error Query [".$strSQL_type."]");
-                        while ( $result_type = mysql_fetch_array($objQuery_type)){?>
+                        $objQuery_type = mysqli_query($con_ajtongmath_self, $strSQL_type) or die ("Error Query [".$strSQL_type."]");
+                        while ( $result_type = mysqli_fetch_array($objQuery_type)){?>
                                 <option value="<?=$result_type['type_id']?>" ><?=$result_type['type_name'];?></option>
-                        <? }?>
+                        <?php }?>
                     </select>
                     <input name="show_arti_topic_subj" type="text" id="show_arti_topic_subj" size="30" value="" placeholder="ค้นหาวิชา" />
                     <input name="h_arti_id_subj" type="hidden" id="h_arti_id_subj" value="" />
@@ -234,13 +233,13 @@ function checkForm3(){
                  <td width="60%" class="tblyy" height="35">
                  <select name="no_petition_staff" id="no_petition_staff">
                  <option value="" selected='selected' >เลือก</option>
-                 <?
+                 <?php
                  $strSQL_staff = "SELECT staff.stname ,staff.stid FROM staff";
-                 $objQuery_staff = mysql_query($strSQL_staff);
-                    while ($objResult_staff = mysql_fetch_array($objQuery_staff)) {
+                 $objQuery_staff = mysqli_query($con_ajtongmath_self, $strSQL_staff);
+                    while ($objResult_staff = mysqli_fetch_array($objQuery_staff)) {
                  ?>
                  <option value="<?=$objResult_staff["stid"]?>"><?=$objResult_staff["stname"]?></option>
-                 <? } ?>
+                 <?php } ?>
                  </select>
                 </td>
              </tr>
@@ -252,22 +251,22 @@ function checkForm3(){
                  <a href="viewaccount.php?accid=<?=$_GET["accid"]?>&studenname=<?=$_GET["studenname"]?>&std=<?=$_GET["std"]?>" style="text-decoration:none"><< กลับ</a>
                  </td>
              </tr>
-            <? 
+            <?php 
                 $i=1;
                 $strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$_GET["accid"]."' ";
-                $objQuery1 = mysql_query($strSQL1);
-                while ($objResult1 = mysql_fetch_array($objQuery1)) {
+                $objQuery1 = mysqli_query($con_ajtongmath_self, $strSQL1);
+                while ($objResult1 = mysqli_fetch_array($objQuery1)) {
                 if($i==1){}else {} $i++; }
             ?>
             
              
            </table>
            </form>
-            <? }if($_GET['type'] == "editall"){?>
+            <?php }if($_GET['type'] == "editall"){?>
             <form name="addstudentForm" method="post" action="addsub.php?type=editall&creditid=<?=$_GET["creditid"]?>&std=<?=$_GET['std']?>&accid=<?=$_GET["accid"]?>" onSubmit="return checkForm3();">
           <strong>+ admin แก้ไขข้อมูลรายวิชา </strong><br /><br />
            <table class="tbl-border" cellpadding="0" cellspacing="1" width="80%" align="center">
-             <?
+             <?php
              $strSQL1 = "SELECT subject.subid ,subject.subname ,credit.date_pay ,credit.codetransfer ,credit.Invoicenumber ,credit.amount ,credit.no_petition,credit.no_petition_staff
              ,staff.stname ,branch.name ,staff.stid , credit.type_pay
              FROM credit 
@@ -276,9 +275,8 @@ function checkForm3(){
              INNER JOIN branch ON staff.branchid = branch.branchid
              WHERE credit.creditid = '".$_GET['creditid']."'
              ";
-             $objQuery1 = mysql_query($strSQL1);
-                while ($objResult1 = mysql_fetch_array($objQuery1)) {
-                
+            $objQuery1 = mysqli_query($con_ajtongmath_self, $strSQL1);
+                while ($objResult1 = mysqli_fetch_array($objQuery1)) {
              ?>
              <tr>
                 <input type="hidden" name="studenname" value="<?=$_GET["studenname"]?>"/>
@@ -296,10 +294,10 @@ function checkForm3(){
              <tr>
                  <td width="20%" class="tblyy2" height="35">ประเภทการจ่าย :</td>
                  <td width="60%" class="tblyy" height="35">
-                 <input name="type_pay" type="radio" value="transfer" class="input4" <? if($objResult1["type_pay"]== "transfer"){?>checked="checked"<? }?> />โอน&nbsp;          
-                 <input name="type_pay" type="radio" value="cradit" class="input4" <? if($objResult1["type_pay"]== "cradit"){?>checked="checked"<? }?>/> บัตรเคดิต 
-                 <input name="type_pay" type="radio" value="money" class="input4" <? if($objResult1["type_pay"]== "money"){?>checked="checked"<? }?>/> เงินสด 
-                 <input name="type_pay" type="radio" value="free" class="input4" <? if($objResult1["type_pay"]== "free"){?>checked="checked"<? }?>/> ฟรี
+                 <input name="type_pay" type="radio" value="transfer" class="input4" <?php if($objResult1["type_pay"]== "transfer"){?>checked="checked" <?php }?> />โอน         
+                 <input name="type_pay" type="radio" value="cradit" class="input4" <?php if($objResult1["type_pay"]== "cradit"){?>checked="checked"<?php }?>/> บัตรเคดิต 
+                 <input name="type_pay" type="radio" value="money" class="input4" <?php if($objResult1["type_pay"]== "money"){?>checked="checked"<?php }?>/> เงินสด 
+                 <input name="type_pay" type="radio" value="free" class="input4" <?php if($objResult1["type_pay"]== "free"){?>checked="checked"<?php }?>/> ฟรี
                  <font color="#FF0000"> *</font></td>
              </tr>
              <tr>
@@ -323,19 +321,19 @@ function checkForm3(){
                  <td width="20%" class="tblyy2" height="35">ผู้ร้องขอ</td>
                  <td width="60%" class="tblyy" height="35">
                  <select name="no_petition_staff" id="no_petition_staff">
-                 <? 
+                 <?php 
                     $strSQL14 = "SELECT * FROM staff WHERE stid = '".$objResult1["no_petition_staff"]."' ";
-                    $objQuery14 = mysql_query($strSQL14) or die ("Error Query [".$strSQL14."]");
-                    $objResult14 = mysql_fetch_array($objQuery14);
+                    $objQuery14 = mysqli_query($con_ajtongmath_self, $strSQL14) or die ("Error Query [".$strSQL14."]");
+                    $objResult14 = mysqli_fetch_array($objQuery14);
                 ?>
                  <option value="<?=$objResult1["no_petition_staff"]?>" selected='selected' ><?=$objResult14["stname"]?></option>
-                 <?
+                 <?php
                  $strSQL_staff = "SELECT staff.stname ,staff.stid FROM staff";
-                 $objQuery_staff = mysql_query($strSQL_staff);
-                    while ($objResult_staff = mysql_fetch_array($objQuery_staff)) {
+                 $objQuery_staff = mysqli_query($con_ajtongmath_self, $strSQL_staff);
+                    while ($objResult_staff = mysqli_fetch_array($objQuery_staff)) {
                  ?>
                  <option value="<?=$objResult_staff["stid"]?>"><?=$objResult_staff["stname"]?></option>
-                 <? } ?>
+                 <?php } ?>
                  </select>
                  </td>
              </tr>
@@ -346,16 +344,16 @@ function checkForm3(){
                  <a href="viewaccount.php?accid=<?=$_GET["accid"]?>&studenname=<?=$_GET["studenname"]?>&std=<?=$_GET["std"]?>" style="text-decoration:none"><< กลับ</a>
                  </td>
              </tr>
-            <? 
+            <?php 
             }
             ?>
             
              
            </table>
            </form>
-            <? }}
+            <?php }}
             else{ ?>
-         <? if($_GET['type'] == "Add"){?>
+         <?php if($_GET['type'] == "Add"){?>
          <form name="addstudentForm" method="post" action="addsub.php?accid=<?=$_GET["accid"]?>&type=Add&stid=<?=$_SESSION["mapid"]?>" onSubmit="return checkForm();">
           
            <table class="tbl-border" cellpadding="0" cellspacing="1" width="80%" align="center">
@@ -364,12 +362,12 @@ function checkForm3(){
                  <td width="60%" class="tblyy" height="35">
                  <select name="type_self" id="type_self">
                     <option value="0" disabled="disabled" selected="selected">เลือก</option>
-                    <?
+                    <?php
                     $strSQL_type = "SELECT * FROM type_self WHERE type_id != 2 AND type_id != 3";
-                    $objQuery_type = mysql_query($strSQL_type) or die ("Error Query [".$strSQL_type."]");
-                    while ( $result_type = mysql_fetch_array($objQuery_type)){?>
+                    $objQuery_type = mysqli_query($con_ajtongmath_self, $strSQL_type) or die ("Error Query [".$strSQL_type."]");
+                    while ( $result_type = mysqli_fetch_array($objQuery_type)){?>
                             <option value="<?=$result_type['type_id']?>" ><?=$result_type['type_name'];?></option>
-                    <? }?>
+                    <?php }?>
                  </select>
                  <input type="hidden" name="studenname" value="<?=$_GET["studenname"]?>"/>
                  <input type="hidden" name="staffid" value="<?=$_SESSION["mapid"]?>"/>
@@ -410,35 +408,35 @@ function checkForm3(){
                  <input type="submit" name="submit" id="submit" class="submit3" value="ตกลง" >
                  <a href="viewaccount.php?accid=<?=$_GET["accid"]?>&studenname=<?=$_GET["studenname"]?>&std=<?=$_GET["std"]?>" style="text-decoration:none"><< กลับ</a></td>
              </tr>
-            <? 
+            <?php 
                 $i=1;
                 $strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$_GET["accid"]."' ";
-                $objQuery1 = mysql_query($strSQL1);
-                while ($objResult1 = mysql_fetch_array($objQuery1)) {
+                $objQuery1 = mysqli_query($con_ajtongmath_self, $strSQL1);
+                while ($objResult1 = mysqli_fetch_array($objQuery1)) {
                 if($i==1){}else {} $i++; }
             ?>
            </table>
            </form>
-           <? } ?>
+           <?php } ?>
            
-           <? if($_GET['type'] == "Edit"){?>
+           <?php if($_GET['type'] == "Edit"){?>
            <form name="addstudentForm" method="post" action="updatesub.php?accid=<?=$_GET["accid"]?>&type=update" onSubmit="return checkForm2();">
            <table class="tbl-border" cellpadding="0" cellspacing="1" width="80%" align="center">
            
-             <?
+             <?php
                 $strSQL = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = ".$_GET["accid"]." ";
-                $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-                $Num_Rows = mysql_num_rows($objQuery); 
-                $objQuery  = mysql_query($strSQL);
+                $objQuery = mysqli_query($con_ajtongmath_self, $strSQL) or die ("Error Query [".$strSQL."]");
+                $Num_Rows = mysqli_num_rows($objQuery); 
+                $objQuery  = mysqli_query($con_ajtongmath_self, $strSQL);
             ?>
-            <? $i=0;?>
-            <? while($objResult = mysql_fetch_array($objQuery)){ ?>
+            <?php $i=0;?>
+            <?php while($objResult = mysqli_fetch_array($objQuery)){ ?>
             <tr>
                  <td width="20%" class="tblyy2" height="35">เลือกวิชาที่ต้องการแก้ไข :</td>
                  <td width="60%" class="tblyy" height="35">
                  <input type="radio" name="chk" id="chk" value="<?=$objResult["creditid"]?>"><?=$objResult["subname"]?></td>
             </tr>
-            <? $i++; } ?>
+            <?php $i++; } ?>
            
             <tr>
                  <td width="20%" class="tblyy2" height="35">ค้นหาวิชาใหม่ :</td>
@@ -455,21 +453,21 @@ function checkForm3(){
                  <input type="submit" name="submit" id="submit" class="submit3" value="ตกลง" >
                  <a href="viewaccount.php?accid=<?=$_GET["accid"]?>&studenname=<?=$_GET["studenname"]?>&std=<?=$_GET["std"]?>" style="text-decoration:none"><< กลับ</a></td>
              </tr>
-            <? 
+            <?php 
                 $i=1;
                 $strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$_GET["accid"]."' ";
-                $objQuery1 = mysql_query($strSQL1);
-                while ($objResult1 = mysql_fetch_array($objQuery1)) {
+                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                while ($objResult1 = mysqli_fetch_array($objQuery1)) {
                 if($i==1){}else {} $i++; }
             ?>
             
              
            </table>
            </form>
-           <? } }?>
+           <?php } }?>
            </p>
 </div>
-<? mysql_close();?>
+<?php mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript">
 
 $("#show_arti_topic_subj_broadcast").hide();
@@ -554,6 +552,5 @@ function make_autocom(autoObj,showObj){
 }   
 make_autocom("show_arti_topic","h_arti_id");
 </script>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

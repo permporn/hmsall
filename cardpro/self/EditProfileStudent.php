@@ -1,25 +1,24 @@
-<? 
+<?php 
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<? include("script_link.php");?>
+<?php include("script_link.php");?>
 </head>
 <body>
 
 <!-- START PAGE SOURCE -->
 <div id="container">
-  <? include('menu.php');?>
+  <?php include('menu.php');?>
   <div id="content">
     <h1></h1>
     <p>
-    
-    <?php
-  include("config.incself.php");
+<?php
   if($_GET["Type"] == "Update" && $_GET["studentid"] != ''){
     $studentid = $_GET["studentid"];
     $name = $_GET["name"];
@@ -35,8 +34,8 @@ include("ck_session_self.php");
     $momname = $_GET["momname"];
     $momtal = $_GET["momtal"];
     
-    $query_Student = mysql_query("SELECT * FROM student WHERE name = '".$name."' AND studentid = $studentid");
-    $result_Student = mysql_fetch_array($query_Student);
+    $query_Student = mysqli_query($con_ajtongmath_self, "SELECT * FROM student WHERE name = '".$name."' AND studentid = $studentid");
+    $result_Student = mysqli_fetch_array($query_Student);
     //echo $result_Student["name"];
     if($result_Student){
       $strSQL1 = "UPDATE student SET ";
@@ -53,7 +52,7 @@ include("ck_session_self.php");
       $strSQL1 .= " ,momname = '".$momname."' ";
       $strSQL1 .= " ,momtal = '".$momtal."' ";
       $strSQL1 .= " WHERE studentid = '".$studentid."'";
-      $objQuery = mysql_query($strSQL1);
+      $objQuery = mysqli_query($strSQL1);
       if($objQuery){
       echo "<script language='javascript'>alert('แก้ไขเรียบร้อย');</script>";
       echo "<script>window.location='EditProfileStudent.php?IdStudent=$studentid&Type=Edit';</script>";
@@ -62,8 +61,8 @@ include("ck_session_self.php");
         echo "<script>window.location='EditProfileStudent.php?IdStudent=$studentid&Type=Edit';</script>";
         }
     }else{
-      $query_Student = mysql_query("SELECT * FROM student WHERE name = '".$name."'");
-      $result_Student = mysql_fetch_array($query_Student);
+      $query_Student = mysqli_query($con_ajtongmath_self, "SELECT * FROM student WHERE name = '".$name."'");
+      $result_Student = mysqli_fetch_array($query_Student);
       if(empty($result_Student)){
         $strSQL1 = "UPDATE student SET ";
         $strSQL1 .= " name = '".$name."' ";
@@ -79,7 +78,7 @@ include("ck_session_self.php");
         $strSQL1 .= " ,momname = '".$momname."' ";
         $strSQL1 .= " ,momtal = '".$momtal."' ";
         $strSQL1 .= " WHERE studentid = '".$studentid."'";
-        $objQuery = mysql_query($strSQL1);
+        $objQuery = mysqli_query($con_ajtongmath_self,$strSQL1);
         if($objQuery){
         echo "<script language='javascript'>alert('แก้ไขเรียบร้อย');</script>";
         echo "<script>window.location='EditProfileStudent.php?IdStudent=$studentid&Type=Edit';</script>";
@@ -98,7 +97,7 @@ include("ck_session_self.php");
         $strSQL1 = "UPDATE account SET ";
         $strSQL1 .= " studentid  = '".$studentid."' ";
         $strSQL1 .= " WHERE accid = '".$_GET['accid']."'";
-        $objQuery = mysql_query($strSQL1);
+        $objQuery = mysqli_query($con_ajtongmath_self,$strSQL1);
         if($objQuery){
           echo "<script language='javascript'>alert('แก้ไขเรียบร้อย');</script>";
           echo "<script>window.location='EditProfileStudent.php?IdStudent=$studentid&Type=Edit';</script>";
@@ -110,19 +109,19 @@ include("ck_session_self.php");
   if($_GET["IdStudent"] != "" && $_GET["Type"] == "Edit"){
 
       $strSQL = "SELECT * FROM student WHERE studentid = '".$_GET["IdStudent"]."'";
-      $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-      $objResult = mysql_fetch_array($objQuery);
+      $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+      $objResult = mysqli_fetch_array($objQuery);
       
       $statusout = "out";
       $strSQL2 = "SELECT * FROM account WHERE studentid = ".$objResult["studentid"]." AND status != 'out'";
-      $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL2."]");
+      $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL2."]");
       $l = 1;
   ?>
     <br>
     <form name="Edit" action="EditProfileStudent.php" method="get" > 
     <table class="tbl-border" cellpadding="0" cellspacing="1" width="90%" align="center">
       <tr>  
-    <? if($objResultSTT["status"]=="Manager" or $objResultSTT["status"]=="ADMIN") {$a = 9;$b = 2;$c = 7;?><? }else{$a = 8;$b = 2;$c = 6;} ?>
+    <?php if($objResultSTT["status"]=="Manager" or $objResultSTT["status"]=="ADMIN") {$a = 9;$b = 2;$c = 7;?><?php }else{$a = 8;$b = 2;$c = 6;} ?>
             <td colspan="<?=$a?>" class="tbl2" style="white-space: nowrap;" align="center"  height="">
             แก้ไขข้อมูลนักเรียน <font color="#FF0000"><br /><strong>*</strong>กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้องเพื่อเป็นประโยชน์แก่องค์กร</font></td>
       </tr>
@@ -219,7 +218,7 @@ include("ck_session_self.php");
   <center><button type="submit" name="submit">บันทึก </button>
     <a href="searchstudent.php?show_arti_topic=<?=$objResult["name"];?>&h_arti_id=<?=$objResult["name"];?>"><button type="button" name="back">กลับ </button></a></center>
 </form>   
-<? }elseif ($_GET["accid"] != "" && $_GET["Type"] == "Edit") {?>
+<?php }elseif ($_GET["accid"] != "" && $_GET["Type"] == "Edit") {?>
 <form name="Edit" action="EditProfileStudent.php" method="get" > 
     <h3>แก้ไขข้อมูลนักเรียน</h3>
     <table class="tbl-border" cellpadding="0" cellspacing="1" width="90%" align="center">
@@ -240,23 +239,23 @@ include("ck_session_self.php");
   <center><button type="submit" name="submit">บันทึก </button>
     <a href="searchstudent.php?show_arti_topic=<?=$objResult["name"];?>&h_arti_id=<?=$objResult["name"];?>"><button type="button" name="back">กลับ </button></a></center>
 </form>  
-<? }
-mysql_close();?>
+<?php }
+mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript">
-function make_autocomname(autoObj,showObj){
-    var mkAutoObj=autoObj; 
-    var mkSerValObj=showObj; 
-    new Autocomplete(mkAutoObj, function() {
-        this.setValue = function(id) {      
-            document.getElementById(mkSerValObj).value = id;
-        }
-        if ( this.isModified )
-            this.setValue("");
-        if ( this.value.length < 1 && this.isNotClick ) 
-            return ;    
-        return "dataname.php?q=" +encodeURIComponent(this.value);
-    }); 
-}
-make_autocomname("show_arti_topic_name","h_arti_id_name");
+// function make_autocomname(autoObj,showObj){
+//     var mkAutoObj=autoObj; 
+//     var mkSerValObj=showObj; 
+//     new Autocomplete(mkAutoObj, function() {
+//         this.setValue = function(id) {      
+//             document.getElementById(mkSerValObj).value = id;
+//         }
+//         if ( this.isModified )
+//             this.setValue("");
+//         if ( this.value.length < 1 && this.isNotClick ) 
+//             return ;    
+//         return "dataname.php?q=" +encodeURIComponent(this.value);
+//     }); 
+// }
+// make_autocomname("show_arti_topic_name","h_arti_id_name");
 </script>
 </html>
