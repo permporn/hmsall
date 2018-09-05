@@ -2,6 +2,7 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -44,11 +45,9 @@ function fncConfirm1()
 </style>
 
          <?
-		 	include("config.incself.php");
 			$strSQL = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = ".$_GET["accid"]." ";
-			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-			$Num_Rows = mysql_num_rows($objQuery); 
-			$objQuery  = mysql_query($strSQL);
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+			$Num_Rows = mysqli_num_rows($objQuery); 
 		 ?>
          
     <form action="delsub1.php?accid=<?=$_GET["accid"];?>" method="post" name="form1">
@@ -60,7 +59,7 @@ function fncConfirm1()
             	<td width="80%" class="tblyy2" height="35" colspan="2">เลือกวิชาที่ต้องการลบ :</td>
          	</tr>
 			<? $i=0;?>
-			<? while($objResult = mysql_fetch_array($objQuery)){ 
+			<? while($objResult = mysqli_fetch_array($objQuery)){ 
 			if($objResult["creditid"] != ''){?>
             <tr>
          		<td width="5%" class="tblyy" height="35"><input type="checkbox" name="chk[]" value="<?=$objResult["creditid"]?>"><?=$objResult["subname"]?></td>
@@ -81,7 +80,7 @@ function fncConfirm1()
     </form>
 </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
 	var mkAutoObj=autoObj; 
@@ -99,6 +98,5 @@ function make_autocom(autoObj,showObj){
 }	
 make_autocom("show_arti_topic","h_arti_id");
 </script>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>
