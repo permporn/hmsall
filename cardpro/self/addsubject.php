@@ -152,7 +152,7 @@ function checkForm3(){
                  <td width="20%" class="tblyy2" height="35">ผู้ร้องขอ : </td>
                  <td width="60%" class="tblyy" height="35">
                  <select name="no_petition_staff" id="no_petition_staff">
-                 <option value="" selected='selected' >เลือก</option>
+                 <option value="0" selected='selected' >เลือก</option>
                  <?php
                  $strSQL_staff = "SELECT staff.stname ,staff.stid FROM staff";
                  $objQuery_staff = mysqli_query($con_ajtongmath_self,$strSQL_staff);

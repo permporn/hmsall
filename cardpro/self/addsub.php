@@ -50,6 +50,10 @@ if($date_pay == ""){
 }
 
 $no_petition_staff = $_POST["no_petition_staff"];
+if($no_petition_staff == 0){
+	$no_petition_staff == null;
+}
+
 if($_GET['id_hms']!==''){$check_pointhms = '1';}
 
 $strSQL8 = "SELECT * FROM account WHERE accid = '".$accid."'";
@@ -148,7 +152,7 @@ if($_GET["type"] == 'Add' ){
 		$strSQL3 .=",'".$check_pointhms."' )";
 		$objQuery = mysqli_query($con_ajtongmath_self,$strSQL3);
 
-		if(!$objQuery){echo "Error Save2 [".mysqli_error($con_ajtongmath_self).$strSQL3."]";}
+		if(!$objQuery){echo "Error Save2 [".$strSQL3."]";}
 		else{
 
 			$strSQL_subject = "SELECT * 
@@ -223,6 +227,7 @@ if($_GET["type"] == 'Add' ){
 				$h = 3;//จำนวนหลัก
 				$type_bill = 1;
 
+				//** s_comment **//
 				// ## ใช้ no_bill_all & no_bill_branch จาก account ที่สร้างขึ้น
 				// $strSQL_COUNT = "SELECT COUNT(id_bill_all) AS count_bill FROM `bill_number` WHERE type_bill = 1";
 				// $objQuery_COUNT = mysqli_query($con_ajtongmath_self,$strSQL_COUNT) or die ("Error Query [".$strSQL_COUNT."]");
@@ -260,7 +265,7 @@ if($_GET["type"] == 'Add' ){
 		   //              echo "error2";
 		   //          }else{
 		                //echo "--".$strSQL_update."<br>";
-
+						//** e_comment
 		                $strSQL_credit ="SELECT *
 							FROM  credit 
 							WHERE accid = ".$accid;
@@ -282,28 +287,29 @@ if($_GET["type"] == 'Add' ){
 				//}
 			}
 
-		
+		//** s_comment **//
 		// $dbserver2 = '10.10.11.14:3306';
 		// $dbuser2 = "AizeRo2" ; 
 		// $dbpass2 = "076424746";
 		// $dbname2 = 'school';
 		
-		// // $dbserver2 = 'localhost';
-		// // $dbuser2 = "root" ; 
-		// // $dbpass2 = "1234";
-		// // $dbname2 = 'school';
+		// $dbserver2 = 'localhost';
+		// $dbuser2 = "root" ; 
+		// $dbpass2 = "1234";
+		// $dbname2 = 'school';
 		
 		// mysqli_connect($dbserver2, $dbuser2, $dbpass2) or die("เชื่อมต่อฐานข้อมูลไม่ได้ ");
 		// mysqli_select_db($dbname2) or die("เลือกฐานข้อมูลไม่ได้"); // เลือกฐานข้อมูล
 		// mysqli_query($con_ajtongmath_self,"SET NAMES UTF8");
 		// mysqli_query($con_ajtongmath_self,"set character set utf8");
-		
+		//** e_comment **//
+
 		$OQ_allid = mysqli_query($con_ajtongmath_scho,"SELECT * FROM hms_allstudent WHERE selfdb_studentid = '".$studentid8."'");
 		$OR_allid = mysqli_fetch_array($OQ_allid);
 		if(empty($OR_allid)){
 		}else{	
 			$STR_hmscard = "SELECT * FROM hms_card WHERE id_allstudent = '".$OR_allid['id']."' AND ( status = '1' OR status = '2' )";
-			$OQ_hmscard = mysqli_query($con_ajtongmath_self,$STR_hmscard);
+			$OQ_hmscard = mysqli_query($con_ajtongmath_scho,$STR_hmscard);
 			$OR_hmscard = mysqli_fetch_array($OQ_hmscard);
 			//echo $STR_hmscard;
 			$newPoint = $OR_hmscard['point'] + 1;
