@@ -1,5 +1,5 @@
 <? 
-include("config.inc.php");
+include("../config.inc.php");
 echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 ob_start();
 	
@@ -33,9 +33,9 @@ ob_start();
                 FROM subject 
                 JOIN subject_real ON subject.id_subject_real = subject_real.id_subject_real
                 WHERE subject.subid = $subid";
-	$objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
+	$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1) or die ("Error Query [".$strSQL1."]");
 	//echo $strSQL1;
-	$objResult1 = mysql_fetch_array($objQuery1) ;
+	$objResult1 = mysqli_fetch_array($objQuery1) ;
 	$amount = $objResult1['price'];
 	$credit = $objResult1['hour'];
 
@@ -74,12 +74,12 @@ ob_start();
 	$sql .= ", '$date_regis'";
 	$sql .= ")"; 
 	//echo $subid." ".$type_pay ;
-	$dbquery = mysql_db_query($dbname, $sql) or die ("Error Query [".$sql."]");;
+	$dbquery = mysqli_db_query($dbname, $sql) or die ("Error Query [".$sql."]");;
 	
 	/////////////////////////////////////////
 	
-	$objQuery_account = mysql_query("SELECT * FROM account WHERE accid = '".$accid."'");
-	$objResult_account = mysql_fetch_array($objQuery_account);
+	$objQuery_account = mysqli_query($con_ajtongmath_self,"SELECT * FROM account WHERE accid = '".$accid."'");
+	$objResult_account = mysqli_fetch_array($objQuery_account);
 	
 	$diffday = DateDiff($today,$objResult_account["edate"]);
 	if($diffday>=0){$OleDate = $objResult_account["edate"];}
@@ -98,7 +98,7 @@ ob_start();
 	$strSQL .=",credit_start = '".$New_credit_start."' ";
 	$strSQL .="WHERE accid = '".$accid."' ";
 	
-	$objQuery = mysql_query($strSQL)  or die ("Error Query [".$strSQL."]");
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL)  or die ("Error Query [".$strSQL."]");
 
 	$id_branch = $objResult_account['status'];
 	$y = date('Y') + 543;
@@ -118,13 +118,13 @@ ob_start();
 	  }
 
 	$strSQL_branch = "SELECT * FROM branch WHERE branchid ='".$id_branch."'"; 
-	$objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-	$objResult_branch = mysql_fetch_array($objQuery_branch);
+	$objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+	$objResult_branch = mysqli_fetch_array($objQuery_branch);
 	$id_branch_new = $objResult_branch['branch_number'];
 
 	$strSQL_COUNT = "SELECT COUNT(id_bill_all) AS count_bill FROM `bill_number` WHERE type_bill = $type_bill AND year_ = '".$year."'";
-	$objQuery_COUNT = mysql_query($strSQL_COUNT) or die ("Error Query [".$strSQL_COUNT."]");
-	$objResult_COUNT = mysql_fetch_array($objQuery_COUNT);
+	$objQuery_COUNT = mysqli_query($con_ajtongmath_self,$strSQL_COUNT) or die ("Error Query [".$strSQL_COUNT."]");
+	$objResult_COUNT = mysqli_fetch_array($objQuery_COUNT);
 	$id_bill_all = $objResult_COUNT['count_bill'];
 	if($id_bill_all == 0){
 		$id_bill_all = 1;
@@ -132,8 +132,8 @@ ob_start();
 		$id_bill_all = $id_bill_all+1;
 	}
 	$strSQL_COUNT_b = "SELECT COUNT(id_bill_branch) AS count_bill FROM `bill_number` WHERE type_bill = $type_bill AND id_branch = ".$id_branch . " AND year_ = '".$year."'";
-	$objQuery_COUNT_b = mysql_query($strSQL_COUNT_b) or die ("Error Query [".$strSQL_COUNT_b."]");
-	$objResult_COUNT_b = mysql_fetch_array($objQuery_COUNT_b);
+	$objQuery_COUNT_b = mysqli_query($con_ajtongmath_self,$strSQL_COUNT_b) or die ("Error Query [".$strSQL_COUNT_b."]");
+	$objResult_COUNT_b = mysqli_fetch_array($objQuery_COUNT_b);
 	$id_bill_branch = $objResult_COUNT_b['count_bill'];
 	if($id_bill_branch == 0){
 		$id_bill_branch = 1;
@@ -144,15 +144,15 @@ ob_start();
 	$no_bill_branch = $text_type.$id_branch_new."-".$year.sprintf("%00".$h."d",$id_bill_branch);
 
 	$strSQL_insert ="INSERT INTO `bill_number` VALUES ('', $id_bill_all , '$no_bill_all' , $id_bill_branch , '$no_bill_branch' , $type_bill, $id_branch, $year, '$date_now', '', '')";
-	$objQuery_insert = mysql_query($strSQL_insert) or die ("Error Query [".$strSQL_insert."]");
+	$objQuery_insert = mysqli_query($con_ajtongmath_self,$strSQL_insert) or die ("Error Query [".$strSQL_insert."]");
 	if(!$objQuery_insert){
-		echo "Error insert bill_number [".mysql_error().$objQuery_insert."]";
+		echo "Error insert bill_number [".mysqli_error().$objQuery_insert."]";
 	}else{
 		// $strSQL_update = "UPDATE account SET"; 
   //       $strSQL_update .=" no_bill_all = '".$no_bill_all."'";
   //       $strSQL_update .=" ,no_bill_branch = '".$no_bill_branch."'";
   //       $strSQL_update .=" WHERE accid = '".$accid."'";
-  //       $objQuery_update = mysql_query($strSQL_update);
+  //       $objQuery_update = mysqli_query($con_ajtongmath_self,$strSQL_update);
   //       if(!$objQuery_update){
   //           echo "error2";
   //       }else{
@@ -161,17 +161,17 @@ ob_start();
             $strSQL_credit ="SELECT MAX(creditid) as creditid
 				FROM  credit 
 				WHERE accid = ".$accid . " AND subid = $subid";
-			$objQuery_credit = mysql_query($strSQL_credit) or die ("Error Query [".$strSQL_credit."]");
+			$objQuery_credit = mysqli_query($con_ajtongmath_self,$strSQL_credit) or die ("Error Query [".$strSQL_credit."]");
 
 			//while (
-			$objResult_credit = mysql_fetch_array($objQuery_credit);
+			$objResult_credit = mysqli_fetch_array($objQuery_credit);
 			//) {
 	            $strSQL_update2 = "UPDATE credit SET"; 
 	            $strSQL_update2 .=" no_bill_all = '".$no_bill_all."'";
 	            $strSQL_update2 .=" ,no_bill_branch = '".$no_bill_branch."'";
 	            $strSQL_update2 .=" WHERE creditid = '".$objResult_credit['creditid'] ."'";
-	            $objQuery_update2 = mysql_query($strSQL_update2);
-	            //$num_rows = mysql_num_rows($objQuery_update2);
+	            $objQuery_update2 = mysqli_query($con_ajtongmath_self,$strSQL_update2);
+	            //$num_rows = mysqli_num_rows($objQuery_update2);
 	            if(!$objQuery_update2){
 	                echo "error3".$strSQL_update2;
 	            }else{

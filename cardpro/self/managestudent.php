@@ -1,9 +1,12 @@
 <? 
+ob_start();
 session_start();
-include("config.inc.php");
+include("funtion.php");
+include("ck_session_self.php");
+
 	$strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["stid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	if($_SESSION["stid"] == "")
 	{
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
@@ -12,8 +15,8 @@ include("config.inc.php");
 		exit();
 	}
 	$strSQLbranch = "SELECT * FROM branch WHERE branchid = '".$objResult99["branchid"]."'";
-	$objQuerybranch = mysql_query($strSQLbranch);
-	$objResultbranch = mysql_fetch_array($objQuerybranch);
+	$objQuerybranch = mysqli_query($con_ajtongmath_self,$strSQLbranch);
+	$objResultbranch = mysqli_fetch_array($objQuerybranch);
 	$branchname = $objResultbranch['name'];
 	
 ?>
@@ -136,8 +139,8 @@ make_autocom("show_arti_topic","h_arti_id");
              <?
 		 include("config.inc.php");
 		 $strSQL = "SELECT * FROM even order by ideven desc";
-		 $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-		 while($objResult = mysql_fetch_array($objQuery))
+		 $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+		 while($objResult = mysqli_fetch_array($objQuery))
          {
 		 ?>
             <li><strong><?=$objResult["date"];?></strong>
@@ -154,10 +157,10 @@ make_autocom("show_arti_topic","h_arti_id");
          <div class="inside">
          <?
          	$strSQL = "SELECT * FROM student WHERE studentid = '".$_GET["studentid"]."' ";
-			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-			$Num_Rows = mysql_num_rows($objQuery); 
-			$objQuery  = mysql_query($strSQL);
-			$objResult = mysql_fetch_array($objQuery);?>
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+			$Num_Rows = mysqli_num_rows($objQuery); 
+			$objQuery  = mysqli_query($con_ajtongmath_self,$strSQL);
+			$objResult = mysqli_fetch_array($objQuery);?>
          <form action="managestudent1.php?studentid=<?=$_GET["studentid"];?>" method="post" enctype="multipart/form-data" name="frm1">
            <table width="600" border="1">
              <tr>

@@ -44,8 +44,8 @@ include("ck_session_self.php");
             $j = 2; //นับ column
             $temp = 50; //เก็บจำวนความสูงชั่วคราว
             $strSQL66 = "SELECT * FROM account JOIN student ON account.studentid = student.studentid AND accid = '".$_GET["accid"]."'";
-    $objQuery66 = mysql_query($strSQL66);
-    $objResult66 = mysql_fetch_array($objQuery66);
+    $objQuery66 = mysqli_query($con_ajtongmath_self,$strSQL66);
+    $objResult66 = mysqli_fetch_array($objQuery66);
             ?>
             
             
@@ -56,8 +56,8 @@ include("ck_session_self.php");
                              $o=1;
                             
                            $strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$_GET["accid"]."' ";
-                $objQuery1 = mysql_query($strSQL1);
-                while ($objResult1 = mysql_fetch_array($objQuery1)) {
+                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                while ($objResult1 = mysqli_fetch_array($objQuery1)) {
                     $top = $top + 16;
                 if($o==1){
                     
@@ -104,8 +104,8 @@ include("ck_session_self.php");
                                                   LEFT JOIN branch ON branch.branchid = account.`status`
                                                   WHERE account.accid = '".$_GET["accid"]."'";
                                               
-                                $objQuery_branch = mysql_query($sql_branch);
-                                while ($objResult_branch = mysql_fetch_array($objQuery_branch)) {
+                                $objQuery_branch = mysqli_query($con_ajtongmath_self,$sql_branch);
+                                while ($objResult_branch = mysqli_fetch_array($objQuery_branch)) {
                                     if($objResult66["status"] == $objResult_branch['branchid']){
                                         echo $objResult_branch['name'];
                                     }if($objResult66["status"] == 111) { echo "พญาไท"; }
@@ -139,6 +139,6 @@ include("ck_session_self.php");
             <a href="viewaccount.php?accid=<?=$_GET["accid"]?>&studenname=<?=$_GET["studenname"]?>&std=<?=$_GET["std"]?>" style="text-decoration:none"><< กลับ</a>
            
             </div> 
-        <? mysql_close();?>
+        <? mysqli_close($con_ajtongmath_self);?>
     </body>
 </html>

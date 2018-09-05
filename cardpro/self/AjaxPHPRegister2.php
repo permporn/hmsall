@@ -1,31 +1,28 @@
 <?php
-include("config.incself.php");
-	/*** By Weerachai Nukitram ***/
-	/***  http://www.ThaiCreate.Com ***/
+session_start();
+include("ck_session_self.php");
 
-	$strUsername = trim($_POST["tUsername"]);
+$strUsername = trim($_POST["tUsername"]);
 
-	if(trim($strUsername) == "")
-	{
-		echo "<img src='images/false.png'>";
-		exit();
-	}
+if(trim($strUsername) == "")
+{
+	echo "<img src='images/false.png'>";
+	exit();
+}
 
-	
+//*** Check Username (already exists) ***//
 
-	//*** Check Username (already exists) ***//
+$strSQL = "SELECT * FROM student WHERE name = '".$strUsername."' ";
+$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+$objResult = mysqli_fetch_array($objQuery);
+if($objResult)
+{
+	echo "<img src='../images/false.png'>";
+}
+else
+{
+	echo "<img src='../images/true.png'>";
+}
 
-	$strSQL = "SELECT * FROM student WHERE name = '".$strUsername."' ";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$objResult = mysql_fetch_array($objQuery);
-	if($objResult)
-	{
-		echo "<img src='../images/false.png'>";
-	}
-	else
-	{
-		echo "<img src='../images/true.png'>";
-	}
-
-	mysql_close();
+mysqli_close($con_ajtongmath_self);
 ?>

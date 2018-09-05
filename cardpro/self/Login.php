@@ -84,10 +84,10 @@ make_autocom("show_arti_topic","h_arti_id");
          <h2>EVEN <span>News</span></h2>
          <ul class="news">
             <?
-		 include("config.inc.php");
+		 include("../config.inc.php");
 		 $strSQL = "SELECT * FROM even order by ideven desc";
-		 $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-		 while($objResult = mysql_fetch_array($objQuery))
+		 $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+		 while($objResult = mysqli_fetch_array($objQuery))
          {
 		 ?>
             <li><strong><?=$objResult["date"];?></strong>
@@ -139,6 +139,5 @@ make_autocom("show_arti_topic","h_arti_id");
       </div>
    </div>
 </footer>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

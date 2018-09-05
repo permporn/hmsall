@@ -1,9 +1,9 @@
 <? 
 session_start();
-include("config.inc.php");
+include("../config.inc.php");
 $strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["stid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	if($_SESSION["stid"]=="")
 	{echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 echo "<script language='javascript'>alert('Please Login!!');</script>";
@@ -114,8 +114,8 @@ make_autocom("show_arti_topic","h_arti_id");
             <?
 		 include("config.inc.php");
 		 $strSQL = "SELECT * FROM even order by ideven desc";
-		 $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-		 while($objResult = mysql_fetch_array($objQuery))
+		 $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+		 while($objResult = mysqli_fetch_array($objQuery))
          {
 		 ?>
             <li><strong><?=$objResult["date"];?></strong>
@@ -132,9 +132,9 @@ make_autocom("show_arti_topic","h_arti_id");
          <div class="inside">
          <?
          	$strSQL = "SELECT * FROM account WHERE accid = '".$_GET["accid"]."' ";
-			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-			$Num_Rows = mysql_num_rows($objQuery); 
-			$objResult = mysql_fetch_array($objQuery);?>
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+			$Num_Rows = mysqli_num_rows($objQuery); 
+			$objResult = mysqli_fetch_array($objQuery);?>
          <form action="">
            <table class="tbl-border" cellpadding="0" cellspacing="1" width="100%">
             
@@ -172,8 +172,8 @@ make_autocom("show_arti_topic","h_arti_id");
 			$i=1;
 			
   				$strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$_GET["accid"]."' ";
-				$objQuery1 = mysql_query($strSQL1);
-  				while ($objResult1 = mysql_fetch_array($objQuery1)) {
+				$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+  				while ($objResult1 = mysqli_fetch_array($objQuery1)) {
 				if($i==1){
 				?> 
              <tr>

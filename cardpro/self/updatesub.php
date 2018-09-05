@@ -1,10 +1,10 @@
 <?php
-include("config.inc.php");
+include("../config.inc.php");
 ob_start();
 include("funtion.php");
 	$strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["stid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	
 $chk = $_POST["chk"];
 $accid = $_GET["accid"];
@@ -23,13 +23,13 @@ $staffid = $_POST["staffid"];
 $no_petition_staff = $_POST["no_petition_staff"];
 
 $strSQL2 = "SELECT * FROM account WHERE accid = '".$accid."'";
-$objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL2."]");
-$objResult2 = mysql_fetch_array($objQuery2);
+$objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL2."]");
+$objResult2 = mysqli_fetch_array($objQuery2);
 $studentid = $objResult2['studentid'];
 
 $strSQL3 = "SELECT * FROM student WHERE studentid = '".$studentid."'";
-$objQuery3= mysql_query($strSQL3) or die ("Error Query [".$strSQL3."]");
-$objResult3 = mysql_fetch_array($objQuery3);
+$objQuery3= mysqli_query($con_ajtongmath_self,$strSQL3) or die ("Error Query [".$strSQL3."]");
+$objResult3 = mysqli_fetch_array($objQuery3);
 $studenname = $objResult3['name'];
 
 	if($chk == ""){
@@ -46,13 +46,13 @@ $studenname = $objResult3['name'];
 	
 	$check=0;
 	$strSQL2 = "SELECT * FROM subject WHERE subid = '".$sub."' ";
-	$objQuery2 = mysql_query($strSQL2);
-	$objResult2 = mysql_fetch_array($objQuery2);
+	$objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+	$objResult2 = mysqli_fetch_array($objQuery2);
 	$subid = $objResult2["subid"];
 	$c1 = $objResult2["hour"];
 	$strSQL9 = "SELECT * FROM credit WHERE accid = '".$accid."' AND subid = '".$subid."'";
-	$objQuery9 = mysql_query($strSQL9);
-	while($objResult9 = mysql_fetch_array($objQuery9)){
+	$objQuery9 = mysqli_query($con_ajtongmath_self,$strSQL9);
+	while($objResult9 = mysqli_fetch_array($objQuery9)){
 		if($objResult9["accid"]==$accid && $objResult9["subid"]==$subid){$check++;}
 		}
 	if($check>0){
@@ -68,8 +68,8 @@ $studenname = $objResult3['name'];
 			$strSQL1 .= " ,no_petition_staff = '".$no_petition_staff."' ";
 			$strSQL1 .= " ,date_regis = '".$date."' ";
 			$strSQL1 .= "WHERE creditid = '".$chk."'";
-			$objQuery1 = mysql_query($strSQL1);
-				if(!$objQuery1){echo "Error Save1 [".mysql_error().$strSQL1."]";}
+			$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+				if(!$objQuery1){echo "Error Save1 [".mysqli_error().$strSQL1."]";}
 				else{header("location:viewaccount.php?accid=$accid&studenname=$studenname&std=$studentid");
 				}
 	}

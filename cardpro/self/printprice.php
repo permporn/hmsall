@@ -68,13 +68,13 @@ $strSQL = "SELECT
       JOIN staff ON credit.staffid = staff.stid
       JOIN branch ON account.status = branch.branchid
       WHERE account.accid =  '$accid'";
-$objQuery = mysql_query($strSQL);
-$objResult = mysql_fetch_array($objQuery);
+$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+$objResult = mysqli_fetch_array($objQuery);
 
 $strSQL_payathai = "SELECT * FROM branch 
       WHERE branchid =  1";
-$objQuery_payathai = mysql_query($strSQL_payathai);
-$objResult_payathai = mysql_fetch_array($objQuery_payathai);
+$objQuery_payathai = mysqli_query($con_ajtongmath_self,$strSQL_payathai);
+$objResult_payathai = mysqli_fetch_array($objQuery_payathai);
 
 ?>
 
@@ -153,8 +153,8 @@ $objResult_payathai = mysql_fetch_array($objQuery_payathai);
                   LEFT JOIN subject_real sr ON subject.id_subject_real = sr.id_subject_real
                   LEFT JOIN teacher t ON sr.id_teacher = t.teacherid 
                   WHERE credit.accid = '".$_GET["accid"]."'";
-          $objQuery2 = mysql_query($strSQL2);
-          while ($objResult2 = mysql_fetch_array($objQuery2)){
+          $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+          while ($objResult2 = mysqli_fetch_array($objQuery2)){
             if($objResult2['name_subject_real'] != ''){
               $subject = $objResult2['name_subject_real'];
             }else{
@@ -279,8 +279,8 @@ $objResult_payathai = mysql_fetch_array($objQuery_payathai);
                   LEFT JOIN subject_real sr ON subject.id_subject_real = sr.id_subject_real
                   LEFT JOIN teacher t ON sr.id_teacher = t.teacherid 
                   WHERE credit.accid = '".$_GET["accid"]."'";
-          $objQuery2 = mysql_query($strSQL2);
-          while ($objResult2 = mysql_fetch_array($objQuery2)){
+          $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+          while ($objResult2 = mysqli_fetch_array($objQuery2)){
             if($objResult2['name_subject_real'] != ''){
               $subject = $objResult2['name_subject_real'];
             }else{
@@ -337,4 +337,4 @@ $objResult_payathai = mysql_fetch_array($objQuery_payathai);
     </body>
 </html>
 
-<?php mysql_close();?>
+<?php mysqli_close($con_ajtongmath_self);?>

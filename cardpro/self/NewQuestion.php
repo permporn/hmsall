@@ -1,8 +1,11 @@
-<? ob_start(); 
-include("config.inc.php");
+<?
+ob_start();
+session_start();
+include("ck_session_self.php");
+
 $strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["stid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	if($_SESSION["stid"]=="")
 	{echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 echo "<script language='javascript'>alert('Please Login!!');</script>";
@@ -113,7 +116,7 @@ echo "<meta http-equiv='refresh' content='0;URL=Login.php'>";
 	$strSQL .="(CreateDate,Question,Details,Name) ";
 	$strSQL .="VALUES ";
 	$strSQL .="('".date("Y-m-d H:i:s")."','".$_POST["txtQuestion"]."','".$_POST["txtDetails"]."','".$_POST["txtName"]."') ";
-	$objQuery = mysql_query($strSQL);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 	
 	header("location:Webboard.php");
 }
@@ -139,7 +142,7 @@ echo "<meta http-equiv='refresh' content='0;URL=Login.php'>";
   <input name="btnSave" type="submit" id="btnSave" value="Submit">
 </form>
 <?
-mysql_close();
+mysqli_close($con_ajtongmath_self);
 ?>
           
            </ul>
@@ -160,6 +163,5 @@ mysql_close();
       </div>
    </div>
 </footer>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

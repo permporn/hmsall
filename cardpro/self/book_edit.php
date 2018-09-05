@@ -1,6 +1,6 @@
 <? 
-include("config.inc.php");
-ob_start();
+session_start();
+include("ck_session_self.php");
 
 $book_staffid = $_POST["staffid"];
 $studentname = $_POST["studenname"];
@@ -24,12 +24,11 @@ $creditid = $_GET["creditid"];
 	$strSQL .=",book_staffid = '".$book_staffid."' ";
 	$strSQL .="WHERE creditid = '".$creditid."' ";
 	
-	$objQuery = mysql_query($strSQL);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 	
 	if(!$objQuery){
 		echo "Error Update [".mysql_error()."]";
 	}else{
-		
 		header("location:book_search.php?h_arti_id=$studentname");
 	}
 	?>

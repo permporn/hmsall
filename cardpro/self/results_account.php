@@ -26,18 +26,17 @@ include("ck_session_self.php");
     </div>
     </p>
 <p>
-    <? include("config.incself.php");?>
     <form name="Form1" method="get" action="results_account.php" onSubmit="return checkForm();">
            <label for=""> ตั้งแต่ :</label><input type="date" name="sdate" id="sdate" value="<?=$_GET["sdate"]?>">
            <label for=""> ถึงวันที่ :</label><input type="date" name="edate" id="edate" value="<?=$_GET["edate"]?>">
            <label for="">สาขา:</label> 
            <? 	$strSQL1 = "SELECT * FROM branch";
-				$objQuery1 = mysql_query($strSQL1);?>
+				$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);?>
                 
                 <select name="status" id="status">
                         <? if($_POST["status"]==""){?><option value="00" selected="selected">เลือกสาขา</option><? }?>
                         <option value="00" <? if($_GET["status"]=="00"){?>selected="selected"<? }?>>ทุกสาขา</option>
-                        <? while ($objResult1 = mysql_fetch_array($objQuery1)){?>
+                        <? while ($objResult1 = mysqli_fetch_array($objQuery1)){?>
                         <option value="<?=$objResult1["branchid"]?>" <? if($objResult1["branchid"]==$_GET["status"]){?>selected="selected"<? }?>><?=$objResult1["name"]?></option>
                    		<? } ?>
                  	</select>
@@ -57,8 +56,8 @@ include("ck_session_self.php");
           <label for="">ค้นหาชื่อคอร์ส: </label>
                    <?
 				   	if($_GET["h_arti_id_subj"]!=""){
-				   		$objQuery_TpSj = mysql_query("SELECT * FROM subject WHERE subid = '".$_GET["h_arti_id_subj"]."'");
-				 		$objResult_TpSj = mysql_fetch_array($objQuery_TpSj);
+				   		$objQuery_TpSj = mysqli_query($con_ajtongmath_self,"SELECT * FROM subject WHERE subid = '".$_GET["h_arti_id_subj"]."'");
+				 		$objResult_TpSj = mysqli_fetch_array($objQuery_TpSj);
 				 	}
                    ?>
                    <input name="show_arti_topic_subj" type="text" id="show_arti_topic_subj" size="30" value="<?=$objResult_TpSj["subname"]?>" />
@@ -85,12 +84,12 @@ include("ck_session_self.php");
                  </select>
             <?
 				$strSQL4 = "SELECT * FROM teacher";
-				$objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL."]"); 
+				$objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL."]"); 
 			?>
            <label for="">ค้นหาครู:</label>
                  <select name="teacher" id="teacher">
                   	  <? if($_GET["teacher"]==""){?><option value="0" disabled="disabled" selected="selected">เลือกครู</option><? }?>
-                     <? while($objResult4 = mysql_fetch_array($objQuery4)){?>
+                     <? while($objResult4 = mysqli_fetch_array($objQuery4)){?>
                      <option value="<?=$objResult4['teacherid']?>" <? if($_GET["teacher"]==$objResult4['teacherid']){?> selected="selected"<? }?>><?=$objResult4['teachername']?></option>
                      <? }?>
                  </select>
@@ -157,8 +156,8 @@ if($teacher!=""){
 	$strSQL .= " AND sub.teacherid = '".$teacher."'";
 }
 //echo $strSQL.'<BR><BR><BR><BR><BR>';
-$objQuery = mysql_query($strSQL);
-$Num_Rows = mysql_num_rows($objQuery);
+$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+$Num_Rows = mysqli_num_rows($objQuery);
 
 $Per_Page = 50;   // Per Page
 
@@ -188,14 +187,14 @@ else
 
 //นับคนทั้งหมด และ จำนวนเงินทั้งหมด
 $sumamount_all = 0;
-$objQuery_sum  = mysql_query($strSQL);
-while($objResult_sum = mysql_fetch_array($objQuery_sum)){
+$objQuery_sum  = mysqli_query($con_ajtongmath_self,$strSQL);
+while($objResult_sum = mysqli_fetch_array($objQuery_sum)){
 	
 	$sumamount_all = $sumamount_all + $objResult_sum["amount"];
 }
 
 $strSQL .=" order  by c.date_regis DESC LIMIT $Page_Start , $Per_Page";
-$objQuery  = mysql_query($strSQL);
+$objQuery  = mysqli_query($con_ajtongmath_self,$strSQL);
 ?>   
 		   <table class="tbl-border" cellpadding="0" cellspacing="1" width="90%" align="center">
            <tr>
@@ -207,8 +206,8 @@ $objQuery  = mysql_query($strSQL);
               <?
 			  if($_GET["status"]=="00"){echo "ทุกสาขา";}
 			  else{
-			  	 $objQuery_bns = mysql_query("SELECT * FROM branch WHERE branchid = '".$_GET["status"]."'");
-				 $objResult_bns = mysql_fetch_array($objQuery_bns);
+			  	 $objQuery_bns = mysqli_query($con_ajtongmath_self,"SELECT * FROM branch WHERE branchid = '".$_GET["status"]."'");
+				 $objResult_bns = mysqli_fetch_array($objQuery_bns);
 				 echo $objResult_bns["name"];
 			  }
 			  ?>
@@ -233,7 +232,7 @@ $objQuery  = mysql_query($strSQL);
             </tr>
 
 <? 	
-	while($objResult = mysql_fetch_array($objQuery)){
+	while($objResult = mysqli_fetch_array($objQuery)){
 		$num++;
 		if($num % 2 == 0){$tblyy = "tblyy2";}
 		else{$tblyy = "tblyy";}
@@ -245,8 +244,8 @@ $objQuery  = mysql_query($strSQL);
               <td width="" class="<?=$tblyy?>" style="white-space: nowrap;"><center><?=DateThai($objResult["date_regis"])?></div></td>
               <td width="" class="<?=$tblyy?>" style="white-space: nowrap;">
 			  <?
-			  	$objQuery_stname = mysql_query("SELECT name FROM student WHERE studentid = '".$objResult["studentid"]."'");
-				$objResult_stname = mysql_fetch_array($objQuery_stname);
+			  	$objQuery_stname = mysqli_query($con_ajtongmath_self,"SELECT name FROM student WHERE studentid = '".$objResult["studentid"]."'");
+				$objResult_stname = mysqli_fetch_array($objQuery_stname);
 				echo $objResult_stname["name"];
 			  ?></td>
               <td width="" class="<?=$tblyy?>" style="white-space: nowrap;"><center><?=$objResult["username"]?></center></td>
@@ -264,8 +263,8 @@ $objQuery  = mysql_query($strSQL);
 				 else if($objResult["type_pay"] == 'free'){echo "ฟรี พิเศษ";}
 			  ?></td>
               <?
-			  	$objQuery_staff = mysql_query("SELECT stname FROM staff WHERE stid = '".$objResult["no_petition_staff"]."'");
-				$objResult_staff = mysql_fetch_array($objQuery_staff);
+			  	$objQuery_staff = mysqli_query($con_ajtongmath_self,"SELECT stname FROM staff WHERE stid = '".$objResult["no_petition_staff"]."'");
+				$objResult_staff = mysqli_fetch_array($objQuery_staff);
 			  ?>
               <td width="" class="<?=$tblyy?>" style="white-space: nowrap;"><center><?=$objResult["no_petition"]?>/<?=$objResult_staff["stname"]?></center></td>
               <td width="" class="<?=$tblyy?>" style="white-space: nowrap;"><center><?=$objResult["stname"]?></center></td>
@@ -305,13 +304,13 @@ if($Page!=$Num_Pages)
 {
 	echo " <a href ='$_SERVER[SCRIPT_NAME]?Page=$Next_Page&sdate=$sdate&edate=$edate&status=$status&h_arti_id_subj=$h_arti_id_subj&type_pay=$type_pay&teacher=$teacher'>Next>></a> ";
 }
-//mysql_close($objConnect);
+//mysqli_close($objConnect);
 ?>
 
            <? }?>
      </p>
 </div>
-<? mysql_close();?>                  
+<? mysqli_close($con_ajtongmath_self);?>                  
 <script type="text/javascript"> 
 function make_autocomsubj(autoObj,showObj){
 	var mkAutoObj=autoObj; 

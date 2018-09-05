@@ -2,6 +2,7 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,12 +18,6 @@ include("ck_session_self.php");
     <h1>จัดการ วิชาเรียน SELF </h1>
     <p>
     <div align="right">
-    <!--<form action="searchstudent.php" method="get" id="search-form">
-        <label >ค้นหารายชื่อ:</label>
-        <input name="show_arti_topic" type="text" id="show_arti_topic" size="50" value="<?=$_GET["h_arti_id"];?>" />
-  		<input name="h_arti_id" type="hidden" id="h_arti_id" value="<?=$_GET["h_arti_id"];?>" />
-        <a href="#" onClick="document.getElementById('search-form').submit()">ค้นหา</a>
-    </form>-->
     </div>
     </p>
 <p>
@@ -43,10 +38,7 @@ include("ck_session_self.php");
 	margin-left:80px;
 }
 </style>
-<? 	
-	include("config.incself.php");
-	
-	if($_POST["hdnCmd"] == "Add")
+<? 	if($_POST["hdnCmd"] == "Add")
 	{ 			
 		$txtAddCustomerID = $_POST["txtAddCustomerID"];
 		$txtAddName = $_POST["txtAddName"];
@@ -85,22 +77,22 @@ include("ck_session_self.php");
 			echo "<script language='javascript'>javascript:history.back()</script>";}
 		else{	
 			$strSQL = "SELECT * FROM  `addtrem` WHERE `idyear`= $idyear  AND  `idterm` = $idterm";
-			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-			$objResult = mysql_fetch_array($objQuery);
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+			$objResult = mysqli_fetch_array($objQuery);
 			$idaddterm = $objResult['idaddterm'];
 			
 			// $strSQL4 = "SELECT * FROM `subject` WHERE `code` = '".$txtAddName."' ";
-			// $objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL4."]");
+			// $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL4."]");
 			// $i =0;
-			// 	while ($objResult4 = mysql_fetch_array($objQuery4)){$i++;}
+			// 	while ($objResult4 = mysqli_fetch_array($objQuery4)){$i++;}
 			// 		if($i != 0){
 			// 		echo "<script language='javascript'>alert('รหัสวิชาซ้ำ');</script>";
 			// 		echo "<script language='javascript'>javascript:history.back()</script>";
 			// 	}
 		
 			$strSQL1 = "SELECT * FROM  `subject` WHERE `subname`= '".$txtAddCustomerID."' AND `code` = '".$txtAddName."' AND idaddterm = '".$idaddterm."'";
-			$objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
-			$objResult1 = mysql_fetch_array($objQuery1);	
+			$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1) or die ("Error Query [".$strSQL1."]");
+			$objResult1 = mysqli_fetch_array($objQuery1);	
 			if($objResult1 == ''){
 				$strSQL = "INSERT INTO subject";
 				$strSQL .="(subname,code,hour,disc,level,idaddterm,brsnchvdo,staffid,date_subj,teacherid,id_subject_real,status,status_delete,status_branch_hms,status_branch_school) ";
@@ -119,12 +111,12 @@ include("ck_session_self.php");
 				$strSQL .=",'".$status_delete."'";
 				$strSQL .=",'".$status_branch_hms."'";
 				$strSQL .=",'".$status_branch_school."') ";
-				$objQuery = mysql_query($strSQL);
-				if(!$objQuery){echo "Error Save [".mysql_error()."]";}
+				$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+				if(!$objQuery){echo "Error Save [".mysqli_error()."]";}
 				else{
 					$strSQL1 = "SELECT * FROM  `subject` WHERE `subname`= '$txtAddCustomerID'  AND idaddterm = '$idaddterm'";//AND `code` = '$txtAddName'
-					$objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
-					$objResult1 = mysql_fetch_array($objQuery1);	
+					$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1) or die ("Error Query [".$strSQL1."]");
+					$objResult1 = mysqli_fetch_array($objQuery1);	
 					$subid = $objResult1["subid"];
 					echo "<script language='javascript'>alert('บันทึกเรียบร้อย');</script>";
 					echo "<script language='javascript'>window.location='coursemanage_add.php?type=Show&CusID=$subid';</script>";}
@@ -174,19 +166,19 @@ include("ck_session_self.php");
 			echo "<script language='javascript'>javascript:history.back()</script>";}
 		else{
 			$strSQL1 = "SELECT * FROM  `addtrem` WHERE `idyear`= '".$idyear."'  AND  `idterm` = '".$idterm."'";
-			$objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
-			$objResult1 = mysql_fetch_array($objQuery1);
+			$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1) or die ("Error Query [".$strSQL1."]");
+			$objResult1 = mysqli_fetch_array($objQuery1);
 			$idaddterm = $objResult1['idaddterm'];
 			
 			$strSQL6 = "SELECT * FROM  `subject` WHERE `subid`= '".$subid."'";
-			$objQuery6 = mysql_query($strSQL6) or die ("Error Query [".$strSQL6."]");
-			$objResult6 = mysql_fetch_array($objQuery6);
+			$objQuery6 = mysqli_query($con_ajtongmath_self,$strSQL6) or die ("Error Query [".$strSQL6."]");
+			$objResult6 = mysqli_fetch_array($objQuery6);
 			
 			if($objResult6['code'] != $txtAddName){
 				$strSQL4 = "SELECT * FROM `subject` WHERE `code` = '".$txtAddName."' ";
-				$objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL4."]");
+				$objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL4."]");
 				$i =0;
-				while ($objResult4 = mysql_fetch_array($objQuery4)){$i++;}
+				while ($objResult4 = mysqli_fetch_array($objQuery4)){$i++;}
 				if($i == 0){
 					$strSQL7 = "UPDATE subject SET";
 					$strSQL7 .= " subname = '$txtAddCustomerID' ";
@@ -203,8 +195,8 @@ include("ck_session_self.php");
 					$strSQL7 .= ",`status_branch_hms`= '$status_branch_hms' ";
 					$strSQL7 .= ",`status_branch_school`= '$status_branch_school' ";
 					$strSQL7 .= "WHERE subid = '$subid' "	;
-					$objQuery7 = mysql_query($strSQL7);
-					if(!$objQuery7){echo "Error Update [".mysql_error()."<br>".$strSQL7."]";}
+					$objQuery7 = mysqli_query($con_ajtongmath_self,$strSQL7);
+					if(!$objQuery7){echo "Error Update [".mysqli_error()."<br>".$strSQL7."]";}
 					else{
 						echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 						echo "<script language='javascript'>alert('ทำการแก้ไขข้อมูลแล้ว1');</script>";
@@ -230,8 +222,8 @@ include("ck_session_self.php");
 			$strSQL7 .= ",`status_branch_hms`= '$status_branch_hms' ";
 			$strSQL7 .= ",`status_branch_school`= '$status_branch_school' ";
 			$strSQL7 .= "WHERE subid = '$subid' "	;
-			$objQuery7 = mysql_query($strSQL7);
-			if(!$objQuery7){echo "Error Update [".mysql_error()."<br>".$strSQL7."]";}
+			$objQuery7 = mysqli_query($con_ajtongmath_self,$strSQL7);
+			if(!$objQuery7){echo "Error Update [".mysqli_error()."<br>".$strSQL7."]";}
 				else{
 					echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 					echo "<script language='javascript'>alert('ทำการแก้ไขข้อมูลแล้ว2');</script>";
@@ -247,8 +239,8 @@ include("ck_session_self.php");
 		$price = $_POST['price'];
 		$type_self = $_POST['type_self'];
 		$strSQL1 = "SELECT * FROM  `subject_real` WHERE `name_subject_real`= '".$namesubject."' AND `id_teacher` = '".$teacher."'";
-		$objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
-		$objResult1 = mysql_fetch_array($objQuery1);	
+		$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1) or die ("Error Query [".$strSQL1."]");
+		$objResult1 = mysqli_fetch_array($objQuery1);	
 			if($objResult1 == ''){
 				$strSQL = "INSERT INTO subject_real ";
 				$strSQL .="(name_subject_real,id_teacher,price,type_self) ";
@@ -257,12 +249,12 @@ include("ck_session_self.php");
 				$strSQL .=",'".$teacher."' ";
 				$strSQL .=",'".$price."' ";
 				$strSQL .=",'".$type_self."') ";
-				$objQuery = mysql_query($strSQL);
-				if(!$objQuery){echo "Error Save [".mysql_error()."]";}
+				$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+				if(!$objQuery){echo "Error Save [".mysqli_error()."]";}
 				else{
 					$strSQL1 = "SELECT * FROM `subject_real` WHERE `name_subject_real`= '$namesubject' AND id_teacher = '$teacher'";
-					$objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
-					$objResult1 = mysql_fetch_array($objQuery1);	
+					$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1) or die ("Error Query [".$strSQL1."]");
+					$objResult1 = mysqli_fetch_array($objQuery1);	
 					$id_subject_real = $objResult1["id_subject_real"];
 					echo "<script language='javascript'>alert('บันทึกเรียบร้อย');</script>";
 					echo "<script language='javascript'>window.location='coursemanage_add.php?type=Show_subject_real&CusID=$id_subject_real';</script>";}
@@ -297,7 +289,7 @@ include("ck_session_self.php");
 			$strSQL7 .= ",`type_self`= '$type_self' ";
 			$strSQL7 .= "WHERE id_subject_real = '$id_subject_real' ";
 			//echo $strSQL7;
-			$objQuery7 = mysql_query($strSQL7);
+			$objQuery7 = mysqli_query($con_ajtongmath_self,$strSQL7);
 			 echo "<script language='javascript'>alert('แก้ไขเรียบร้อย');</script>";
 			 echo "<script language='javascript'>window.location='coursemanage_real_subject.php';</script>";
 		}
@@ -315,14 +307,14 @@ include("ck_session_self.php");
 			
 
 				$strSQL1 = "SELECT * FROM  `subject_detail` WHERE `subid`= '".$subid."' AND `disc` = '".$i."'";
-				$objQuery1 = mysql_query($strSQL1) or die ("Error Query [".$strSQL1."]");
-				$objResult1 = mysql_fetch_array($objQuery1);	
+				$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1) or die ("Error Query [".$strSQL1."]");
+				$objResult1 = mysqli_fetch_array($objQuery1);	
 				if($objResult1){
 					$strSQL7  = " UPDATE subject_detail SET";
 					$strSQL7 .= " detail = '".$_POST[$i]."'";
 					$strSQL7 .= " WHERE subid = '".$subid."' AND `disc` = '".$i."'";
 					//echo $strSQL7."<br>";
-					$objQuery = mysql_query($strSQL7);
+					$objQuery = mysqli_query($con_ajtongmath_self,$strSQL7);
 				}
 				else{
 				if($_POST[$i] != ''){
@@ -331,7 +323,7 @@ include("ck_session_self.php");
 				$strSQL .=" VALUES (";
 				$strSQL .= $subid . " , ". $i . " , '". $_POST[$i] . "' , '". $date ."' );";
 				//echo $strSQL."<br>";
-				$objQuery = mysql_query($strSQL);
+				$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 				}
 			}
 			
@@ -378,8 +370,8 @@ include("ck_session_self.php");
                   <option value="0" disabled="disabled" selected >--- เลือกปีการศึกษา ---</option>
                   <?
                     $strSQL = "SELECT * FROM year ORDER BY  `year`.`idyear` DESC ";
-                    $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-                    while($objResult = mysql_fetch_array($objQuery)) {?>         
+                    $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+                    while($objResult = mysqli_fetch_array($objQuery)) {?>         
                     <option value="<?=$objResult['idyear'];?>"><?=$objResult['nameyear'];?></option>
                     <? }?>
                     </select>
@@ -392,8 +384,8 @@ include("ck_session_self.php");
                   <option value="0" disabled="disabled" selected >--- เลือกเทอม ---</option>
                   <?
                     $strSQL = "SELECT * FROM term";
-                    $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-                    while($objResult = mysql_fetch_array($objQuery)){?>         
+                    $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+                    while($objResult = mysqli_fetch_array($objQuery)){?>         
                     <option value="<?=$objResult['idterm'];?>"><?=$objResult['nameterm'];?></option>
                     <? }?>
                   </select>    
@@ -405,14 +397,14 @@ include("ck_session_self.php");
     </tr>
     <?
 		$strSQL6 = "SELECT * FROM teacher";
-        $objQuery6 = mysql_query($strSQL6) or die ("Error Query [".$strSQL."]"); 
+        $objQuery6 = mysqli_query($con_ajtongmath_self,$strSQL6) or die ("Error Query [".$strSQL."]"); 
     ?>
     <tr>
         <td colspan="" class="tblyy2" style="white-space: nowrap;" align="left"  height=""><strong>ครู</strong></td>
         <td colspan="" class="tblyy" style="white-space: nowrap;" align="left"  height="">
 		<select name="teacher" id="teacher">
           <option selected="selected" disabled="disabled">เลือก</option>
-		 <? while( $objResult6 = mysql_fetch_array($objQuery6)){ ?>
+		 <? while( $objResult6 = mysqli_fetch_array($objQuery6)){ ?>
          <option value="<?=$objResult6["teacherid"];?>"><?=$objResult6["teachername"];?></option>
          <? } ?>
         </select>
@@ -420,14 +412,14 @@ include("ck_session_self.php");
     </tr>
     <?
 		$strSQL5 = "SELECT * FROM subject_real ORDER BY  `subject_real`.`id_subject_real` ASC ";
-        $objQuery5 = mysql_query($strSQL5) or die ("Error Query [".$strSQL5."]"); 
+        $objQuery5 = mysqli_query($con_ajtongmath_self,$strSQL5) or die ("Error Query [".$strSQL5."]"); 
 	?>
     <tr>
         <td colspan="" class="tblyy2" style="white-space: nowrap;" align="left"  height=""><strong>ชื่อวิชาจริง</strong></td>
         <td colspan="" class="tblyy" style="white-space: nowrap;" align="left"  height="">
 		<select name="subject_real" id="subject_real">
           <option selected="selected" disabled="disabled">เลือกชื่อวิชาจริง</option>
-		 <? while( $objResult5 = mysql_fetch_array($objQuery5)){ ?>
+		 <? while( $objResult5 = mysqli_fetch_array($objQuery5)){ ?>
          <option value="<?=$objResult5["id_subject_real"];?>"><?=$objResult5["name_subject_real"];?></option>
          <? } ?>
         </select>
@@ -457,8 +449,8 @@ include("ck_session_self.php");
 <? if($_GET["type"] == "Edit" &&  $_GET["CusID"]  != ""){
 	$courseid = $_GET["CusID"];
 	$strSQL = "SELECT * FROM subject WHERE subid = '".$courseid."'";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$objResult11 = mysql_fetch_array($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$objResult11 = mysqli_fetch_array($objQuery);
 	
 ?>
 <form name="frmMain" method="post" action="<?=$_SERVER["PHP_SELF"];?>" >
@@ -495,16 +487,16 @@ include("ck_session_self.php");
         
         <?
             $strSQL4 = "SELECT * FROM  `addtrem` WHERE  `idaddterm` =  '".$objResult11["idaddterm"]."'";
-            $objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL."]"); 
-            $objResult4 = mysql_fetch_array($objQuery4);
+            $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL."]"); 
+            $objResult4 = mysqli_fetch_array($objQuery4);
             
             $strSQL2 = "SELECT * FROM  year WHERE idyear = '".$objResult4["idyear"]."'";
-            $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL."]"); 
-            $objResult2 = mysql_fetch_array($objQuery2);
+            $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL."]"); 
+            $objResult2 = mysqli_fetch_array($objQuery2);
             
             $strSQL3 = "SELECT * FROM term WHERE idterm = '".$objResult4["idterm"]."'";
-            $objQuery3 = mysql_query($strSQL3) or die ("Error Query [".$strSQL."]"); 
-            $objResult3 = mysql_fetch_array($objQuery3);
+            $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3) or die ("Error Query [".$strSQL."]"); 
+            $objResult3 = mysqli_fetch_array($objQuery3);
             ?>
        <td colspan="4" class="tblyy" style="white-space: nowrap;" align="left"  height="">
             <select name="idyear11" id="idyear11" style="width:100px">
@@ -513,8 +505,8 @@ include("ck_session_self.php");
                 </option>
               <?
                 $strSQL = "SELECT * FROM year";
-                $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-                while($objResult = mysql_fetch_array($objQuery))
+                $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+                while($objResult = mysqli_fetch_array($objQuery))
                      {
             ?>
               <option value="<?=$objResult['idyear'];?>">
@@ -529,8 +521,8 @@ include("ck_session_self.php");
             </option>
           <?
             $strSQL = "SELECT * FROM term";
-            $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-            while($objResult = mysql_fetch_array($objQuery))
+            $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+            while($objResult = mysqli_fetch_array($objQuery))
                  {
         ?>
           <option value="<?=$objResult['idterm'];?>">
@@ -547,17 +539,17 @@ include("ck_session_self.php");
     </tr>
     <?
 		$strSQL04 = "SELECT * FROM teacher WHERE  teacherid = '".$objResult11['teacherid']."'";
-        $objQuery04 = mysql_query($strSQL04) or die ("Error Query [".$strSQL04."]"); 
-		$objResult04 = mysql_fetch_array($objQuery04);
+        $objQuery04 = mysqli_query($con_ajtongmath_self,$strSQL04) or die ("Error Query [".$strSQL04."]"); 
+		$objResult04 = mysqli_fetch_array($objQuery04);
 		$strSQL4 = "SELECT * FROM teacher";
-        $objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL4."]"); 
+        $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL4."]"); 
     ?>
     <tr>
         <td colspan="2" class="tblyy2" style="white-space: nowrap;" align="right"  height=""><strong>ครู</strong></td>
         <td colspan="4" class="tblyy" style="white-space: nowrap;" align="left"  height="">
 		<select name="teacher" id="teacher">
          <option value="<?=$objResult04["teacherid"];?>" selected="selected"><?=$objResult04["teachername"];?></option>
-		 <? while( $objResult4 = mysql_fetch_array($objQuery4)){ ?>
+		 <? while( $objResult4 = mysqli_fetch_array($objQuery4)){ ?>
          <option value="<?=$objResult4["teacherid"];?>"><?=$objResult4["teachername"];?></option>
          <? } ?>
         </select>
@@ -565,19 +557,19 @@ include("ck_session_self.php");
     </tr>
     <?
 		$strSQL5 = "SELECT * FROM subject_real ORDER BY `subject_real`.`id_subject_real` ASC ";
-        $objQuery5 = mysql_query($strSQL5) or die ("Error Query [".$strSQL5."]"); 
+        $objQuery5 = mysqli_query($con_ajtongmath_self,$strSQL5) or die ("Error Query [".$strSQL5."]"); 
 		$strSQL05 = "SELECT * FROM subject_real 
 					WHERE id_subject_real =  '".$objResult11['id_subject_real']."'
 					ORDER BY `subject_real`.`id_subject_real` ASC ";
-        $objQuery05 = mysql_query($strSQL05) or die ("Error Query [".$strSQL05."]"); 
-		$objResult05 = mysql_fetch_array($objQuery05);
+        $objQuery05 = mysqli_query($con_ajtongmath_self,$strSQL05) or die ("Error Query [".$strSQL05."]"); 
+		$objResult05 = mysqli_fetch_array($objQuery05);
     ?>
     <tr>
         <td colspan="2" class="tblyy2" style="white-space: nowrap;" align="right"  height=""><strong>ชื่อวิชาจริง</strong></td>
         <td colspan="4" class="tblyy" style="white-space: nowrap;" align="left"  height="">
 		<select name="subject_real" id="subject_real">
           <option selected="selected" value="<?=$objResult05["id_subject_real"];?>"><?=$objResult05["name_subject_real"];?></option>
-		 <? while( $objResult5 = mysql_fetch_array($objQuery5)){ ?>
+		 <? while( $objResult5 = mysqli_fetch_array($objQuery5)){ ?>
          <option value="<?=$objResult5["id_subject_real"];?>"><?=$objResult5["name_subject_real"];?></option>
          <? } ?>
         </select>
@@ -608,8 +600,8 @@ include("ck_session_self.php");
 <? if($_GET["type"] == "Show" &&  $_GET["CusID"]  != ""){
 	$courseid = $_GET["CusID"];
 	$strSQL = "SELECT * FROM subject WHERE subid = '".$courseid."'";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$objResult11 = mysql_fetch_array($objQuery);?>
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$objResult11 = mysqli_fetch_array($objQuery);?>
     
 <form name="frmMain" method="post" action="<?=$_SERVER["PHP_SELF"];?>" >
     
@@ -640,16 +632,16 @@ include("ck_session_self.php");
         
         <?
             $strSQL4 = "SELECT * FROM  `addtrem` WHERE  `idaddterm` =  '".$objResult11["idaddterm"]."'";
-            $objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL."]"); 
-            $objResult4 = mysql_fetch_array($objQuery4);
+            $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL."]"); 
+            $objResult4 = mysqli_fetch_array($objQuery4);
             
             $strSQL2 = "SELECT * FROM  year WHERE idyear = '".$objResult4["idyear"]."'";
-            $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL."]"); 
-            $objResult2 = mysql_fetch_array($objQuery2);
+            $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL."]"); 
+            $objResult2 = mysqli_fetch_array($objQuery2);
             
             $strSQL3 = "SELECT * FROM term WHERE idterm = '".$objResult4["idterm"]."'";
-            $objQuery3 = mysql_query($strSQL3) or die ("Error Query [".$strSQL."]"); 
-            $objResult3 = mysql_fetch_array($objQuery3);
+            $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3) or die ("Error Query [".$strSQL."]"); 
+            $objResult3 = mysqli_fetch_array($objQuery3);
             ?>
             <td colspan="4" class="tblyy" style="white-space: nowrap;" align="left"  height="">
                
@@ -664,8 +656,8 @@ include("ck_session_self.php");
     </tr>
     <?
 		$strSQL4 = "SELECT * FROM teacher WHERE  teacherid = '".$objResult11['teacherid']."'";
-        $objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL."]"); 
-		$objResult4 = mysql_fetch_array($objQuery4);
+        $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL."]"); 
+		$objResult4 = mysqli_fetch_array($objQuery4);
     ?>
     <tr>
         <td colspan="2" class="tblyy2" style="white-space: nowrap;" align="right"  height=""><strong>ครู</strong></td>
@@ -673,8 +665,8 @@ include("ck_session_self.php");
     </tr>
     <?
 		$strSQL7 = "SELECT * FROM subject_real WHERE id_subject_real = '".$objResult11['id_subject_real']."'";
-        $objQuery7 = mysql_query($strSQL7) or die ("Error Query [".$strSQL7."]"); 
-		$objResult7 = mysql_fetch_array($objQuery7);
+        $objQuery7 = mysqli_query($con_ajtongmath_self,$strSQL7) or die ("Error Query [".$strSQL7."]"); 
+		$objResult7 = mysqli_fetch_array($objQuery7);
     ?>
     
     <tr>
@@ -717,14 +709,14 @@ include("ck_session_self.php");
     </tr>
     <?
 		$strSQL6 = "SELECT * FROM teacher";
-        $objQuery6 = mysql_query($strSQL6) or die ("Error Query [".$strSQL."]"); 
+        $objQuery6 = mysqli_query($con_ajtongmath_self,$strSQL6) or die ("Error Query [".$strSQL."]"); 
     ?>
     <tr>
         <td colspan="" class="tblyy2" style="white-space: nowrap;" align="left"  height=""><strong>ครู</strong></td>
         <td colspan="" class="tblyy" style="white-space: nowrap;" align="left"  height="">
 		<select name="teacher" id="teacher">
           <option selected="selected" disabled="disabled">เลือก</option>
-		 <? while( $objResult6 = mysql_fetch_array($objQuery6)){ ?>
+		 <? while( $objResult6 = mysqli_fetch_array($objQuery6)){ ?>
          <option value="<?=$objResult6["teacherid"];?>"><?=$objResult6["teachername"];?></option>
          <? } ?>
         </select>
@@ -741,8 +733,8 @@ include("ck_session_self.php");
                 <option value="0" disabled="disabled" selected="selected">เลือก</option>
                 <?
                 $strSQL_type = "SELECT * FROM type_self WHERE type_id != 2 AND type_id != 3";
-                $objQuery_type = mysql_query($strSQL_type) or die ("Error Query [".$strSQL_type."]");
-                while ( $result_type = mysql_fetch_array($objQuery_type)){?>
+                $objQuery_type = mysqli_query($con_ajtongmath_self,$strSQL_type) or die ("Error Query [".$strSQL_type."]");
+                while ( $result_type = mysqli_fetch_array($objQuery_type)){?>
                         <option value="<?=$result_type['type_id']?>"><?=$result_type['type_name']?></option>
                 <? }?>
             </select>
@@ -760,8 +752,8 @@ include("ck_session_self.php");
 <? if($_GET["type"] == "EditSubjectReal" ){
 $id_subject_real = $_GET["CusID"];
 $strSQL5 = "SELECT * FROM subject_real WHERE id_subject_real= '".$id_subject_real."'";
-$objQuery5 = mysql_query($strSQL5) or die ("Error Query [".$strSQL5."]");
-$objResult5 = mysql_fetch_array($objQuery5); ?>
+$objQuery5 = mysqli_query($con_ajtongmath_self,$strSQL5) or die ("Error Query [".$strSQL5."]");
+$objResult5 = mysqli_fetch_array($objQuery5); ?>
 
 <form name="frmMain" method="post" action="<?=$_SERVER["PHP_SELF"];?>" >
     
@@ -777,7 +769,7 @@ $objResult5 = mysql_fetch_array($objQuery5); ?>
     </tr>
     <?
 		$strSQL6 = "SELECT * FROM teacher";
-        $objQuery6 = mysql_query($strSQL6) or die ("Error Query [".$strSQL."]"); 
+        $objQuery6 = mysqli_query($con_ajtongmath_self,$strSQL6) or die ("Error Query [".$strSQL."]"); 
 
     ?>
     <tr>
@@ -785,7 +777,7 @@ $objResult5 = mysql_fetch_array($objQuery5); ?>
         <td colspan="" class="tblyy" style="white-space: nowrap;" align="left"  height="">
 		<select name="teacher" id="teacher">
           <option selected="selected" disabled="disabled">เลือก</option>
-		 <? while( $objResult6 = mysql_fetch_array($objQuery6)){ ?>
+		 <? while( $objResult6 = mysqli_fetch_array($objQuery6)){ ?>
          <option value="<?=$objResult6["teacherid"];?>" <? if($objResult5['id_teacher'] == $objResult6["teacherid"]){?> selected="selected" <? }?>><?=$objResult6["teachername"];?>
          	
          </option>
@@ -804,8 +796,8 @@ $objResult5 = mysql_fetch_array($objQuery5); ?>
                 <option value="0" disabled="disabled" selected="selected">เลือก</option>
                 <?
                 $strSQL_type = "SELECT * FROM type_self WHERE type_id != 2 AND type_id != 3";
-                $objQuery_type = mysql_query($strSQL_type) or die ("Error Query [".$strSQL_type."]");
-                while ( $result_type = mysql_fetch_array($objQuery_type)){?>
+                $objQuery_type = mysqli_query($con_ajtongmath_self,$strSQL_type) or die ("Error Query [".$strSQL_type."]");
+                while ( $result_type = mysqli_fetch_array($objQuery_type)){?>
                         <option value="<?=$result_type['type_id']?>" <? if($objResult5['type_self'] == $result_type["type_id"]){?> selected="selected" <? }?>><?=$result_type['type_name'];?></option>
                 <? }?>
             </select>
@@ -824,8 +816,8 @@ $objResult5 = mysql_fetch_array($objQuery5); ?>
 	
 $id_subject_real = $_GET["CusID"];
 $strSQL5 = "SELECT * FROM subject_real WHERE id_subject_real= '".$id_subject_real."'";
-$objQuery5 = mysql_query($strSQL5) or die ("Error Query [".$strSQL5."]");
-$objResult5 = mysql_fetch_array($objQuery5); 
+$objQuery5 = mysqli_query($con_ajtongmath_self,$strSQL5) or die ("Error Query [".$strSQL5."]");
+$objResult5 = mysqli_fetch_array($objQuery5); 
 ?>
 <form name="frmMain" method="post" action="<?=$_SERVER["PHP_SELF"];?>" >
    
@@ -841,8 +833,8 @@ $objResult5 = mysql_fetch_array($objQuery5);
     </tr>
     <?
 		$strSQL04 = "SELECT * FROM teacher WHERE teacherid = '".$objResult5['id_teacher']."'";
-        $objQuery04 = mysql_query($strSQL04) or die ("Error Query [".$strSQL04."]"); 
-		$objResult04 = mysql_fetch_array($objQuery04);
+        $objQuery04 = mysqli_query($con_ajtongmath_self,$strSQL04) or die ("Error Query [".$strSQL04."]"); 
+		$objResult04 = mysqli_fetch_array($objQuery04);
     ?>
     <tr>
         <td colspan="" class="tblyy2" style="white-space: nowrap;" align="left"  height=""><strong>ครู</strong></td>
@@ -864,13 +856,13 @@ $objResult5 = mysql_fetch_array($objQuery5);
 <? if($_GET["type"] == "AddDetailSubject" &&  $_GET["CusID"]  != ""){
 	$courseid = $_GET["CusID"];
 	$strSQL = "SELECT * FROM subject WHERE subid = '".$courseid."'";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$objResult_adddetail = mysql_fetch_array($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$objResult_adddetail = mysqli_fetch_array($objQuery);
 	$disc = $objResult_adddetail['disc'];
 
 	$strSQL_detail = "SELECT * FROM subject_detail WHERE subid = '".$courseid."'";
-	$objQuery_detail = mysql_query($strSQL_detail) or die ("Error Query [".$strSQL_detail."]");
-	while ($objResult_detail = mysql_fetch_array($objQuery_detail)){
+	$objQuery_detail = mysqli_query($con_ajtongmath_self,$strSQL_detail) or die ("Error Query [".$strSQL_detail."]");
+	while ($objResult_detail = mysqli_fetch_array($objQuery_detail)){
 		$detail[] = $objResult_detail['detail'];
 	}
  ?>   
@@ -904,7 +896,8 @@ $objResult5 = mysql_fetch_array($objQuery5);
 <? }?>
 </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
+
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
 	var mkAutoObj=autoObj; 
@@ -920,13 +913,10 @@ function make_autocom(autoObj,showObj){
 		return "datacourse.php?q=" +encodeURIComponent(this.value);
     });	
 }	
- 
 // การใช้งาน
 // make_autocom(" id ของ input ตัวที่ต้องการกำหนด "," id ของ input ตัวที่ต้องการรับค่า");
 make_autocom("show_arti_topic","h_arti_id");
-</script>
 
-<script type="text/javascript">
 function make_autocom(autoObj,showObj){
 	var mkAutoObj=autoObj; 
 	var mkSerValObj=showObj; 
@@ -943,6 +933,5 @@ function make_autocom(autoObj,showObj){
 }	
 make_autocom("show_arti_topic","h_arti_id");
 </script>
-
 </body>
 </html>

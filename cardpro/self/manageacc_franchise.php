@@ -1,12 +1,12 @@
 <?
 ob_start();
 session_start();
-include("config.inc.php");
+include("../config.inc.php");
 include("funtion.php");
 
 $strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["mapid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	if($_SESSION["mapid"] == "")
 	{
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
@@ -87,25 +87,25 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 		}
 }
 	$strSQL = "SELECT * FROM account WHERE username = '".$account."' ";
-	$objQuery = mysql_query($strSQL);
-	$objResult = mysql_fetch_array($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+	$objResult = mysqli_fetch_array($objQuery);
 	
 	if($objResult){echo "Account already exist";}
 	else{
 		$strSQL1 = "SELECT * FROM student WHERE name = '".$studentname."' ";
-		$objQuery1 = mysql_query($strSQL1);
-		$objResult1 = mysql_fetch_array($objQuery1);
+		$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+		$objResult1 = mysqli_fetch_array($objQuery1);
 		$student = $objResult1["studentid"];
 		
 		
 		// $strSQL2 = "SELECT * FROM subject WHERE subname = '".$sub."' ";
-		// $objQuery2 = mysql_query($strSQL2);
-		// $objResult2 = mysql_fetch_array($objQuery2);
+		// $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+		// $objResult2 = mysqli_fetch_array($objQuery2);
 		// $subid = $objResult2["subid"];
 		
 		$strSQL7 = "SELECT * FROM subject WHERE subid = '".$subid."' ";
-		$objQuery7 = mysql_query($strSQL7);
-		$objResult7 = mysql_fetch_array($objQuery7);
+		$objQuery7 = mysqli_query($con_ajtongmath_self,$strSQL7);
+		$objResult7 = mysqli_fetch_array($objQuery7);
 		$totalcredit = $objResult7["hour"];
 		$s=1;
 		
@@ -116,15 +116,15 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 		$strSQL9 .=",'".$_POST["password"]."','1'";
 		$strSQL9 .=",'".$stardate."','".$enddate."'";
 		$strSQL9 .=",'".$totalcredit."','".$totalcredit."','".$status."','".$status_pro."','".$staffid."','".$no_petition."','".$no_petition_staff."') ";
-		$objQuery9 = mysql_query($strSQL9);
+		$objQuery9 = mysqli_query($con_ajtongmath_self,$strSQL9);
 		
 		if(!$objQuery9){
-			echo "Error Save1 [".mysql_error().$strSQL9."]";
+			echo "Error Save1 [".mysqli_error().$strSQL9."]";
 		}
 		else{
 			$strSQL4 = "SELECT * FROM account WHERE username = '".$account."' ";
-			$objQuery4 = mysql_query($strSQL4);
-			$objResult4 = mysql_fetch_array($objQuery4);
+			$objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+			$objResult4 = mysqli_fetch_array($objQuery4);
 			$accid = $objResult4["accid"];
 			
 			$strSQL3 = "INSERT INTO credit ";
@@ -147,20 +147,20 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 			$strSQL3 .=",'".$book_detail."'";
 			$strSQL3 .=", '1'";
 			$strSQL3 .=",'".$book_staffid."' )";
-			$objQuery3 = mysql_query($strSQL3);
-			if(!$objQuery3){echo "Error Save2 [".mysql_error().$strSQL3."]";}
+			$objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+			if(!$objQuery3){echo "Error Save2 [".mysqli_error().$strSQL3."]";}
 			else{
 
 			$strSQL_subject = "SELECT * 
 								FROM  `book_information` 
 								LEFT JOIN subject ON subject.subid = book_information.id_subject
 								WHERE  book_information.`id_subject` = '".$subid."' AND book_information.status = 1 AND subject.status_branch_hms = 1";
-			$OQ_subject = mysql_query($strSQL_subject);
+			$OQ_subject = mysqli_query($con_ajtongmath_self,$strSQL_subject);
 			echo $OQ_subject;
 			echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 			echo "<script language='javascript'>alert('หนังสือไม่มีใน store');</script>";
 
-			while ($OR_subject = mysql_fetch_array($OQ_subject)){
+			while ($OR_subject = mysqli_fetch_array($OQ_subject)){
 				//echo "----------------".$OR_subject['id'];
 
 				$strSQL_book = "SELECT *
@@ -168,8 +168,8 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 							book_store
 							WHERE book_store.id_book = '".$OR_subject['id']."' AND book_store.id_branch='".$status."'";
 					
-				$OQ_allid = mysql_query($strSQL_book);
-				$num_rows = mysql_num_rows($OQ_allid);
+				$OQ_allid = mysqli_query($con_ajtongmath_self,$strSQL_book);
+				$num_rows = mysqli_num_rows($OQ_allid);
 				
 				// หักยอดหนังสือ
 				if($num_rows == 0){
@@ -181,9 +181,9 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 						$strSQL3 .=",'".$qty."' ";
 						$strSQL3 .=",'".$status."' ";
 						$strSQL3 .=",'".$date."' )";
-						$objQuery_insert = mysql_query($strSQL3) or die ("Error Query [".$strSQL3."]");
+						$objQuery_insert = mysqli_query($con_ajtongmath_self,$strSQL3) or die ("Error Query [".$strSQL3."]");
 						if(!$objQuery_insert){
-							echo "Error insert book_store [".mysql_error().$objQuery_insert."]";
+							echo "Error insert book_store [".mysqli_error().$objQuery_insert."]";
 						}else{
 							//echo "insert success full";
 							echo "------new-------".$strSQL3;
@@ -192,13 +192,13 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 						}
 					//}	
 				}else{	
-					while ($OR_allid = mysql_fetch_array($OQ_allid)){
+					while ($OR_allid = mysqli_fetch_array($OQ_allid)){
 						$newPoint 	 = $OR_allid['qty'] - 1;
 						$str_uppoint = "UPDATE book_store SET ";
 						$str_uppoint .="qty = '".$newPoint."' ";
 						$str_uppoint .=",modify_date = '".date('Y-m-d H:i')."' ";
 						$str_uppoint .=" WHERE id_book = '".$OR_allid['id_book']."' AND id_branch = '".$status."'";
-						$OQ_uppoint = mysql_query($str_uppoint);
+						$OQ_uppoint = mysqli_query($con_ajtongmath_self,$str_uppoint);
 						echo "------update-------".$str_uppoint;
 						echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 						echo "<script language='javascript'>alert('ถูกลบหนังสือใน store แล้ว');</script>";
@@ -224,13 +224,13 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 				  }
 
 				$strSQL_branch = "SELECT * FROM branch WHERE branchid ='".$id_branch."'"; 
-				$objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-				$objResult_branch = mysql_fetch_array($objQuery_branch);
+				$objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+				$objResult_branch = mysqli_fetch_array($objQuery_branch);
 				$id_branch_new = $objResult_branch['branch_number'];
 
 				$strSQL_COUNT = "SELECT COUNT(id_bill_all) AS count_bill FROM `bill_number` WHERE type_bill = 1 AND year_ = '".$year."'";
-				$objQuery_COUNT = mysql_query($strSQL_COUNT) or die ("Error Query [".$strSQL_COUNT."]");
-				$objResult_COUNT = mysql_fetch_array($objQuery_COUNT);
+				$objQuery_COUNT = mysqli_query($con_ajtongmath_self,$strSQL_COUNT) or die ("Error Query [".$strSQL_COUNT."]");
+				$objResult_COUNT = mysqli_fetch_array($objQuery_COUNT);
 				$id_bill_all = $objResult_COUNT['count_bill'];
 				if($id_bill_all == 0){
 					$id_bill_all = 1;
@@ -238,8 +238,8 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 					$id_bill_all = $id_bill_all+1;
 				}
 				$strSQL_COUNT_b = "SELECT COUNT(id_bill_branch) AS count_bill FROM `bill_number` WHERE type_bill = 1 AND id_branch = ".$id_branch . " AND year_ = '".$year."'";
-				$objQuery_COUNT_b = mysql_query($strSQL_COUNT_b) or die ("Error Query [".$strSQL_COUNT_b."]");
-				$objResult_COUNT_b = mysql_fetch_array($objQuery_COUNT_b);
+				$objQuery_COUNT_b = mysqli_query($con_ajtongmath_self,$strSQL_COUNT_b) or die ("Error Query [".$strSQL_COUNT_b."]");
+				$objResult_COUNT_b = mysqli_fetch_array($objQuery_COUNT_b);
 				$id_bill_branch = $objResult_COUNT_b['count_bill'];
 				if($id_bill_branch == 0){
 					$id_bill_branch = 1;
@@ -250,15 +250,15 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 				$no_bill_branch = $text_type.$id_branch_new."-".$year.sprintf("%00".$h."d",$id_bill_branch);
 
 				$strSQL_insert ="INSERT INTO `bill_number` VALUES ('', $id_bill_all , '$no_bill_all' , $id_bill_branch , '$no_bill_branch' , $type_bill, $id_branch, $year, '$date_now', '', '')";
-				$objQuery_insert = mysql_query($strSQL_insert) or die ("Error Query [".$strSQL_insert."]");
+				$objQuery_insert = mysqli_query($con_ajtongmath_self,$strSQL_insert) or die ("Error Query [".$strSQL_insert."]");
 				if(!$objQuery_insert){
-					echo "Error insert bill_number [".mysql_error().$objQuery_insert."]";
+					echo "Error insert bill_number [".mysqli_error().$objQuery_insert."]";
 				}else{
 					$strSQL_update = "UPDATE account SET"; 
 		            $strSQL_update .=" no_bill_all = '".$no_bill_all."'";
 		            $strSQL_update .=" ,no_bill_branch = '".$no_bill_branch."'";
 		            $strSQL_update .=" WHERE accid = '".$accid."'";
-		            $objQuery_update = mysql_query($strSQL_update);
+		            $objQuery_update = mysqli_query($con_ajtongmath_self,$strSQL_update);
 		            if(!$objQuery_update){
 		                echo "error2";
 		            }else{
@@ -267,14 +267,14 @@ if($type_pay == "transfer" or $type_pay == "cradit" && $objResult99['status'] !=
 		                $strSQL_credit ="SELECT *
 							FROM  credit 
 							WHERE accid = ".$accid;
-						$objQuery_credit = mysql_query($strSQL_credit) or die ("Error Query [".$strSQL_credit."]");
+						$objQuery_credit = mysqli_query($con_ajtongmath_self,$strSQL_credit) or die ("Error Query [".$strSQL_credit."]");
 
-						while ($objResult_credit = mysql_fetch_array($objQuery_credit)) {
+						while ($objResult_credit = mysqli_fetch_array($objQuery_credit)) {
 				            $strSQL_update2 = "UPDATE credit SET"; 
 				            $strSQL_update2 .=" no_bill_all = '".$no_bill_all."'";
 				            $strSQL_update2 .=" ,no_bill_branch = '".$no_bill_branch."'";
 				            $strSQL_update2 .=" WHERE creditid = '".$objResult_credit['creditid'] ."'";
-				            $objQuery_update2 = mysql_query($strSQL_update2);
+				            $objQuery_update2 = mysqli_query($con_ajtongmath_self,$strSQL_update2);
 				            if(!$objQuery_update){
 				                echo "error3";
 				            }else{

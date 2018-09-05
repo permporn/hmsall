@@ -1,5 +1,5 @@
 <?
-include("config.inc.php");
+include("../config.inc.php");
 date_default_timezone_set("Asia/Bangkok");
 $s = date('Y-m-d');
 $seciton_s = $_POST["time_s"];
@@ -7,8 +7,8 @@ $seciton_e = $_POST["time_e"];
 $branch = $_POST["branch"];
 
 	$strSQL = "SELECT * FROM account WHERE username = '".trim($_POST['username'])."' and Password = '".trim($_POST['password'])."'";
-	$objQuery = mysql_query($strSQL);
-	$objResult = mysql_fetch_array($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+	$objResult = mysqli_fetch_array($objQuery);
 	
 	if(!$objResult)
 	{
@@ -41,7 +41,7 @@ $branch = $_POST["branch"];
 	$strSQL .="(accid,status,time,section,section_s,section_e,branchid)";
 	$strSQL .="VALUES ";
 	$strSQL .="('".$objResult["accid"]."','0','".date('Y-m-d')."','0',$seciton_s,$seciton_e,$branch)";
-	$objQuery = mysql_query($strSQL); 
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL); 
 	
 	if($objQuery){
 	$section = ($seciton_e - $seciton_s);
@@ -49,7 +49,7 @@ $branch = $_POST["branch"];
 	$strSQL6 = "UPDATE account SET ";
 	$strSQL6 .="totalcredit = '".$sumall."' ";
 	$strSQL6 .="WHERE accid = '".$objResult["accid"]."' ";
-	$objQuery6 = mysql_query($strSQL6);
+	$objQuery6 = mysqli_query($con_ajtongmath_self,$strSQL6);
 	if($objQuery6){
 	echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 	echo "<script language='javascript'>alert('จองเวลาเรียบร้อยแล้ว  เสียเคดิต $section เหลือ $sumall');</script>";

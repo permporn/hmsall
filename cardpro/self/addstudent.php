@@ -2,6 +2,7 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -155,8 +156,6 @@ include("ck_session_self.php");
            </form>
   </p>         
 </div>
-
-
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
 	var mkAutoObj=autoObj; 

@@ -2,6 +2,7 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,12 +18,6 @@ include("ck_session_self.php");
     <h1>จองที่นัง SELF FAST </h1>
     <p>
     <div align="right">
-    <!--<form action="searchstudent.php" method="get" id="search-form">
-        <label >ค้นหารายชื่อ:</label>
-        <input name="show_arti_topic" type="text" id="show_arti_topic" size="50" value="<?=$_GET["h_arti_id"];?>" />
-      <input name="h_arti_id" type="hidden" id="h_arti_id" value="<?=$_GET["h_arti_id"];?>" />
-        <a href="#" onClick="document.getElementById('search-form').submit()">ค้นหา</a>
-    </form>-->
     </div>
     </p>
 <p>
@@ -174,19 +169,18 @@ return Erase
           <select name="branch" id="branch">
           <option value="0"  disabled="disabled" selected="selected">เลือก</option>
             <?   
-            include("config.incself.php");
             if( $objResultSTT["status"] == "manager_franchise" || $objResultSTT["status"] == "user_franchise"){?>
                   <?
                   $strSQL_branch = "SELECT * FROM branch";
-                  $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                  while ( $result_branch = mysql_fetch_array($objQuery_branch)){
+                  $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                  while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
                       if($result_branch['branchid'] == $id_branch_self){?>
                       <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                   <? }}?>
             <? }else{
                   $strSQL_branch = "SELECT * FROM branch WHERE branchid != 9 AND branchid != 10";
-                  $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                  while ( $result_branch = mysql_fetch_array($objQuery_branch)){?>
+                  $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                  while ( $result_branch = mysqli_fetch_array($objQuery_branch)){?>
                       <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                   <? }?>
             <? }?>
@@ -201,9 +195,8 @@ return Erase
           </td>
       </tr> 
   </table>                           
-           </form>
+</form>
     </p>
 </div>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

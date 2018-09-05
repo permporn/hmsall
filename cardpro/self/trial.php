@@ -84,25 +84,25 @@ $(function(){
 }
 </style>
 
-    <? include("config.incself.php");
+    <?
     $strSQL1 = "SELECT * FROM counter3";
-    $objQuery1 = mysql_query($strSQL1);
-    $objResult1 = mysql_fetch_array($objQuery1);
+    $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+    $objResult1 = mysqli_fetch_array($objQuery1);
     $c=$objResult1["count"];
     $c++;
     $strSQL = "UPDATE counter3 SET ";
       $strSQL .="count = '$c' ";
-      $objQuery = mysql_query($strSQL);
+      $objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
       if(!$objQuery)
       {
-        echo "Error Update [".mysql_error()."]";
+        echo "Error Update [".mysqli_error()."]";
       }
     ?>
       <form name="studentForm" method="post" action="trial2.php" onSubmit="return checkForm();">
       <?
       $strSQL = "SELECT * FROM counter3";
-      $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-      $objResult = mysql_fetch_array($objQuery);
+      $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+      $objResult = mysqli_fetch_array($objQuery);
       $counter=$objResult["count"];
       if( $objResultSTT["status"] == "manager_franchise" || $objResultSTT["status"] == "user_franchise"){
       $fix="BTFC";
@@ -165,15 +165,15 @@ $(function(){
                   if( $objResultSTT["status"] == "manager_franchise" || $objResultSTT["status"] == "user_franchise"){?>
                         <?
                         $strSQL_branch = "SELECT * FROM branch";
-                        $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                        while ( $result_branch = mysql_fetch_array($objQuery_branch)){
+                        $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                        while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
                             if($result_branch['branchid'] == $id_branch_self){?>
                             <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                         <? }}?>
                   <? }else{
                         $strSQL_branch = "SELECT * FROM branch WHERE branchid != 9 AND branchid != 10";
-                        $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                        while ( $result_branch = mysql_fetch_array($objQuery_branch)){?>
+                        $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                        while ( $result_branch = mysqli_fetch_array($objQuery_branch)){?>
                             <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                         <? }?>
                   <? }?>
@@ -230,8 +230,8 @@ $(function(){
                  <option value="" selected='selected' >เลือก</option>
                  <?
          $strSQL_staff = "SELECT staff.stname ,staff.stid FROM staff";
-         $objQuery_staff = mysql_query($strSQL_staff);
-          while ($objResult_staff = mysql_fetch_array($objQuery_staff)) {
+         $objQuery_staff = mysqli_query($con_ajtongmath_self,$strSQL_staff);
+          while ($objResult_staff = mysqli_fetch_array($objQuery_staff)) {
          ?>
                  <option value="<?=$objResult_staff["stid"]?>"><?=$objResult_staff["stname"]?></option>
                  <? } ?>
@@ -249,7 +249,7 @@ $(function(){
            </form>
          </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 
 <script type="text/javascript">
 function make_autocomname(autoObj,showObj){
@@ -304,6 +304,6 @@ function make_autocom(autoObj,showObj){
 // การใช้งาน
 // make_autocom(" id ของ input ตัวที่ต้องการกำหนด "," id ของ input ตัวที่ต้องการรับค่า");
 make_autocom("show_arti_topic","h_arti_id");
-</script><script type="text/javascript"> Cufon.now(); </script>
+</script>
 </body>
 </html>

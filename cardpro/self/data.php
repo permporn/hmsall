@@ -5,9 +5,9 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 
 include("../config.inc.php");
 // เชื่อมต่อฐานข้อมูล
-//$link=mysql_connect("10.10.11.14:3306","ajtong_root","076424746") or die("error".mysql_error());
-//mysql_select_db("selfdb",$link);
-// mysql_query("SET NAMES UTF8");
+//$link=mysqli_connect("10.10.11.14:3306","ajtong_root","076424746") or die("error".mysqli_error());
+//mysqli_select_db("selfdb",$link);
+// mysqli_query("SET NAMES UTF8");
 // mysqli_query("SET character_set_results=UTF8");
 // mysqli_query("SET character_set_client=UTF8");
 // mysqli_query("SET character_set_connection=UTF8");

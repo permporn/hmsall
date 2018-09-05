@@ -1,13 +1,13 @@
 <?
-include ("config.inc.php");
+include ("../config.inc.php");
 
 	$staffid = $_GET["staffid"];
 	$name = $_POST["name"];
 	$k = $_GET["studentid"];
 	
 	$strSQL = "SELECT * FROM student WHERE name = '".$name." '";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$objResult = mysql_fetch_array($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$objResult = mysqli_fetch_array($objQuery);
 	
 	if(!$objResult){
 	$strSQL = "UPDATE student SET ";
@@ -17,10 +17,10 @@ include ("config.inc.php");
 	$strSQL .=",staffid = '".$staffid."' ";
 	$strSQL .="WHERE studentid = '".$_GET["studentid"]."' ";
 	
-	$objQuery = mysql_query($strSQL);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 	if(!$objQuery)
 	{
-		echo "Error Update [".mysql_error()."]";
+		echo "Error Update [".mysqli_error()."]";
 	}
 	
 	

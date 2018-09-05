@@ -1,12 +1,12 @@
 <?
 ob_start();
 session_start();
-include("config.inc.php");
+include("../config.inc.php");
 include("funtion.php");
 
 $strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["mapid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	if($_SESSION["mapid"] == "")
 	{
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
@@ -61,25 +61,25 @@ else{
 //}
 //echo $stardate." ".$enddate;
 	$strSQL = "SELECT * FROM account WHERE username = '".$account."' ";
-	$objQuery = mysql_query($strSQL);
-	$objResult = mysql_fetch_array($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+	$objResult = mysqli_fetch_array($objQuery);
 	
 	if($objResult){echo "Account already exist";}
 	else{
 		$strSQL1 = "SELECT * FROM student WHERE name = '".$studentname."' ";
-		$objQuery1 = mysql_query($strSQL1);
-		$objResult1 = mysql_fetch_array($objQuery1);
+		$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+		$objResult1 = mysqli_fetch_array($objQuery1);
 		$student = $objResult1["studentid"];
 		
 		
 		$strSQL2 = "SELECT * FROM subject WHERE subname = '".$sub."' ";
-		$objQuery2 = mysql_query($strSQL2);
-		$objResult2 = mysql_fetch_array($objQuery2);
+		$objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+		$objResult2 = mysqli_fetch_array($objQuery2);
 		$subid = $objResult2["subid"];
 		
 		$strSQL7 = "SELECT * FROM subject WHERE subname = '".$sub."' ";
-		$objQuery7 = mysql_query($strSQL7);
-		$objResult7 = mysql_fetch_array($objQuery7);
+		$objQuery7 = mysqli_query($con_ajtongmath_self,$strSQL7);
+		$objResult7 = mysqli_fetch_array($objQuery7);
 		//$totalcredit = $objResult7["hour"];
 		$s=1;
 		
@@ -90,13 +90,13 @@ else{
 		$strSQL9 .=",'".$_POST["password"]."','1'";
 		$strSQL9 .=",'".$stardate."','".$enddate."'";
 		$strSQL9 .=",'".$totalcredit."','".$totalcredit."','".$status."','".$staffid."','".$no_petition."','".$no_petition_staff."') ";
-		$objQuery9 = mysql_query($strSQL9);
+		$objQuery9 = mysqli_query($con_ajtongmath_self,$strSQL9);
 		
-		if(!$objQuery9){echo "Error Save1 [".mysql_error().$strSQL9."]";}
+		if(!$objQuery9){echo "Error Save1 [".mysqli_error().$strSQL9."]";}
 		else{
 		$strSQL4 = "SELECT * FROM account WHERE username = '".$account."' ";
-		$objQuery4 = mysql_query($strSQL4);
-		$objResult4 = mysql_fetch_array($objQuery4);
+		$objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+		$objResult4 = mysqli_fetch_array($objQuery4);
 		$accid = $objResult4["accid"];
 		
 		$strSQL3 = "INSERT INTO credit ";
@@ -117,10 +117,10 @@ else{
 		$strSQL3 .=",'".$book_num."'";
 		$strSQL3 .=",'".$book_detail."'";
 		$strSQL3 .=",'".$book_staffid."' )";
-		$objQuery3 = mysql_query($strSQL3);
-		if(!$objQuery3){echo "Error Save2 [".mysql_error().$strSQL3."]";}
+		$objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+		if(!$objQuery3){echo "Error Save2 [".mysqli_error().$strSQL3."]";}
 		else{
-		mysql_close();
+		mysqli_close($con_ajtongmath_self);
 		header("location:viewaccount.php?accid=$accid&studenname=$studentname&type_pay=$type_pay&std=$student");
 		}}}
 		

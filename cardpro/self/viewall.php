@@ -1,10 +1,10 @@
 <? 
 session_start();
-include("config.inc.php");
+include("../config.inc.php");
 include("funtion.php");
 	$strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["stid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	if($_SESSION["stid"] == "")
 	{
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
@@ -13,8 +13,8 @@ include("funtion.php");
 		exit();
 	}
 	$strSQLbranch = "SELECT * FROM branch WHERE branchid = '".$objResult99["branchid"]."'";
-	$objQuerybranch = mysql_query($strSQLbranch);
-	$objResultbranch = mysql_fetch_array($objQuerybranch);
+	$objQuerybranch = mysqli_query($con_ajtongmath_self,$strSQLbranch);
+	$objResultbranch = mysqli_fetch_array($objQuerybranch);
 	$branchname = $objResultbranch['name'];
 	
 ?>
@@ -142,8 +142,8 @@ make_autocom("show_arti_topic","h_arti_id");
             <?
 		 include("config.inc.php");
 		 $strSQL = "SELECT * FROM even order by ideven desc";
-		 $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-		 while($objResult = mysql_fetch_array($objQuery))
+		 $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+		 while($objResult = mysqli_fetch_array($objQuery))
          {
 		 ?>
             <li><strong><?=$objResult["date"];?></strong>
@@ -168,16 +168,16 @@ make_autocom("show_arti_topic","h_arti_id");
               <? 	
 			  if($_POST["h_arti_id"] != ''){
 			  		$strSQL = "SELECT * FROM student WHERE (name LIKE '%".$_POST["h_arti_id"]."%')";
-					$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-					$Num_Rows = mysql_num_rows($objQuery); 
-					$objResult = mysql_fetch_array($objQuery);
+					$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+					$Num_Rows = mysqli_num_rows($objQuery); 
+					$objResult = mysqli_fetch_array($objQuery);
 					$std = $objResult["studentid"];
 					$studenname = $objResult["name"];
 			  }else{
 				  	$strSQL = "SELECT * FROM student WHERE name = '".$_GET["studenname"]."'";
-					$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-					$Num_Rows = mysql_num_rows($objQuery); 
-					$objResult = mysql_fetch_array($objQuery);
+					$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+					$Num_Rows = mysqli_num_rows($objQuery); 
+					$objResult = mysqli_fetch_array($objQuery);
 					$std = $objResult["studentid"];
 					$studenname = $objResult["name"];
 				}
@@ -211,14 +211,14 @@ make_autocom("show_arti_topic","h_arti_id");
                 <?
 				$statusout = "out";
 				$strSQL = "SELECT * FROM account WHERE studentid = '".$std."' AND status != '".$statusout."' ";
-				$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-				$Num_Rows = mysql_num_rows($objQuery); 
+				$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+				$Num_Rows = mysqli_num_rows($objQuery); 
 				?>
     		<tr>
                <td height="30" colspan="4"  class="tbl2"><div align="center"><strong>Account</strong></div></td>
              </tr>
              
-             <? $l=1; while($objResult = mysql_fetch_array($objQuery)) {?>
+             <? $l=1; while($objResult = mysqli_fetch_array($objQuery)) {?>
              <tr>
                <td height="20" colspan="4" class="tblyy"><div align="left"><strong>Account ที่ <?=$l; $l++;?></strong></div></td>
              </tr>
@@ -243,12 +243,12 @@ make_autocom("show_arti_topic","h_arti_id");
              </tr>
              <?php
 				$strSQL11 = "SELECT * FROM staff WHERE stid = '".$objResult["staffid"]."' ";
-				$objQuery11 = mysql_query($strSQL11) or die ("Error Query [".$strSQL11."]");
-			 	$objResult11 = mysql_fetch_array($objQuery11);
+				$objQuery11 = mysqli_query($con_ajtongmath_self,$strSQL11) or die ("Error Query [".$strSQL11."]");
+			 	$objResult11 = mysqli_fetch_array($objQuery11);
 				
 				$strSQL12 = "SELECT * FROM branch WHERE branchid = '".$objResult11["branchid"]."' ";
-				$objQuery12 = mysql_query($strSQL12) or die ("Error Query [".$strSQL12."]");
-			 	$objResult12 = mysql_fetch_array($objQuery12);
+				$objQuery12 = mysqli_query($con_ajtongmath_self,$strSQL12) or die ("Error Query [".$strSQL12."]");
+			 	$objResult12 = mysqli_fetch_array($objQuery12);
 			 ?>
              <tr>
                <td width="101" height="50" class="tblyy">โดย(ออก/แก้ไข) </td>
@@ -280,8 +280,8 @@ make_autocom("show_arti_topic","h_arti_id");
 			 	$ff=$objResult["accid"];
 				$i=1;
 				$strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$ff."' ";
-				$objQuery1 = mysql_query($strSQL1);
-  				while ($objResult1 = mysql_fetch_array($objQuery1)) {
+				$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+  				while ($objResult1 = mysqli_fetch_array($objQuery1)) {
 				if($i==1){
 				?> 
              <tr>
@@ -304,9 +304,9 @@ make_autocom("show_arti_topic","h_arti_id");
               
              <? $i++; } 
 			 $strSQL2 = "SELECT * FROM reserve where accid = '".$objResult["accid"]."' order  by reservid DESC";
-				$objQuery2 = mysql_query($strSQL2);
+				$objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
 				$j=1;
-				while ($objResult2 = mysql_fetch_array($objQuery2)){
+				while ($objResult2 = mysqli_fetch_array($objQuery2)){
 					if($objResult2["section"]!=0){
 						$time7 = 8 + floor(($objResult2["section"]-1)/2); 
 							
@@ -374,6 +374,5 @@ make_autocom("show_arti_topic","h_arti_id");
       </div>
    </div>
 </footer>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

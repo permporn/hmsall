@@ -2,31 +2,28 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
+
 if($_POST["idyear"] != "" && $_POST["idterm"] != ""){
   $idyear=$_POST["idyear"];
   $idterm=$_POST["idterm"];
   
   $strSQL = "SELECT * FROM  `addtrem` WHERE `idyear`= $idyear  AND  `idterm` = $idterm";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-  $objResult = mysql_fetch_array($objQuery);
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+  $objResult = mysqli_fetch_array($objQuery);
   $idaddterm = $objResult['idaddterm'];
   }
   $strSQLbranch = "SELECT * FROM branch WHERE branchid = '".$objResult99["branchid"]."'";
-  $objQuerybranch = mysql_query($strSQLbranch);
-  $objResultbranch = mysql_fetch_array($objQuerybranch);
+  $objQuerybranch = mysqli_query($con_ajtongmath_self,$strSQLbranch);
+  $objResultbranch = mysqli_fetch_array($objQuerybranch);
   $branchname = $objResultbranch['name'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <? include("script_link.php");?>
-
 <link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet">
-<!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
-
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-<!-- <script src="js/bootstrap.min.js"></script> -->
-
 <script type="text/javascript">
 $(document).ready(function() {
     $('#example').DataTable({
@@ -108,26 +105,25 @@ make_autocom("show_arti_topic","h_arti_id");
 </style>
 
 <?  
-include("config.incself.php");
   //*** Delete Condition ***//
   if($_GET["Action"] == "Del")
   {
     /*$strSQL = "DELETE FROM subject ";
     $strSQL .="WHERE subid = '".$_GET["CusID"]."' ";
-    $objQuery = mysql_query($strSQL);
+    $objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
     if(!$objQuery)
     {
-      echo "Error Delete [".mysql_error()."]";
+      echo "Error Delete [".mysqli_error()."]";
     }*/
     $status=1;
     $strSQL_update = "UPDATE subject SET"; 
     $strSQL_update .=" status_delete = '".$status."'";
     $strSQL_update .=" WHERE subid = '".$_GET["CusID"] ."'";
-    $objQuery_update = mysql_query($strSQL_update);
+    $objQuery_update = mysqli_query($con_ajtongmath_self,$strSQL_update);
     //echo $strSQL_update;
     if(!$objQuery_update)
     {
-      echo "Error Delete [".mysql_error()."]";
+      echo "Error Delete [".mysqli_error()."]";
     }
     
   }
@@ -152,8 +148,8 @@ include("config.incself.php");
         <option value="0" selected>เลือกปีการศึกษา</option>
       <?
         $strSQL = "SELECT * FROM year";
-        $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-        while($objResult = mysql_fetch_array($objQuery)){?>         
+        $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+        while($objResult = mysqli_fetch_array($objQuery)){?>         
         <option value="<?=$objResult['idyear'];?>"><?=$objResult['nameyear'];?></option>
         <? }?>
         </select>    
@@ -161,8 +157,8 @@ include("config.incself.php");
         <option value="0" selected>เลือก SEC</option>
       <?
         $strSQL = "SELECT * FROM term";
-        $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-        while($objResult = mysql_fetch_array($objQuery)){?>         
+        $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+        while($objResult = mysqli_fetch_array($objQuery)){?>         
         <option value="<?=$objResult['idterm'];?>"><?=$objResult['nameterm']/*."-".$objResult['idterm']*/;?></option>
          <? }?>
         </select>    
@@ -176,25 +172,25 @@ include("config.incself.php");
 <? 
   if($_POST["idyear"] == 0 or $_POST["idterm"] == 0){
   $strSQL = "SELECT * FROM subject WHERE status_delete != 1 ORDER BY  `subject`.`subid` DESC  ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
   else
   {$strSQL = "SELECT * FROM subject WHERE idaddterm = $idaddterm AND status_delete != 1 ORDER BY  `subject`.`subid` ASC ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
   
   if($idaddterm == 0 ){
   $strSQL = "SELECT * FROM subject WHERE status != 0  AND status_delete != 1 ORDER BY  `subject`.`subid` ASC ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
   else
   {$strSQL = "SELECT * FROM subject WHERE idaddterm = $idaddterm AND status_delete != 1 ORDER BY  `subject`.`subid` ASC ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
   
   if($_GET["h_arti_id"] != '' ){
   $strSQL = "SELECT * FROM subject WHERE subid = '".$_POST["h_arti_id"]."'" AND status_delete != 1;
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
   
   if($_POST["h_arti_id"] != '' ){
   $strSQL = "SELECT * FROM subject WHERE subid = '".$_POST["h_arti_id"]."' AND status_delete != 1 ORDER BY  `subject`.`subid` ASC ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
   ?>
     
   <input type="hidden" name="hdnCmd" value="">
@@ -204,8 +200,8 @@ include("config.incself.php");
         FROM (addtrem INNER JOIN term ON addtrem.idterm = term.idterm)
         INNER JOIN year ON addtrem.idyear = year.idyear
         WHERE addtrem.idaddterm = $idaddterm";
-  $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL2."]");
-  $objResult2 = mysql_fetch_array($objQuery2)
+  $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL2."]");
+  $objResult2 = mysqli_fetch_array($objQuery2)
   ?>
     <? } 
   else { ?>
@@ -240,7 +236,7 @@ include("config.incself.php");
     </thead>
     <tbody>
     <? $i=0;
-  while($objResult = mysql_fetch_array($objQuery)){
+  while($objResult = mysqli_fetch_array($objQuery)){
   $i++;
     ?>
     
@@ -252,15 +248,15 @@ include("config.incself.php");
       <td ><?=$objResult["subname"];?></td>
       <?
     $strSQL7 = "SELECT * FROM subject_real WHERE id_subject_real = '".$objResult['id_subject_real']."'";
-        $objQuery7 = mysql_query($strSQL7) or die ("Error Query [".$strSQL7."]"); 
-    $objResult7 = mysql_fetch_array($objQuery7);
+        $objQuery7 = mysqli_query($con_ajtongmath_self,$strSQL7) or die ("Error Query [".$strSQL7."]"); 
+    $objResult7 = mysqli_fetch_array($objQuery7);
        ?>
       <td ><?=$objResult7["name_subject_real"];?></td>
       <td style="white-space:nowrap;"><div align="center"><?=$objResult["code"];?></div></td>
       <?
     $strSQL4 = "SELECT * FROM teacher WHERE  teacherid = '".$objResult['teacherid']."'";
-        $objQuery4 = mysql_query($strSQL4) or die ("Error Query [".$strSQL."]"); 
-    $objResult4 = mysql_fetch_array($objQuery4);
+        $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL."]"); 
+    $objResult4 = mysqli_fetch_array($objQuery4);
     ?>
       <td style="white-space:nowrap;"><div align="center">
       <?  if($objResult4){echo $objResult4['teachername']; }
@@ -273,8 +269,8 @@ include("config.incself.php");
         FROM (addtrem INNER JOIN term ON addtrem.idterm = term.idterm)
         INNER JOIN year ON addtrem.idyear = year.idyear
         WHERE addtrem.idaddterm = '".$objResult['idaddterm']."'";
-                    $objQuery_trem = mysql_query($strSQL_trem) or die ("Error Query [".$strSQL_trem."]");
-          $objResult_trem = mysql_fetch_array($objQuery_trem)
+                    $objQuery_trem = mysqli_query($con_ajtongmath_self,$strSQL_trem) or die ("Error Query [".$strSQL_trem."]");
+          $objResult_trem = mysqli_fetch_array($objQuery_trem)
           ?>
       
       <td style="white-space:nowrap;"><div align="center">
@@ -311,5 +307,5 @@ include("config.incself.php");
 </p>
 </div>
 </body>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 </html>

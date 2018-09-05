@@ -1,5 +1,7 @@
 <?
-include("config.inc.php");
+session_start();
+include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -130,10 +132,10 @@ if($_GET["Action"] == "Del")
 {
 	$strSQL = "DELETE FROM account ";
 	$strSQL .="WHERE accid = '".$_GET["accid"]."' ";
-	$objQuery = mysql_query($strSQL);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 	if(!$objQuery)
 	{
-		echo "Error Delete [".mysql_error()."]";
+		echo "Error Delete [".mysqli_error()."]";
 	}
 	//header("location:$_SERVER[PHP_SELF]");
 	//exit();
@@ -142,8 +144,8 @@ if($_GET["h_arti_id"] == "")
 	{
 	// Search By Name or Email
 	$strSQL = "SELECT * FROM account WHERE 1";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$Num_Rows = mysql_num_rows($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$Num_Rows = mysqli_num_rows($objQuery);
 
 
 	$Per_Page = 30;   // Per Page
@@ -174,7 +176,7 @@ if($_GET["h_arti_id"] == "")
 
 
 	$strSQL .=" order  by accid ASC LIMIT $Page_Start , $Per_Page";
-	$objQuery  = mysql_query($strSQL);
+	$objQuery  = mysqli_query($con_ajtongmath_self,$strSQL);
 
 	?>
 	<table width="600" border="2" bordercolor="red">
@@ -186,7 +188,7 @@ if($_GET["h_arti_id"] == "")
 		<th width="80" bgcolor="#0D7CE4"> <div align="center"><img  src='images/delect.gif'/></div></th>
 	  </tr>
 	<?
-	while($objResult = mysql_fetch_array($objQuery))
+	while($objResult = mysqli_fetch_array($objQuery))
 	{
 	?>
 	  <tr>
@@ -223,7 +225,7 @@ if($_GET["h_arti_id"] == "")
 		echo " <a href ='$_SERVER[SCRIPT_NAME]?Page=$Next_Page&txtKeyword=$_GET[h_arti_id]'>Next>></a> ";
 	}
 	
-	mysql_close();
+	mysqli_close();
 
 	}
 	
@@ -231,8 +233,8 @@ if($_GET["h_arti_id"] == "")
 	{
 	// Search By Name or Email
 	$strSQL = "SELECT * FROM account WHERE username = '".$_GET["h_arti_id"]."'";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$Num_Rows = mysql_num_rows($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$Num_Rows = mysqli_num_rows($objQuery);
 
 
 	$Per_Page = 30;   // Per Page
@@ -263,7 +265,7 @@ if($_GET["h_arti_id"] == "")
 
 
 	$strSQL .=" order  by studentid ASC LIMIT $Page_Start , $Per_Page";
-	$objQuery  = mysql_query($strSQL);
+	$objQuery  = mysqli_query($con_ajtongmath_self,$strSQL);
 
 	?>
 	<table width="600" border="2" bordercolor="red">
@@ -275,7 +277,7 @@ if($_GET["h_arti_id"] == "")
 		<th width="80" bgcolor="#0D7CE4"> <div align="center"><img  src='images/delect.gif'/></div></th>
 	  </tr>
 	<?
-	while($objResult = mysql_fetch_array($objQuery))
+	while($objResult = mysqli_fetch_array($objQuery))
 	{
 	?>
 	  <tr>
@@ -312,7 +314,7 @@ if($_GET["h_arti_id"] == "")
 		echo " <a href ='$_SERVER[SCRIPT_NAME]?Page=$Next_Page&txtKeyword=$_GET[h_arti_id]'>Next>></a> ";
 	}
 	
-	mysql_close();
+	mysqli_close($con_ajtongmath_self);
 
 	}		
     ?>

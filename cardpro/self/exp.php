@@ -2,6 +2,7 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -56,25 +57,25 @@ function checkForm(){
   background:url(images/addstudent2.png) no-repeat left top;
 }
 </style>
-<? include("config.incself.php");
+<?
 $strSQL1 = "SELECT * FROM counter2";
-$objQuery1 = mysql_query($strSQL1);
-$objResult1 = mysql_fetch_array($objQuery1);
+$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+$objResult1 = mysqli_fetch_array($objQuery1);
 $c=$objResult1["count"];
 $c++;
 $strSQL = "UPDATE counter2 SET ";
   $strSQL .="count = '$c' ";
-  $objQuery = mysql_query($strSQL);
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
   if(!$objQuery)
   {
-    echo "Error Update [".mysql_error()."]";
+    echo "Error Update [".mysqli_error()."]";
   }
   ?>
 <form name="studentForm" method="post" action="exp2.php" onSubmit="return checkForm();">
 <?
 $strSQL = "SELECT * FROM counter2";
-$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-$objResult = mysql_fetch_array($objQuery);
+$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+$objResult = mysqli_fetch_array($objQuery);
 $counter = $objResult["count"];
 if( $objResultSTT["status"] == "manager_franchise" || $objResultSTT["status"] == "user_franchise"){
 $fix="testfc";
@@ -135,15 +136,15 @@ for($i=0;$i<3-strlen($counter);$i++){
                   if( $objResultSTT["status"] == "manager_franchise" || $objResultSTT["status"] == "user_franchise"){?>
                         <?
                         $strSQL_branch = "SELECT * FROM branch";
-                        $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                        while ( $result_branch = mysql_fetch_array($objQuery_branch)){
+                        $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                        while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
                             if($result_branch['branchid'] == $id_branch_self){?>
                             <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                         <? }}?>
                   <? }else{
                         $strSQL_branch = "SELECT * FROM branch WHERE type = 0 ANd status_branch != 0";
-                        $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                        while ( $result_branch = mysql_fetch_array($objQuery_branch)){?>
+                        $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                        while ( $result_branch = mysqli_fetch_array($objQuery_branch)){?>
                             <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                         <? }?>
                   <? }?>
@@ -160,7 +161,7 @@ for($i=0;$i<3-strlen($counter);$i++){
            </form>
          </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close();?>
 <script type="text/javascript">
 function make_autocomname(autoObj,showObj){
   var mkAutoObj=autoObj; 

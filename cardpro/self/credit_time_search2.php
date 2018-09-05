@@ -2,6 +2,7 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -50,7 +51,6 @@ function chk_null(){
   }
 }
 </script>
-<? include("config.incself.php");?>
          <form name="frmSearch" method="get" action="<?=$_SERVER['SCRIPT_NAME'];?>">
          <div align="right">
          <label >ค้นหารายชื่อ:</label>
@@ -66,10 +66,10 @@ function chk_null(){
         {
             $strSQL = "DELETE FROM account ";
             $strSQL .="WHERE accid = '".$_GET["accid"]."' ";
-            $objQuery = mysql_query($strSQL);
+            $objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
             if(!$objQuery)
             {
-                echo "Error Delete [".mysql_error()."]";
+                echo "Error Delete [".mysqli_error()."]";
             }
             //header("location:$_SERVER[PHP_SELF]");
             //exit();
@@ -77,15 +77,15 @@ function chk_null(){
         if($_GET["h_arti_id"] != ""){
 
             $strSQL = "SELECT * FROM student WHERE name = '".$_GET["h_arti_id"]."'";
-            $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-      $objResult = mysql_fetch_array($objQuery);
+            $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+      $objResult = mysqli_fetch_array($objQuery);
       $std = $objResult["studentid"];
       $stdname = $objResult["name"];
       
       
       $statusout = "out";
       $strSQL2 = "SELECT * FROM account WHERE studentid = ".$std." AND status != '".$statusout."' ";
-      $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL2."]");
+      $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL2."]");
       $l = 1;
 
             ?>
@@ -189,10 +189,10 @@ function chk_null(){
         <th width="75" class="tbl2" style="white-space: nowrap;"> เพิ่มเครดิต/เวลา</th>
     </tr>
   <?
-  while($objResult = mysql_fetch_array($objQuery2))
+  while($objResult = mysqli_fetch_array($objQuery2))
   {
     $strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$objResult["accid"]."' AND subject.status = '1' ";
-    $objQuery1 = mysql_query($strSQL1);
+    $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
     if ($i % 2 == 0){$tblyy = "tblyy2";}else{$tblyy = "tblyy";}
     $i++;
   ?>
@@ -200,7 +200,7 @@ function chk_null(){
         <td width="75" class="<?=$tblyy?>"><center><?=$l++;?></center></td>
         <td width="122" class="<?=$tblyy?>"><center><?=$objResult["username"];?></center></td>
     <!--<td width="293" class="tblyy"><center><?=$stdname;?></center></td>-->
-        <td width="264" style="white-space:nowrap;" class="<?=$tblyy?>"><?php $n = 1; while($objResult1 = mysql_fetch_array($objQuery1)){echo $n++." ) ".$objResult1["subname"]."<br><br>";}?></td>
+        <td width="264" style="white-space:nowrap;" class="<?=$tblyy?>"><?php $n = 1; while($objResult1 = mysqli_fetch_array($objQuery1)){echo $n++." ) ".$objResult1["subname"]."<br><br>";}?></td>
         <td width="102" class="<?=$tblyy?>" style="white-space: nowrap;"><div align="left">เคดิต: <?=$objResult["totalcredit"]?> เคดิต<br> วันหมด: <?=DateThai($objResult["edate"])?></div></td>
         <td width="75" class="<?=$tblyy?>" style="white-space: nowrap;"><div align="center">
         <? 
@@ -223,13 +223,13 @@ function chk_null(){
   <? if($_GET["type"] == "Edit" && $_GET["studentid"] != "" && $_GET["accid"] != "" && $_GET["studenname"] != ""){
     
         $strSQL = "SELECT * FROM student WHERE studentid = '".$_GET["studentid"]."'";
-            $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-      $objResult = mysql_fetch_array($objQuery);
+            $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+      $objResult = mysqli_fetch_array($objQuery);
       $std = $objResult["studentid"];
       $stdname = $objResult["name"];
       
       $strSQL2 = "SELECT * FROM account WHERE accid = '".$_GET["accid"]."'";
-      $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL2."]");
+      $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL2."]");
       $l = 1;?>
             
         <form action="credit_time_edit2.php" method="post" name="frm1" >
@@ -245,7 +245,7 @@ function chk_null(){
                 <th width="117" class="tbl2" style="white-space: nowrap;"> คอร์ส</th>
               </tr>
               <?
-        while($objResult = mysql_fetch_array($objQuery2))
+        while($objResult = mysqli_fetch_array($objQuery2))
         {
         ?>
               <input type="hidden" name="studenname" value="<?=$_GET["studenname"]?>"/>
@@ -263,8 +263,8 @@ function chk_null(){
                 <td width="117" style="white-space:nowrap;" class="tblyy">
         <?
           $strSQL1 = "SELECT * FROM credit JOIN subject ON credit.subid = subject.subid AND accid = '".$objResult["accid"]."' AND subject.status = '1'";
-                $objQuery1 = mysql_query($strSQL1);
-          while($objResult1 = mysql_fetch_array($objQuery1)){echo $objResult1["subname"]."<br><br>";}
+                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+          while($objResult1 = mysqli_fetch_array($objQuery1)){echo $objResult1["subname"]."<br><br>";}
         ?></td>
                 <tr>
                 <th width="197" class="tbl2" style="white-space: nowrap;"> การซื้อ</th>
@@ -280,8 +280,8 @@ function chk_null(){
                                 FROM subject 
                                 JOIN subject_real ON subject.id_subject_real = subject_real.id_subject_real
                                 WHERE type_self = 6";
-                          $objQuery_s = mysql_query($strSQL_s);
-                    while($objResult_s = mysql_fetch_array($objQuery_s)){
+                          $objQuery_s = mysqli_query($con_ajtongmath_self,$strSQL_s);
+                    while($objResult_s = mysqli_fetch_array($objQuery_s)){
                     ?>
                     <option  selected="selected" value="<?=$objResult_s['subid']?>"><?=$objResult_s['name_subject_real']?></option>
                     <? }?>
@@ -306,7 +306,7 @@ function chk_null(){
  <? } ?>
 </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
   var mkAutoObj=autoObj; 

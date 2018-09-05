@@ -91,24 +91,23 @@ function checkForm(){
 <p>
 
 <? 
-include("config.incself.php");
 $strSQL1 = "SELECT * FROM counter";
-$objQuery1 = mysql_query($strSQL1);
-$objResult1 = mysql_fetch_array($objQuery1);
+$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+$objResult1 = mysqli_fetch_array($objQuery1);
 $c=$objResult1["count"];
 $c++;
 $strSQL = "UPDATE counter SET ";
     $strSQL .="count = '$c' ";
-    $objQuery = mysql_query($strSQL);
+    $objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
     if(!$objQuery)
     {
-        echo "Error Update [".mysql_error()."]";
+        echo "Error Update [".mysqli_error()."]";
     }?>
         <form name="studentForm" method="post" action="manageacc_franchise.php" onSubmit="return checkForm();">
         <?
         $strSQL = "SELECT * FROM counter";
-        $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-        $objResult = mysql_fetch_array($objQuery);
+        $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+        $objResult = mysqli_fetch_array($objQuery);
         $counter=$objResult["count"];
         $fix="FC30";
         for($i=0;$i<5-strlen($counter);$i++){
@@ -149,8 +148,8 @@ $strSQL = "UPDATE counter SET ";
                         <option value="0" disabled="disabled" selected="selected">เลือก</option>
                         <?
                         $strSQL_type = "SELECT * FROM type_self WHERE type_id != 2 AND type_id != 3";
-                        $objQuery_type = mysql_query($strSQL_type) or die ("Error Query [".$strSQL_type."]");
-                        while ( $result_type = mysql_fetch_array($objQuery_type)){?>
+                        $objQuery_type = mysqli_query($con_ajtongmath_self,$strSQL_type) or die ("Error Query [".$strSQL_type."]");
+                        while ( $result_type = mysqli_fetch_array($objQuery_type)){?>
                                 <option value="<?=$result_type['type_id']?>" ><?=$result_type['type_name'];?></option>
                         <? }?>
                     </select>
@@ -191,8 +190,8 @@ $strSQL = "UPDATE counter SET ";
                         <option value="0" disabled="disabled" selected="selected">เลือก</option>
                         <?
                         $strSQL_branch = "SELECT * FROM branch";
-                        $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                        while ( $result_branch = mysql_fetch_array($objQuery_branch)){
+                        $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                        while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
                             if($result_branch['branchid'] == $id_branch_self){?>
                                 <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                         <? }}?>
@@ -249,7 +248,7 @@ $strSQL = "UPDATE counter SET ";
         </form>
     </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 
 <script type="text/javascript">
 

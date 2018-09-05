@@ -3,13 +3,14 @@ header("Content-type:text/html; charset=UTF-8");
 header("Cache-Control: no-store, no-cache, must-revalidate");       
 header("Cache-Control: post-check=0, pre-check=0", false);       
 // เชื่อมต่อฐานข้อมูล
-$link=mysql_connect("10.10.11.14:3306","ajtong_root","076424746") or die("error".mysql_error());
-//$link=mysql_connect("localhost","root","1234") or die("error".mysql_error());
-mysql_select_db("selfdb",$link);
-mysql_query("SET NAMES UTF8");
-	mysql_query("SET character_set_results=UTF8");
-	mysql_query("SET character_set_client=UTF8");
-	mysql_query("SET character_set_connection=UTF8");
+include("../config.inc.php");
+// $link=mysqli_connect("10.10.11.14:3306","ajtong_root","076424746") or die("error".mysqli_error());
+// //$link=mysqli_connect("localhost","root","1234") or die("error".mysqli_error());
+// mysqli_select_db("selfdb",$link);
+// mysqli_query($con_ajtongmath_self,"SET NAMES UTF8");
+// 	mysqli_query($con_ajtongmath_self,"SET character_set_results=UTF8");
+// 	mysqli_query($con_ajtongmath_self,"SET character_set_client=UTF8");
+// 	mysqli_query($con_ajtongmath_self,"SET character_set_connection=UTF8");
 	mb_internal_encoding('UTF-8');
 	mb_http_output('UTF-8');
 	mb_http_input('UTF-8');
@@ -45,8 +46,8 @@ $sql = "select
  from $table_db  
  LEFT JOIN subject_real ON subject_real.id_subject_real = `subject`.id_subject_real 
  where `subject`.status_delete != 1 AND `subject_real`.type_self != 4 AND `subject`.status_branch_hms = 1 AND locate('$q', $find_field) > 0 order by locate('$q', $find_field), $find_field limit $pagesize";
-$results = mysql_query($sql);
-while ($row = mysql_fetch_array( $results )) {
+$results = mysqli_query($con_ajtongmath_self,$sql);
+while ($row = mysqli_fetch_array( $results )) {
 	$id = $row["subid"]; // ฟิลที่ต้องการส่งค่ากลับ
 	$name =$row["subname"]; // ฟิลที่ต้องการแสดงค่า
 	$name_subject_real =$row["name_subject_real"];
@@ -61,5 +62,5 @@ while ($row = mysql_fetch_array( $results )) {
 	$display_name = preg_replace("/(" . $q . ")/i", "<b>$1</b>", $subject_name);
 	echo "<li onselect=\"this.setText('$name').setValue('$id');\">$display_name</li>";
 }
-mysql_close();
+mysqli_close();
 ?>

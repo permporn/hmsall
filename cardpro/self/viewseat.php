@@ -37,7 +37,6 @@ $tmp=0;
    }
 ?>
  <?
-          include("config.incself.php");
     
             function add_date($givendate,$day=0,$mth=0,$yr=0) {
             $cd = strtotime($givendate);
@@ -117,19 +116,18 @@ a:link {
                 <select name="local"  id="local" class="input2 input1" >
                   <option value="" onfocus="this.value='';" onblur="if(this.value=='') this.value='เลือกสถานที่'" onFocus="if(this.value =='เลือกสถานที่' ) this.value=''"<option>เลือกสถานที่</option>
                     <?   
-                    include("config.incself.php");
                     if( $objResultSTT["status"] == "manager_franchise" || $objResultSTT["status"] == "user_franchise"){?>
                           <?
                           $strSQL_branch = "SELECT * FROM branch";
-                          $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                          while ( $result_branch = mysql_fetch_array($objQuery_branch)){
+                          $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                          while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
                               if($result_branch['branchid'] == $id_branch_self){?>
                               <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                           <? }}?>
                     <? }else{
                           $strSQL_branch = "SELECT * FROM branch WHERE branchid != 9 AND branchid != 10";
-                          $objQuery_branch = mysql_query($strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-                          while ( $result_branch = mysql_fetch_array($objQuery_branch)){?>
+                          $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+                          while ( $result_branch = mysqli_fetch_array($objQuery_branch)){?>
                               <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
                           <? }?>
                     <? }?>
@@ -182,16 +180,16 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '1' and section_e >= '1'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '1'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 ?>
                       <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
@@ -224,20 +222,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '2' and section_e >= '2'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '1'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '2'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["2"]<=0){?> <img src="../images/false.png" /> 
@@ -269,20 +267,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '3' and section_e >= '3'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '2'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '3'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong> <? if($objResult1["3"]<=0){?> <img src="../images/false.png" /> 
@@ -314,21 +312,21 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
     
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '4' and section_e >= '4'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '3'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '4'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["4"]<=0){?> <img src="../images/false.png" /> 
@@ -360,20 +358,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '5' and section_e >= '5'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '4'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '5'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["5"]<=0){?> <img src="../images/false.png" /> 
@@ -405,20 +403,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '6' and section_e >= '6'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '5'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '6'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["6"]<=0){?> <img src="../images/false.png" /> 
@@ -450,20 +448,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '7' and section_e >= '7'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '6'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '7'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                         <div align="center"><strong><? if($objResult1["7"]<=0){?> <img src="../images/false.png" /> 
@@ -495,20 +493,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '8' and section_e >= '8'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '7'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '8'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                         <div align="center"><strong><? if($objResult1["8"]<=0){?> <img src="../images/false.png" /> 
@@ -540,20 +538,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '9' and section_e >= '9'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '8'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '9'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                         <div align="center"><strong><? if($objResult1["9"]<=0){?> <img src="../images/false.png" /> 
@@ -585,20 +583,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '10' and section_e >= '10'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '9'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '10'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                         <div align="center"><strong><? if($objResult1["10"]<=0){?> <img src="../images/false.png" /> 
@@ -630,20 +628,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '11' and section_e >= '11'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '10'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '11'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["11"]<=0){?> <img src="../images/false.png" /> 
@@ -675,20 +673,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '12' and section_e >= '12'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '11'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '12'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["12"]<=0){?> <img src="../images/false.png" /> 
@@ -720,20 +718,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '13' and section_e >= '13'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '12'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '13'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong>
@@ -765,20 +763,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '14' and section_e >= '14'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '13'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '14'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap; color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong>
@@ -810,21 +808,21 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '15' and section_e >= '15'";
-                                $objQuery2 = mysql_query($strSQL2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
     
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '14'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '15'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["15"]<=0){?> <img src="../images/false.png" /> 
@@ -855,20 +853,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '16' and section_e >= '16'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '15'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '16'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                          <div align="center"><strong><? if($objResult1["16"]<=0){?> <img src="../images/false.png" /> 
@@ -899,20 +897,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '17' and section_e >= '17'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '16'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '17'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                         <div align="center"><strong><? if($objResult1["17"]<=0){?> <img src="../images/false.png" /> 
@@ -944,20 +942,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '18' and section_e >= '18'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '17'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '18'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["18"]<=0){?> <img src="../images/false.png" /> 
@@ -989,20 +987,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '19' and section_e >= '19'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '18'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '19'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["19"]<=0){?> <img src="../images/false.png" /> 
@@ -1034,20 +1032,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '20' and section_e >= '20'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '19'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '20'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["20"]<=0){?> <img src="../images/false.png" /> 
@@ -1079,20 +1077,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '21' and section_e >= '21'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '20'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '21'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["21"]<=0){?> <img src="../images/false.png" /> 
@@ -1124,20 +1122,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '22' and section_e >= '22'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '21'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '22'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["22"]<=0){?> <img src="../images/false.png" /> 
@@ -1169,20 +1167,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '23' and section_e >= '23'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '22'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '23'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["23"]<=0){?> <img src="../images/false.png" /> 
@@ -1214,20 +1212,20 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '24' and section_e >= '24'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '23'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 $strSQL4 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '24'";
-                                $objQuery4 = mysql_query($strSQL4);
-                                $objResult4 = mysql_fetch_array($objQuery4);
+                                $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4);
+                                $objResult4 = mysqli_fetch_array($objQuery4);
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
                        <div align="center"><strong><? if($objResult1["24"]<=0){?> <img src="../images/false.png" /> 
@@ -1259,16 +1257,16 @@ a:link {
                                 for($i=0; $i<5; $i++)
                                 {
                                 $strSQL1 = "SELECT * FROM `seats` WHERE date =DATE_ADD('".$_GET["date"]."', INTERVAL $i day) AND branchid =".$_GET["local"]."";
-                                $objQuery1 = mysql_query($strSQL1);
-                                $objResult1 = mysql_fetch_array($objQuery1);
+                                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                                $objResult1 = mysqli_fetch_array($objQuery1);
                                 $kdate=$objResult1["date"];
                                 $strSQL2 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section_s <= '25' and section_e >= '25'";
-                                $objQuery2 = mysql_query($strSQL2);
-                                $objResult2 = mysql_fetch_array($objQuery2);
+                                $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
+                                $objResult2 = mysqli_fetch_array($objQuery2);
                                 
                                 $strSQL3 = "SELECT * FROM `reserve` WHERE time ='".$objResult1["date"]."' AND branchid ='".$_GET["local"]."' AND accid = '".$accid."' AND section = '24'";
-                                $objQuery3 = mysql_query($strSQL3);
-                                $objResult3 = mysql_fetch_array($objQuery3);
+                                $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
+                                $objResult3 = mysqli_fetch_array($objQuery3);
                                 
                                 ?>
                        <td width="14%" class="tblx" style="white-space: nowrap;color:#0099FF;" onMouseOver="this.bgColor='#9F3'" onMouseOut="this.bgColor = ''">
@@ -1296,7 +1294,7 @@ a:link {
      <? } ?>
      </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

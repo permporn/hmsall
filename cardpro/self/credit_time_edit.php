@@ -1,5 +1,5 @@
 <? 
-include("config.inc.php");
+include("../config.inc.php");
 echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 ob_start();
 
@@ -23,11 +23,11 @@ ob_start();
 	$accid = $_GET["accid"];
 	$creditid = $_GET["creditid"];
 	
-	$objQuery_credit = mysql_query("SELECT * FROM credit WHERE creditid = '".$_GET["creditid"]."'");
-	$objResult_credit = mysql_fetch_array($objQuery_credit);
+	$objQuery_credit = mysqli_query($con_ajtongmath_self,"SELECT * FROM credit WHERE creditid = '".$_GET["creditid"]."'");
+	$objResult_credit = mysqli_fetch_array($objQuery_credit);
 	
-	$objQuery_account = mysql_query("SELECT * FROM account WHERE accid = '".$_GET["accid"]."'");
-	$objResult_account = mysql_fetch_array($objQuery_account);
+	$objQuery_account = mysqli_query($con_ajtongmath_self,"SELECT * FROM account WHERE accid = '".$_GET["accid"]."'");
+	$objResult_account = mysqli_fetch_array($objQuery_account);
 	if($_GET["action"]=="addtime"){
 		if($objResult_credit["events_add_time"]=="0"){
 			
@@ -41,12 +41,12 @@ ob_start();
 			$strSQL = "UPDATE account SET ";
 			$strSQL .="edate = '".$NewDate."' ";
 			$strSQL .="WHERE accid = '".$accid."' ";
-			$objQuery = mysql_query($strSQL);
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 			
 			$strSQL2 = "UPDATE credit SET ";
 			$strSQL2 .="events_add_time = '1' ";
 			$strSQL2 .="WHERE creditid = '".$creditid."' ";
-			$objQuery2 = mysql_query($strSQL2);
+			$objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
 			
 			echo "<script language='javascript'>alert('   ผู้ใช้งานถูกขยายเวลาถึงวันที่ $showDate !!');</script>";
 		}
@@ -66,12 +66,12 @@ ob_start();
 			$strSQL .="totalcredit = '".$NewCredit."' ";
 			$strSQL .=",credit_start = '".$NewStCredit."' ";
 			$strSQL .="WHERE accid = '".$accid."' ";
-			$objQuery = mysql_query($strSQL);
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 			
 			$strSQL2 = "UPDATE credit SET ";
 			$strSQL2 .="events_add_credit = '1' ";
 			$strSQL2 .="WHERE creditid = '".$creditid."' ";
-			$objQuery2 = mysql_query($strSQL2);
+			$objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
 			
 			echo "<script language='javascript'>alert('   ผู้ใช้งานถูกเพิ่มเคดิตเป็น $NewStCredit เคดิต คงเหลือ $NewCredit เคดิต !!');</script>";
 		}

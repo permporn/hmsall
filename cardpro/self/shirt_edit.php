@@ -1,11 +1,11 @@
 <? 
 session_start();
-include("config.inc.php");
+include("../config.inc.php");
 include("funtion.php");
 
 $strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["mapid"]."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	if($_SESSION["mapid"] == "")
 	{
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
@@ -21,8 +21,8 @@ $accid = $_GET["accid"];
 
 	
 	$strSQL99 = "SELECT * FROM account WHERE accid = '".$accid."'";
-	$objQuery99 = mysql_query($strSQL99);
-	$objResult99 = mysql_fetch_array($objQuery99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,$strSQL99);
+	$objResult99 = mysqli_fetch_array($objQuery99);
 	$shirt = $objResult99["shirt"];
 	$nums = $shirt + $num;
 			
@@ -31,10 +31,10 @@ $accid = $_GET["accid"];
 	$strSQL .=",shirt_staffid = '".$staffid."' ";
 	$strSQL .="WHERE accid = '".$accid."' ";
 	
-	$objQuery = mysql_query($strSQL);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 	
 	if(!$objQuery){
-		echo "Error Update [".mysql_error()."]";
+		echo "Error Update [".mysqli_error()."]";
 	}else{
 		
 		header("location:shirt_search.php?h_arti_id=$studentname");

@@ -44,7 +44,6 @@ include("ck_session_self.php");
 }
 </style>
 <?
-include("config.incself.php");
     
 //*** Update Condition ***//
 if($_POST["hdnCmd"] == "Update")
@@ -58,8 +57,8 @@ if($_POST["hdnCmd"] == "Update")
   $strSQL .=",sumpoint = $sumpoint ";
   $strSQL .=",statuspoint = 1 ";
   $strSQL .="WHERE creditid = $creditid ";
-  $objQuery = mysql_query($strSQL);
-  if(!$objQuery){echo "Error Update [".mysql_error()."]";}
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+  if(!$objQuery){echo "Error Update [".mysqli_error()."]";}
   
 }
 
@@ -84,7 +83,7 @@ if($_POST["hdnCmd"] == "Update")
         INNER JOIN credit ON account.accid = credit.accid
         WHERE credit.creditid  ='".$_GET["CusID"]."'";
   $strSQL .=" ORDER BY  `account`.`studentid` ASC ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
   /*echo "11";*/
   }
   if($_POST["h_arti_id"] != ''){
@@ -93,7 +92,7 @@ if($_POST["hdnCmd"] == "Update")
         INNER JOIN credit ON account.accid = credit.accid
         WHERE account.studentid  ='".$_POST["h_arti_id"]."'";
   $strSQL .=" ORDER BY  `account`.`studentid` ASC ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
   /*echo "22";*/
   }else{
   $strSQL = "SELECT * 
@@ -101,7 +100,7 @@ if($_POST["hdnCmd"] == "Update")
         INNER JOIN credit ON account.accid = credit.accid
         WHERE credit.creditid  ='".$_GET["CusID"]."'";
   $strSQL .=" ORDER BY  `account`.`studentid` ASC ";
-  $objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+  $objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
   /*echo "33";*/
   }
   $h_arti_id = $_POST["h_arti_id"];
@@ -112,13 +111,13 @@ if($_POST["hdnCmd"] == "Update")
     <? if($objResultSTT["status"] == "adminexam" or $objResultSTT["status"] == "admin" or $objResultSTT["status"] == "admin_hms"){ $a=9;}else{$a=7;}?> 
     <? 
   if($_GET["idaddterm"] != ''){
-  $objResult = mysql_fetch_array($objQuery);
+  $objResult = mysqli_fetch_array($objQuery);
   $strSQL3 = "SELECT * 
         FROM (addtrem INNER JOIN term ON addtrem.idterm = term.idterm)
         INNER JOIN year ON addtrem.idyear = year.idyear
         WHERE addtrem.idaddterm = '".$_GET["idaddterm"]."'";
-  $objQuery3 = mysql_query($strSQL3) or die ("Error Query [".$strSQL3."]");
-  $objResult3 = mysql_fetch_array($objQuery3)
+  $objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3) or die ("Error Query [".$strSQL3."]");
+  $objResult3 = mysqli_fetch_array($objQuery3)
   ?>
     <tr><td style="white-space:nowrap;" class="tbl2" colspan="<?=$a?>"> <center>[<?=$objResult3["nameyear"]; ?>]<?=$objResult3["nameterm"];?></center></td> </tr>
     <? } 
@@ -140,12 +139,12 @@ if($_POST["hdnCmd"] == "Update")
      </tr>
     <? 
   $i=0;
-  while($objResult = mysql_fetch_array($objQuery))
+  while($objResult = mysqli_fetch_array($objQuery))
   { 
     $i++;
     $strSQL2 = "SELECT * FROM subject WHERE subid = '".$objResult["subid"]."'";
-    $objQuery2 = mysql_query($strSQL2) or die ("Error Query [".$strSQL."]");
-    $objResult2 = mysql_fetch_array($objQuery2);
+    $objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL."]");
+    $objResult2 = mysqli_fetch_array($objQuery2);
     $objResult2['code'];
    ?>
 
@@ -198,7 +197,7 @@ if($_POST["hdnCmd"] == "Update")
     </div></p>  
 </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
@@ -217,6 +216,5 @@ function make_autocom(autoObj,showObj){
 } 
 make_autocom("show_arti_topic","h_arti_id");
 </script>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

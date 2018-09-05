@@ -1,13 +1,7 @@
 <?
-$dbserver = '10.10.11.14:3306';
-$dbuser = "ajtong_root" ; 
-$dbpass= "076424746";
-$dbname= 'selfdb';
-mysql_connect($dbserver, $dbuser, $dbpass) or die("เชื่อมต่อฐานข้อมูลไม่ได้ ");
-mysql_select_db($dbname) or die("เลือกฐานข้อมูลไม่ได้"); // เลือกฐานข้อมูล
-mysql_query("SET NAMES UTF8");
-mysql_query("set character set utf8");  
-$title = "ระบบจัดการ โรงเรียนคณิตศาสตร์ อ.โต้ง";
+session_start();
+include("funtion.php");
+include("ck_session_self.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -37,10 +31,10 @@ $title = "ระบบจัดการ โรงเรียนคณิตศ
 <form name="Form1" method="get" action="results_accountNewSelf.php" onSubmit="return checkForm();">
 <select name="status" id="status">
 	<? 	$strSQL1 = "SELECT * FROM branch";
-		$objQuery1 = mysql_query($strSQL1);?>
+		$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);?>
    <? if($_POST["status"]==""){?><option value="00" selected="selected">เลือกสาขา</option><? }?>
       <option value="00" <? if($_GET["status"]=="00"){?>selected="selected"<? }?>>ทุกสาขา</option>
-   <? while ($objResult1 = mysql_fetch_array($objQuery1)){?>
+   <? while ($objResult1 = mysqli_fetch_array($objQuery1)){?>
        <option value="<?=$objResult1["branchid"]?>" <? if($objResult1["branchid"]==$_GET["status"]){?>selected="selected"<? }?>><?=$objResult1["name"]?></option>
    <? } ?>
 </select>
@@ -65,7 +59,7 @@ if($status!="00"){
 	}	
 			
 $str_nameNew .= " ORDER BY student.name ASC";
-$query_nameNew = mysql_query($str_nameNew);
+$query_nameNew = mysqli_query($con_ajtongmath_self,$str_nameNew);
 ?>
 <body>
 
@@ -83,7 +77,7 @@ $query_nameNew = mysql_query($str_nameNew);
 
 <? 
 	$i = 0;
-	while($result_nameNew = mysql_fetch_array($query_nameNew)){
+	while($result_nameNew = mysqli_fetch_array($query_nameNew)){
 	
 	$Str= "SELECT acc.accid, acc.sdate 
 			FROM account acc
@@ -92,8 +86,8 @@ $query_nameNew = mysql_query($str_nameNew);
 			WHERE acc.studentid = '".$result_nameNew["studentid"]."'  
 			AND acc.sdate NOT BETWEEN '2015-02-01' AND '2015-03-31' AND acc.status != 'out' 
 			ORDER BY student.name ASC ";
-	$query_nameNew2 = mysql_query($Str);
-	$result_nameNew2 = mysql_fetch_array($query_nameNew2);
+	$query_nameNew2 = mysqli_query($con_ajtongmath_self,$Str);
+	$result_nameNew2 = mysqli_fetch_array($query_nameNew2);
 	if(empty($result_nameNew2)){
 		
 		$Str3 = "SELECT acc.accid, acc.sdate ,credit.subid ,subject.subname ,credit.type_pay
@@ -103,10 +97,10 @@ $query_nameNew = mysql_query($str_nameNew);
 			JOIN subject 
 			ON credit.subid = subject.subid 
 			WHERE credit.accid = '".$result_nameNew["accid"]."'";
-		$query_nameNew3 = mysql_query($Str3);
+		$query_nameNew3 = mysqli_query($con_ajtongmath_self,$Str3);
 	?>
     
-    <? while($result_nameNew3 = mysql_fetch_array($query_nameNew3)){
+    <? while($result_nameNew3 = mysqli_fetch_array($query_nameNew3)){
 		
 	if($result_nameNew3["type_pay"] == "cradit"  || $result_nameNew3["type_pay"] == "money" || $result_nameNew3["type_pay"] == "test"){
 	$i++;?>

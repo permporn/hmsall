@@ -1,13 +1,13 @@
 <?php
-include("config.inc.php");
+include("../config.inc.php");
 ob_start();
 include("funtion.php");
 
 $reservid = $_GET["reservid"];
 
 $strSQL = "SELECT * FROM `reserve` WHERE reservid = '".$reservid."'";
-$objQuery = mysql_query($strSQL);
-$objResult = mysql_fetch_array($objQuery);
+$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+$objResult = mysqli_fetch_array($objQuery);
 //echo $strSQL."/".$objResult["section_s"]."<br>" ;
 
 $accid = $objResult["accid"];
@@ -17,19 +17,19 @@ $section = ($section_e - $section_s)+1;
 //echo $section_s."/".$section_e."=".$section."<br>";
 
 $strSQL1 = "SELECT * FROM `account` WHERE accid = '".$accid."'";
-$objQuery1 = mysql_query($strSQL1);
-$objResult1 = mysql_fetch_array($objQuery1);
+$objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+$objResult1 = mysqli_fetch_array($objQuery1);
 $totalcredit = $objResult1['totalcredit'];
 $sumall = $totalcredit + $section;
 //echo $sumall;
 	$strSQL2 = "UPDATE account SET ";
 	$strSQL2 .= " totalcredit = '".$sumall."' ";
 	$strSQL2 .= "WHERE accid = '".$accid."'";
-	$objQuery2 = mysql_query($strSQL2);
+	$objQuery2 = mysqli_query($con_ajtongmath_self,$strSQL2);
 	
 	$strSQL3 = "DELETE FROM reserve ";
 	$strSQL3 .="WHERE reservid = '".$reservid."' ";
-	$objQuery3 = mysql_query($strSQL3);
+	$objQuery3 = mysqli_query($con_ajtongmath_self,$strSQL3);
 	
 	if($objQuery2){
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";

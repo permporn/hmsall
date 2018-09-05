@@ -39,8 +39,8 @@ include("ck_session_self.php");
     $branchid = $_GET['branchid'];
     
     $strSQL_edit = "SELECT * FROM branch WHERE branchid = $branchid";
-    $QR_edit = mysql_query($strSQL_edit,$connect_self);
-    $RS_edit = mysql_fetch_array($QR_edit);
+    $QR_edit = mysqli_query($con_ajtongmath_self,$strSQL_edit);
+    $RS_edit = mysqli_fetch_array($QR_edit);
 ?>
 <form name="frm" method="get" action="information_branch.php?type=update">
   <table class="tbl-border" cellpadding="0" cellspacing="1" width="90%" align="center">
@@ -127,8 +127,8 @@ if($objResultSTT['status'] == 'admin' || $objResultSTT['status'] == 'ADMIN' or $
 }else{
   $strSQL_branch = "SELECT * FROM  `branch` WHERE branchid = '".$id_branch_self."' AND status_branch != 0";
 }
-	$QR_branch = mysql_query($strSQL_branch,$connect_self);
-	while ($RS_branch = mysql_fetch_array($QR_branch)){
+	$QR_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch);
+	while ($RS_branch = mysqli_fetch_array($QR_branch)){
     $i++;
 	?>
    	<tr>
@@ -170,8 +170,8 @@ $sdate = $_GET["sdate"];
   $strSQL_UPDATE .=",sdate = '".$sdate."' ";
   $strSQL_UPDATE .=",email = '".$email."' ";
   $strSQL_UPDATE .="WHERE branchid = '".$branchid."' ";
-  $QR_UPDATE = mysql_query($strSQL_UPDATE,$connect_self);
-  if(!$QR_UPDATE){echo "update ข้อมูลผิดพลาด [".mysql_error().$strSQL_UPDATE."]";}
+  $QR_UPDATE = mysqli_query($con_ajtongmath_self,$strSQL_UPDATE);
+  if(!$QR_UPDATE){echo "update ข้อมูลผิดพลาด [".mysqli_error().$strSQL_UPDATE."]";}
   else{
       echo "<script language='javascript'>alert('บันทึกเรียบร้อย');</script>";
       echo "<script>window.location='information_branch.php';</script>";
@@ -181,4 +181,4 @@ $sdate = $_GET["sdate"];
 </div>
 </body>
 </html>
-<?php mysql_close();?>
+<?php mysqli_close($con_ajtongmath_self);?>

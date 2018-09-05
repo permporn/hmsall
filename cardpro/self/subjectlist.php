@@ -1,5 +1,5 @@
 <?
-include("config.inc.php");
+include("../config.inc.php");
 ?>
 <HTML>
     <HEAD>
@@ -48,8 +48,8 @@ if($_GET["h_arti_id"] == "")
 	{
 	// Search By Name or Email
 	$strSQL = "SELECT * FROM subject WHERE 1";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$Num_Rows = mysql_num_rows($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$Num_Rows = mysqli_num_rows($objQuery);
 
 
 	$Per_Page = 5;   // Per Page
@@ -80,7 +80,7 @@ if($_GET["h_arti_id"] == "")
 
 
 	$strSQL .=" order  by subid ASC LIMIT $Page_Start , $Per_Page";
-	$objQuery  = mysql_query($strSQL);
+	$objQuery  = mysqli_query($con_ajtongmath_self,$strSQL);
 
 	?>
 	<table class="tbl-border" cellpadding="0" cellspacing="1" width="600">
@@ -89,7 +89,7 @@ if($_GET["h_arti_id"] == "")
 		<th width="180" class="tbl2"> <div align="center">เครดิต</div></th>
 	  </tr>
 	<?
-	while($objResult = mysql_fetch_array($objQuery))
+	while($objResult = mysqli_fetch_array($objQuery))
 	{
 	?>
 	  <tr><div class="fontaa">
@@ -123,7 +123,7 @@ if($_GET["h_arti_id"] == "")
 		echo " <a href ='$_SERVER[SCRIPT_NAME]?Page=$Next_Page&txtKeyword=$_GET[h_arti_id]'>Next>></a> ";
 	}
 	
-	mysql_close();
+	mysqli_close();
 
 	}
 	
@@ -131,8 +131,8 @@ if($_GET["h_arti_id"] == "")
 	{
 	// Search By Name or Email
 	$strSQL = "SELECT * FROM subject WHERE (subname LIKE '%".$_GET["h_arti_id"]."%')";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$Num_Rows = mysql_num_rows($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$Num_Rows = mysqli_num_rows($objQuery);
 
 
 	$Per_Page = 30;   // Per Page
@@ -163,7 +163,7 @@ if($_GET["h_arti_id"] == "")
 
 
 	$strSQL .=" order  by subid ASC LIMIT $Page_Start , $Per_Page";
-	$objQuery  = mysql_query($strSQL);
+	$objQuery  = mysqli_query($con_ajtongmath_self,$strSQL);
 
 	?></div>
 	<table class="tbl-border" cellpadding="0" cellspacing="1" width="600">
@@ -172,7 +172,7 @@ if($_GET["h_arti_id"] == "")
 		<th width="180" class="tbl2"> <div align="center">เครดิต</div></th>
 	  </tr>
 	<?
-	while($objResult = mysql_fetch_array($objQuery))
+	while($objResult = mysqli_fetch_array($objQuery))
 	{
 	?>
 	  <tr><div class="fontaa">
@@ -206,7 +206,7 @@ if($_GET["h_arti_id"] == "")
 		echo " <a href ='$_SERVER[SCRIPT_NAME]?Page=$Next_Page&txtKeyword=$_GET[h_arti_id]'>Next>></a> ";
 	}
 	
-	mysql_close();
+	mysqli_close($con_ajtongmath_self);
 
 	}		
     ?></div>

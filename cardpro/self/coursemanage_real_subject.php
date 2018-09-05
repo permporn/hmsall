@@ -2,18 +2,20 @@
 session_start();
 include("funtion.php");
 include("ck_session_self.php");
+error_reporting(~E_NOTICE);
+
 if($_POST["idyear"] != "" && $_POST["idterm"] != ""){
 	$idyear=$_POST["idyear"];
 	$idterm=$_POST["idterm"];
 	
 	$strSQL = "SELECT * FROM  `addtrem` WHERE `idyear`= $idyear  AND  `idterm` = $idterm";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-	$objResult = mysql_fetch_array($objQuery);
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+	$objResult = mysqli_fetch_array($objQuery);
 	$idaddterm = $objResult['idaddterm'];
 	}
 	$strSQLbranch = "SELECT * FROM branch WHERE branchid = '".$objResult99["branchid"]."'";
-	$objQuerybranch = mysql_query($strSQLbranch);
-	$objResultbranch = mysql_fetch_array($objQuerybranch);
+	$objQuerybranch = mysqli_query($con_ajtongmath_self,$strSQLbranch);
+	$objResultbranch = mysqli_fetch_array($objQuerybranch);
 	$branchname = $objResultbranch['name'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,7 +55,6 @@ if($_POST["idyear"] != "" && $_POST["idterm"] != ""){
 </style>
 
 <? 	
-include("config.incself.php");
 	//*** Delete Condition ***//
 	if($_GET["Action"] == "Del")
 	{
@@ -62,10 +63,10 @@ include("config.incself.php");
 	    $strSQL_update .=" WHERE id_subject_real = '".$_GET["CusID"]."' ";
 		// $strSQL = "DELETE FROM subject_real ";
 		// $strSQL .="WHERE id_subject_real = '".$_GET["CusID"]."' ";
-		$objQuery = mysql_query($strSQL);
+		$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
 		if(!$objQuery)
 		{
-			echo "Error Delete [".mysql_error()."]";
+			echo "Error Delete [".mysqli_error()."]";
 		}
 		
 	}
@@ -90,7 +91,7 @@ include("config.incself.php");
 				INNER JOIN teacher t  ON sr.id_teacher = t.teacherid 
 				LEFT JOIN type_self ON sr.type_self = type_self.type_id
 				WHERE sr.status_delete = 0 AND sr.id_subject_real = '".$_GET["h_arti_id"]."' ORDER BY sr.id_teacher,sr.name_subject_real,sr.id_subject_real ASC";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
 	
 	if($_POST["h_arti_id"] != '' ){
 	$strSQL = "SELECT * 
@@ -98,7 +99,7 @@ include("config.incself.php");
 				INNER JOIN teacher t ON sr.id_teacher = t.teacherid 
 				LEFT JOIN type_self ON sr.type_self = type_self.type_id
 				WHERE sr.status_delete = 0 AND sr.id_subject_real = '".$_POST["h_arti_id"]."' ORDER BY sr.id_teacher,sr.name_subject_real,sr.id_subject_real ASC";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");}
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
 	else{
 	$strSQL = "SELECT * 
 				FROM subject_real sr
@@ -106,7 +107,7 @@ include("config.incself.php");
 				LEFT JOIN type_self ON sr.type_self = type_self.type_id
 				WHERE sr.status_delete = 0
 				 ORDER BY t.teacherid ,sr.name_subject_real,sr.id_subject_real ASC";
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");	
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");	
 	}
 	
 	?>
@@ -130,7 +131,7 @@ include("config.incself.php");
       <? } ?>
     </tr>
     <? $i=0;
-	while($objResult = mysql_fetch_array($objQuery)){
+	while($objResult = mysqli_fetch_array($objQuery)){
 	$i++;
 	 	?>
     <tr>
@@ -158,7 +159,7 @@ include("config.incself.php");
 </form>
 </p>
 </div>
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
 	var mkAutoObj=autoObj; 
@@ -176,6 +177,5 @@ function make_autocom(autoObj,showObj){
 }	
 make_autocom("show_arti_topic","h_arti_id");
 </script>
-<script type="text/javascript"> Cufon.now(); </script>
 </body>
 </html>

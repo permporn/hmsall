@@ -47,8 +47,8 @@ function DateThai($strDate){
             $temp = 50; //เก็บจำวนความสูงชั่วคราว
             $k = 2;
             $strSQL66 = "SELECT * FROM account JOIN student ON account.studentid = student.studentid AND accid = '".$_GET["accid"]."'";
-    $objQuery66 = mysql_query($strSQL66);
-    $objResult66 = mysql_fetch_array($objQuery66);
+    $objQuery66 = mysqli_query($con_ajtongmath_self,$strSQL66);
+    $objResult66 = mysqli_fetch_array($objQuery66);
             ?>
             
             <div id="printable"> 
@@ -64,8 +64,8 @@ function DateThai($strDate){
                             LEFT JOIN  `subject` ON  `subject`.subid = credit.subid
                             LEFT JOIN subject_real ON subject.id_subject_real = subject_real.id_subject_real
                             WHERE credit.accid = '".$_GET["accid"]."'";
-                $objQuery1 = mysql_query($strSQL1);
-                while ($objResult1 = mysql_fetch_array($objQuery1)) {
+                $objQuery1 = mysqli_query($con_ajtongmath_self,$strSQL1);
+                while ($objResult1 = mysqli_fetch_array($objQuery1)) {
                     if($objResult1['name_subject_real'] ==''){
                         $subject = $objResult1['subname'];
                     }else{
@@ -118,8 +118,8 @@ function DateThai($strDate){
                                                   LEFT JOIN branch ON branch.branchid = account.`status`
                                                   WHERE account.accid = '".$_GET["accid"]."'";
                                               
-                                  $objQuery_branch = mysql_query($sql_branch);
-                                  $objResult_branch = mysql_fetch_array($objQuery_branch);
+                                  $objQuery_branch = mysqli_query($con_ajtongmath_self,$sql_branch);
+                                  $objResult_branch = mysqli_fetch_array($objQuery_branch);
                                   echo $objResult_branch['name'];
                                   ?>
                                     
@@ -140,7 +140,7 @@ function DateThai($strDate){
     <A HREF="javascript:window.print()"> <button style="margin-left:200px; width:200px; font-size:20px; height:80px;" >PRINT</button> </A>
     <a href="viewaccount.php?accid=<?=$_GET["accid"]?>&studenname=<?=$_GET["studenname"]?>&std=<?=$_GET["std"]?>" style="text-decoration:none"><< กลับ</a>
 </div> 
-<? mysql_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 </DIV>
 </body>
 </html>
