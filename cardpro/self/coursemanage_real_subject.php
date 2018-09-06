@@ -153,9 +153,6 @@ if($_POST["idyear"] != "" && $_POST["idterm"] != ""){
     <? } ?>
     </table>
 <br/>
-
-
-	
 </form>
 </p>
 </div>
