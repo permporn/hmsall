@@ -148,8 +148,15 @@ if($_GET["Action"] == "Del")
 		$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
 		$objResult = mysqli_fetch_array($objQuery);
 		$idaddterm = $objResult['idaddterm'];
-		$strSQL2 = "SELECT * FROM subject WHERE idaddterm = $idaddterm ORDER BY  `subject`.`subid` ASC ";
-		$objQuery = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL."]");
+		echo $strSQL;
+		if($idaddterm != ''){
+			$strSQL2 = "SELECT * FROM subject WHERE idaddterm = $idaddterm ORDER BY  `subject`.`subid` ASC ";
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL."]");
+		}else{
+			$strSQL = "SELECT * FROM subject ORDER BY  `subject`.`subid` ASC  ";
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+		}
+		
 	}
 	?>
     
