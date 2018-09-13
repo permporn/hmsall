@@ -142,7 +142,8 @@ if($_GET["Action"] == "Del")
 				WHERE subid = '".$_POST["h_arti_id"]."'
 				ORDER BY  `subject`.`subid` ASC  ";
 	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
-
+	echo $_POST["idyear"];
+	echo $_POST["idterm"];
 	if($_POST["idyear"] != 0 AND $_POST["idterm"] != 0){
 		$strSQL = "SELECT * FROM  `addtrem` WHERE `idyear`=". $_POST["idyear"] ." AND  `idterm` = ". $_POST["idterm"];
 		$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
