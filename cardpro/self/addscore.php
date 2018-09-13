@@ -137,10 +137,6 @@ if($_GET["Action"] == "Del")
 	$strSQL = "SELECT * FROM subject ORDER BY  `subject`.`subid` ASC  ";
 	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
 	
-	if($idaddterm == 0){
-	$strSQL = "SELECT * FROM subject ORDER BY  `subject`.`subid` ASC ";
-	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
-	
 	if($_POST["h_arti_id"] != ''){
 	$strSQL = "SELECT * FROM subject
 				WHERE subid = '".$_POST["h_arti_id"]."'
