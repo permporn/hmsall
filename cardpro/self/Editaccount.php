@@ -15,7 +15,7 @@ error_reporting(~E_NOTICE);
 <div id="container">
   <?php  include('menu.php');?>
   <div id="content">
-    <h1>+ admin แก้ไขวิชา</h1>
+    <h1>+ admin แก้ไขข้อมูล</h1>
     <p>
     <div align="right">
     <form action="searchstudent.php" method="get" id="search-form">
@@ -82,44 +82,30 @@ else
                <input type="text" name="totalcredit" id="totalcredit" value="<?=$objResult["totalcredit"]?>" /></td>
              </tr>
              <tr>
-               <td width="" class="tblyy2" height="35">ที่เรียน :</td>
+               <td width="" class="tblyy2" height="35">ที่เรียน : </td>
                <td width="" class="tblyy" height="35" colspan="2">
                  <select name="status" id="status" >
-                 <!-- <option value="<?=$objResult["status"]?>" selected>
-         <?php if($objResult["status"]==1){?>เรียนได้ทุกสาขา<?php }
-         else if($objResult["status"]==2){ ?>เฉพาะวงเวียนใหญ่<?php } 
-         else if($objResult["status"]==3) { ?>เฉพาะวิสุทธานี<?php } 
-         else if($objResult["status"]==6){ ?> เฉพาะสระบุรี <?php  } 
-                 else if($objResult["status"]==7){ ?>เฉพาะชลบุรี<?php } 
-         else if($objResult["status"]==8) { ?>เฉพาะราชบุรี<?php }?>
-                 </option>
-                 <option value="1">เรียนได้ทุกสาขา</option>
-                 <option value="2">เฉพาะวงเวียนใหญ่</option>
-                 <option value="3">เฉพาะวิสุทธิ</option> 
-                 <option value="6">เฉพาะสระบุรี</option>
-                 <option value="7">เฉพาะชลบุรี</option>
-                 <option value="8">เฉพาะราชบุรี</option> -->
                  <?php 
                     $strSQL_branch = "SELECT * FROM branch";
                     $objQuery_branch = mysqli_query($con_ajtongmath_self, $strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
                     while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
                         //if($result_branch['branchid'] == $id_branch_self){?>
-                            <option value="<?=$result_branch['branchid']?>" <?php if($result_branch['branchid']==$id_branch_self){?> selected <?php }?>><?=$result_branch['name'];?></option>
+                            <option value="<?=$result_branch['branchid']?>" <?php if($result_branch['branchid']==$objResult['status']){?> selected <?php }?>><?=$result_branch['name'];?></option>
                     <?php }//}?>
                </select></td>
              </tr>
-              <?php
-        $strSQL1 = "SELECT * FROM credit WHERE accid = '".$objResult["accid"]."'";
-        $objQuery1 = mysqli_query($con_ajtongmath_self, $strSQL1) or die ("Error Query [".$strSQL1."]");
-        $objResult1 = mysqli_fetch_array($objQuery1);
-         ?>
+        <?php
+          $strSQL1 = "SELECT * FROM credit WHERE accid = '".$objResult["accid"]."'";
+          $objQuery1 = mysqli_query($con_ajtongmath_self, $strSQL1) or die ("Error Query [".$strSQL1."]");
+          $objResult1 = mysqli_fetch_array($objQuery1);
+        ?>
          
-                <?php 
-        $strSQL2 = "SELECT * FROM account WHERE accid = '".$objResult["accid"]."'";
-        $objQuery2 = mysqli_query($con_ajtongmath_self, $strSQL2) or die ("Error Query [".$strSQL2."]");
-        $objResult2 = mysqli_fetch_array($objQuery2);
-        $studentid = $objResult2['studentid'];
-        //echo $studentid;
+        <?php 
+          $strSQL2 = "SELECT * FROM account WHERE accid = '".$objResult["accid"]."'";
+          $objQuery2 = mysqli_query($con_ajtongmath_self, $strSQL2) or die ("Error Query [".$strSQL2."]");
+          $objResult2 = mysqli_fetch_array($objQuery2);
+          $studentid = $objResult2['studentid'];
+          //echo $studentid;
         ?>
                 <tr>
                  <td width="" class="tblyy2" height="35">หมายเลขใบคำร้อง:</td>
