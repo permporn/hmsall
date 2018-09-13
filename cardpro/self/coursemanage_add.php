@@ -55,6 +55,8 @@ error_reporting(~E_NOTICE);
 		$status_branch_school = $_POST['status_branch_school'];
 		$status_delete = $_POST['status_delete'];
 		$status = $_POST['status'];
+		$subject_real = $_POST['subject_real'];
+
 
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 		if($txtAddCustomerID == ""){
@@ -80,6 +82,18 @@ error_reporting(~E_NOTICE);
 			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
 			$objResult = mysqli_fetch_array($objQuery);
 			$idaddterm = $objResult['idaddterm'];
+			if($idaddterm == ''){
+				$strSQL = "INSERT INTO addtrem";
+				$strSQL .="(idyear,idterm) ";
+				$strSQL .="VALUES ";
+				$strSQL .="('".$idyear."' ";
+				$strSQL .=",'".$idterm."') ";
+				$objQuery = mysqli_query($con_ajtongmath_self,$strSQL);
+				$strSQL = "SELECT * FROM  `addtrem` WHERE `idyear`= $idyear  AND  `idterm` = $idterm";
+				$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+				$objResult = mysqli_fetch_array($objQuery);
+				$idaddterm = $objResult['idaddterm'];
+			}
 			
 			// $strSQL4 = "SELECT * FROM `subject` WHERE `code` = '".$txtAddName."' ";
 			// $objQuery4 = mysqli_query($con_ajtongmath_self,$strSQL4) or die ("Error Query [".$strSQL4."]");

@@ -1,5 +1,6 @@
 <?php
- include("config.inc.php");
+session_start();
+include("ck_session_self.php"); 
  echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 
  $date0 = $_POST["date0"];
@@ -39,12 +40,12 @@
   	$str = "SELECT * FROM  `seats` WHERE  `date` =  '$date0' AND  branchid = '$local'";
 	//echo $str .'<br>';
 	
-	$objQuerystr = mysql_query($str) or die ("Error Query [".$str."]");
+	$objQuerystr = mysqli_query($con_ajtongmath_self,$str) or die ("Error Query [".$str."]");
 	
 	$time = $_POST["time"];
     $timeend = $_POST["timeend"];
 	
-	while($objResulstr = mysql_fetch_array($objQuerystr)){
+	while($objResulstr = mysqli_fetch_array($objQuerystr)){
 	$nn1 = $objResulstr['1'];
 	$nn2 = $objResulstr['2'];
 	$nn3 = $objResulstr['3'];
@@ -131,7 +132,7 @@
 	 	}
 	 }
 	 }	
-	$strSQL = "UPDATE  `selfdb`.`seats` SET ";
+	$strSQL = "UPDATE  `seats` SET ";
 	$strSQL .="`1` = '".$nn1."' ";
 	$strSQL .=",`2` = '".$nn2."' ";
 	$strSQL .=",`3` = '".$nn3."' ";
@@ -161,7 +162,7 @@
 	$strSQL .=",branchid = '".$_POST["local"]."' ";
 	$strSQL .="WHERE `seats`.`date` =  '$date0' AND  `seats`.`branchid` = '$local'";
 	//echo $strSQL ."<br>";;
-	$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
 	$date0 = add_date($date0,1,0,0);
 	}
 	echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";

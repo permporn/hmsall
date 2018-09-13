@@ -74,7 +74,7 @@ ob_start();
 	$sql .= ", '$date_regis'";
 	$sql .= ")"; 
 	//echo $subid." ".$type_pay ;
-	$dbquery = mysqli_db_query($dbname, $sql) or die ("Error Query [".$sql."]");;
+	$dbquery = mysqli_query($con_ajtongmath_self, $sql) or die ("Error Query [".$sql."]");;
 	
 	/////////////////////////////////////////
 	

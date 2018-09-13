@@ -3,7 +3,7 @@ include("../config.inc.php");
 ob_start();
 include("funtion.php");
 	$strSQL99 = "SELECT * FROM staff WHERE stid = '".$_SESSION["mapid"]."'";
-	$objQuery99 = mysqli_query($con_ajtongmath_self,($strSQL99);
+	$objQuery99 = mysqli_query($con_ajtongmath_self,($strSQL99));
 	$objResult99 = mysqli_fetch_array($objQuery99);
 	
 $name1=$_POST["txtUsername"];
@@ -11,7 +11,7 @@ $type=$_POST["type"];
 $staffid=$_POST["staffid"];
 
 $strSQL = "SELECT * FROM student WHERE `name`= '$name1' ";
-$objQuery = mysqli_query($con_ajtongmath_self,($strSQL);
+$objQuery = mysqli_query($con_ajtongmath_self,($strSQL));
 $objResult = mysqli_fetch_array($objQuery);
 
 	if($objResult != ''){
@@ -36,7 +36,7 @@ $objResult = mysqli_fetch_array($objQuery);
     	$strSQL .="VALUES ";
     	$strSQL .="('".$name1."','".$_POST["school"]."','".$_POST["pcode"]."'";
     	$strSQL .=",'".$_POST["tel"]."','".$staffid."','".$DateAddName."') ";
-		$objQuery = mysqli_query($con_ajtongmath_self,($strSQL);
+		$objQuery = mysqli_query($con_ajtongmath_self,($strSQL));
 		if(!$objQuery){
 			echo "Error Save [".mysqli_error()."]";
 		}

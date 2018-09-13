@@ -1,23 +1,7 @@
 <?php 
 session_start();
-// include("config.inc.php");
-// include("../funtion.php");
-include("../ck_session_self.php"); 
+include("ck_session_self.php"); 
 include("../funtion.php");
-include("../config_multidb.php");
-
-// $strSTT = "SELECT * FROM staff WHERE stid = '".$_SESSION["mapid"]."'";
-//   $objQuerySTT = mysql_query($strSTT);
-//   $objResultSTT = mysql_fetch_array($objQuerySTT);
-//   $_SESSION["db"] = "selfdb";
-  //echo $_SESSION["mapid"];
-  
-  // if($_SESSION["mapid"] == ""){
-  //   echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
-  //   echo "<script language='javascript'>alert('Please Login!!');</script>";
-  //   echo "<meta http-equiv='refresh' content='0;URL=../Login.php'>";
-  //   exit();
-  // }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -30,7 +14,7 @@ include("../config_multidb.php");
 <body>
 <!-- START PAGE SOURCE -->
 <div id="container">
-<? include('menu.php');?>
+<? //include('menu.php');?>
 <div id="content">
 <h1>แก้ไขที่นั่ง SELF</h1>
 <p> <strong>+ admin  แก้ไข บวก-ลบ ที่นั่ง SELF</strong></p> 
@@ -117,33 +101,17 @@ include("../config_multidb.php");
 </tr>
 <tr>
     <td width="20%" class="tblyy2" height="35">สาขา : </td>
-    <td width="60%" class="tblyy" height="35">                 
-    <!-- <select name="local"  id="local" class="input2 input1" >
-    <option value="" onfocus="this.value='';" onblur="if(this.value=='') this.value='เลือกสาขา'" onFocus="if(this.value =='เลือกสาขา' ) this.value=''"<option>เลือกสาขา</option>
-        <option value="1">พญาไท ชั้น 10 </option>
-        <option value="5">พญาไท ชั้น 9 </option>
-        <option value="4">พญาไท ชั้น 2 </option>
-        <option value="2">วงเวียนใหญ่</option>
-        <option value="3">วิสุทธิธานี</option>
-        <option value="6">สระบุรี สุขอนันต์ ปาร์ค</option>
-        <option value="7">ชลบุรี</option>
-        <option value="8">ราชบุรี</option>
-        <option value="10">หาดใหญ่</option>
- <option value="11">เพชรบุรี</option>
-<option value="12">นครปฐม</option>
-<option value="13">สุราษธานี</option>
-<option value="14">ภูเก็ต</option>
-     </select> -->
+    <td width="60%" class="tblyy" height="35"> 
       <select name="local"  id="local" class="input2 input1" >
-              <option value="0" disabled="disabled" selected="selected">เลือก</option>
-              <?
-              $strSQL_branch = "SELECT * FROM branch WHERE status_branch != 0";
-              $objQuery_branch = mysql_query($strSQL_branch,$connect_self) or die ("Error Query [".$strSQL_branch."]");
-              while ( $result_branch = mysql_fetch_array($objQuery_branch)){
-                 if($result_branch['branchid'] == $id_branch_self || $account_status == "admin" || $account_status == "admin_hms"){?>
-                      <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
-              <? }
-              } ?>
+        <option value="0" disabled="disabled" selected="selected">เลือก</option>
+        <?
+        $strSQL_branch = "SELECT * FROM branch WHERE status_branch != 0";
+        $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
+        while ( $result_branch = mysqli_fetch_array($objQuery_branch)){
+           if($result_branch['branchid'] == $id_branch_self || $account_status == "admin" || $account_status == "admin_hms"){?>
+                <option value="<?=$result_branch['branchid']?>" ><?=$result_branch['name'];?></option>
+        <? }
+        } ?>
        </select> 
 </td>
 </tr>
@@ -152,6 +120,7 @@ include("../config_multidb.php");
     <td width="60%" class="tblyy" height="35">
     <input type="hidden" name="hiddenField" id="hiddenField">
     <input type="submit" name="Save" id="Save" value="Save">
+    <a href="../../index.php"> กลับหน้าแรก</a>
 </td>
 </tr>
 </table>

@@ -35,5 +35,5 @@ $name = str_replace("'", "'", $name);
 $display_name = preg_replace("/(" . $q . ")/i", "<b>$1</b>", $name);
 echo "<li onselect=\"this.setText('$name').setValue('$id');\">$display_name</li>";
 }
-mysqli_close();
+mysqli_close($con_ajtongmath_self);
 ?>

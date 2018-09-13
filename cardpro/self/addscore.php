@@ -132,18 +132,13 @@ if($_GET["Action"] == "Del")
 
 <form name="frmMain" method="post" action="<?=$_SERVER["PHP_SELF"];?>?h_arti_id=<?=$_POST["h_arti_id"];?>&subid=<?=$_GET["subid"];?>">
 <? 
+
 	if($_POST["idyear"] == 0 || $_POST["idterm"] == 0){
 	$strSQL = "SELECT * FROM subject ORDER BY  `subject`.`subid` ASC  ";
 	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
-	else
-	{$strSQL = "SELECT * FROM subject WHERE idaddterm = $idaddterm ORDER BY  `subject`.`subid` ASC ";
-	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
 	
-	if($idaddterm == 0 ){
+	if($idaddterm == 0){
 	$strSQL = "SELECT * FROM subject ORDER BY  `subject`.`subid` ASC ";
-	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
-	else
-	{$strSQL = "SELECT * FROM subject WHERE idaddterm = $idaddterm ORDER BY  `subject`.`subid` ASC ";
 	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
 	
 	if($_POST["h_arti_id"] != ''){
@@ -151,6 +146,15 @@ if($_GET["Action"] == "Del")
 				WHERE subid = '".$_POST["h_arti_id"]."'
 				ORDER BY  `subject`.`subid` ASC  ";
 	$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");}
+
+	if($_POST["idyear"] != 0 AND $_POST["idterm"] != 0){
+		$strSQL = "SELECT * FROM  `addtrem` WHERE `idyear`=". $_POST["idyear"] ." AND  `idterm` = ". $_POST["idterm"];
+		$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
+		$objResult = mysqli_fetch_array($objQuery);
+		$idaddterm = $objResult['idaddterm'];
+		$strSQL2 = "SELECT * FROM subject WHERE idaddterm = $idaddterm ORDER BY  `subject`.`subid` ASC ";
+		$objQuery = mysqli_query($con_ajtongmath_self,$strSQL2) or die ("Error Query [".$strSQL."]");
+	}
 	?>
     
     <input type="hidden" name="hdnCmd" value="">
@@ -169,7 +173,7 @@ if($_GET["Action"] == "Del")
 	$objResult2 = mysqli_fetch_array($objQuery2)
 	?>
     <tr>
-        <td style="white-space:nowrap;" class="tblyy" colspan="<?=$a?>"> 
+        <td style="white-space:nowrap;" class="tblyy" colspan="4"> 
         <center>[<?=$objResult2["nameyear"]; ?>]<?=$objResult2["nameterm"];?></center>
         </td> 
     </tr>
@@ -204,7 +208,7 @@ if($_GET["Action"] == "Del")
 </form>
 </p>
 </div>
-<? mysqli_close();?>
+<? mysqli_close($con_ajtongmath_self);?>
 <script type="text/javascript">
 function make_autocom(autoObj,showObj){
 	var mkAutoObj=autoObj; 

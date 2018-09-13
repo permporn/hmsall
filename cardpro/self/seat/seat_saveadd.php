@@ -1,6 +1,7 @@
 <?php
- include("config.inc.php");
- echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
+session_start();
+include("ck_session_self.php");
+echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 
  $date0 = $_POST["date0"];
  $date1 = $_POST["date1"];
@@ -67,16 +68,16 @@
 		
 		$str = "SELECT * FROM  `seats` WHERE  `date` =  '".$date0."' AND  branchid = ".$local;
 		//echo $str .'<br>';
-		$objQuerystr = mysql_query($str) or die ("Error Query [".$str."]");
+		$objQuerystr = mysqli_query($con_ajtongmath_self,$str) or die ("Error Query [".$str."]");
 		
-		$objResult = mysql_fetch_array($objQuerystr);
+		$objResult = mysqli_fetch_array($objQuerystr);
 		
 			if($objResult != ''){
 				echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
 				echo "<script language='javascript'>alert('วันซ้ำ $date0');</script>";
 			}else{
 					
-			$strSQL = "INSERT INTO  `selfdb`.`seats` (`date` ,`1` ,`2` ,`3` ,`4` ,`5` ,`6` ,`7` ,`8` ,`9` ,`10` ,`11` ,`12` ,`13` ,`14` ,`15` ,`16` ,`17` ,`18` ,`19` ,`20` ,`21`,`22`,`23`,`24` ,`25` ,`branchid`)";
+			$strSQL = "INSERT INTO  `seats` (`date` ,`1` ,`2` ,`3` ,`4` ,`5` ,`6` ,`7` ,`8` ,`9` ,`10` ,`11` ,`12` ,`13` ,`14` ,`15` ,`16` ,`17` ,`18` ,`19` ,`20` ,`21`,`22`,`23`,`24` ,`25` ,`branchid`)";
 			$strSQL .= " VALUES ('".$date0."'";
 			$strSQL .= ",'".$nn1."'";
 			$strSQL .= ",'".$nn2."'";
@@ -104,7 +105,7 @@
 			$strSQL .= ",'".$nn24."'";
 			$strSQL .= ",'".$nn25."'";
 			$strSQL .= ",'".$_POST["local"]."')";
-			$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
+			$objQuery = mysqli_query($con_ajtongmath_self,$strSQL) or die ("Error Query [".$strSQL."]");
 			
 			
 			echo "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />";
