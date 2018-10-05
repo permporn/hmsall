@@ -38,6 +38,96 @@ include('../config/config_multidb.php');
 
 </style>
 
+<script type="text/javascript">
+
+function insertPayPromotion(id){
+
+    if(show_alert('ยืนยันการบันทึก') != false){
+
+    $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
+
+    var pay = $('#pay_promotion').val();
+
+    var remark = $('#remark_promotion').val();
+
+    var request = $.ajax({
+
+        url: "report.php",
+
+        method: "GET",
+
+        data: { id : id , action_type : "insertPayPromotion", pay : pay, remark : remark}
+
+    });
+
+    request.done(function( result ) {
+
+        $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
+
+        $.ajax({
+
+            type: "GET",
+
+            url: "form/form_edit_bill_full.php",
+
+            data: {id_bill : id , type : "1" , test : ""},
+
+            success: function(data){
+
+                 $(".header").hide();
+
+                 $("#data-table").html(data);
+
+            } 
+
+        });
+
+    });
+
+    }
+
+}
+
+$('.close_pay').click(function(){
+
+  $.ajax({
+
+      type: "POST",
+
+      url: "form/form_data_pay.php",
+
+      data: {},
+
+      success: function(data){
+
+          //console.log(data);
+
+          $("#data-table").html(data);
+
+          $(".header").show();
+
+          $('.form-saerch').hide();
+
+          $('.subject_self').hide();
+
+          $('.term_self').hide();
+
+          $('.quantity').hide(); 
+
+          $('.set_pay').show();
+
+          $('.form-gen').show();
+
+          $('#header_title').html('<span class="glyphicon glyphicon-search" aria-hidden="true" ></span> เงื่อนไข'); 
+
+      } 
+
+  });
+
+});
+
+</script>
+
 <?php
 
 function num2wordsThai($num){  
@@ -50,7 +140,7 @@ if($num != ''){
 
     $num=$num_decimal[0];
 
-    $returnNumWord;   
+    $returnNumWord='';   
 
     $lenNumber=strlen($num);   
 
@@ -302,15 +392,19 @@ if($_GET['id_bill']){
 
     $set_type_self = $objResult_bill['set_type_self'];
 
-    $sum_all_type = 0;
-
     $price_discount = $objResult_bill['price_discount'];
 
     $price_discount_remark = $objResult_bill['price_discount_remark'];
 
+    $sum_all_type = 0;
+
     ?>
 
+
+
     <div class="col-sm-12">
+
+    <div id="loading"></div>
 
     <table class="table borderless" cellspacing="0" width="100%">
 
@@ -428,42 +522,6 @@ if($_GET['id_bill']){
 
     }
 
-    //print_r(json_encode($data_type_self));
-
-
-
-    //print_r($data_type_self);
-
-    //select type_self *
-
-    // $j = 0;
-
-    // $sql_type_self = "SELECT * FROM type_self WHERE status_percent = 1";
-
-    // $objQuery_type_self = mysqli_query($con_ajtongmath_self,$sql_type_self) or die ("Error Query [".$sql_type_self."]");
-
-    // while($objResult_type_self = mysqli_fetch_array($objQuery_type_self)){
-
-    //   $data_type_self[$j]['name'] = $objResult_type_self['type_name'];
-
-    //   $data_type_self[$j]['id'] = $objResult_type_self['type_id'];
-
-    //   $data_type_self[$j]['status_percent'] = $objResult_type_self['status_percent'];
-
-    //   $data_type_self[$j]['status_branch'] = $objResult_type_self['status_branch'];
-
-    //   $data_type_self[$j]['branch_id'] = $objResult_type_self['branch_id'];
-
-    //   $data_type_self[$j]['status_surcharge'] = $objResult_type_self['status_surcharge'];
-
-    //   $data_type_self[$j]['surcharge'] = $objResult_type_self['surcharge'];
-
-    //   $j++;
-
-    // }
-
-
-
     $teacher_array = explode(",",$teacher);
 
     $pay_array = explode(",",$pay);
@@ -483,8 +541,6 @@ if($_GET['id_bill']){
       }
 
     }
-
-    //print_r($teacher_array);
 
     for ($l=0; $l < count($data_type_self); $l++) {
 
@@ -611,9 +667,6 @@ if($_GET['id_bill']){
 
 
           if($num_rows > 0){      
-
-
-
       ?>
 
        <h4>สรุปรายการ <?=$name_type_self;?></h4>
@@ -1012,10 +1065,8 @@ if($_GET['id_bill']){
         $objResult['bill_number'] = $bill_number;
 
     }?>
-
+      
       <tr>
-
-        <!-- <td colspan="2" ><center><?=num2wordsThai($sum_by_branch);?>ถ้วน</center></td> -->
 
         <td colspan="6"><center><strong>ยอดสุทธิ</strong></center></td>
 
@@ -1052,36 +1103,32 @@ if($_GET['id_bill']){
     <td colspan="3" class="text-right"><strong>ยอดชำระ</strong></td>
 
   </tr>
-
   <tr>
 
-    <td colspan="9"><center><strong>ยอดรวมทั้งหมด </strong></center></td>
+    <td colspan="9"><center><strong>ยอดรวมทั้งหมด</strong></center></td>
 
-    <td colspan="3" class="text-right"><strong><?=number_format(($sum_all) , 2)?></strong></td>
+    <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all) , 2)?></font></strong></td>
 
   </tr>
+  <tr>
+    <td colspan="9"><center><strong>ยอดหัก <font color="#fd0000">*สำหรับโปรโมชั่น</font></strong></center></td>
 
-  <? if($price_discount != 0){?>
-
+    <td colspan="3" class="text-right">
+      <input type="text" id="pay_promotion" name="pay_promotion" class="form-control text-right" placeholder="0" value="<?=$price_discount?>" />
+      <strong><font color="#fd0000">*ยอดที่หัก กรุณากรอกตัวเลขจำนวนเต็ม</font></strong>
+      <br><br>
+      <textarea id="remark_promotion" name="remark_promotion" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$price_discount_remark?></textarea><strong><font color="#fd0000">*กรอกรายละเอียดสำหรับโปรโมชั่น</font></strong>
+      <br>
+      <button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button>
+    </td>
+  </tr>
   <tr>
 
-    <td colspan="9"><center><strong>ยอดหัก<font color="#fd0000">*สำหรับโปรโมชั่น</font></strong></center></td>
+    <td colspan="9"><center><strong>ยอดสุทธิ</strong></center></td>
 
-    <td colspan="3" class="text-right"><strong><?=number_format(($price_discount) , 2)?></strong></td>
+    <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all-$price_discount) , 2)?></font></strong></td>
 
   </tr>
-
-  <? }?>
-
-  <tr>
-
-  <!-- <td colspan="2" ><center><?=num2wordsThai($sum_by_branch);?>ถ้วน</center></td> -->
-
-  <td colspan="9"><center><strong>ยอดสุทธิ</strong></center></td>
-
-  <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all-$price_discount) , 2)?></font></strong></td>
-
-</tr>
 
 </table>
 
@@ -1097,9 +1144,6 @@ if($_GET['id_bill']){
 
 <h5> - ชำระเงินได้ที่ บัญชี บริษัท เอช.เอ็ม.เอส. กรุ๊ป จำกัด<font color="#1758ff"> <strong>เลขบัญชี 880-0-11081-9 </strong></font>ธนาคารกรุงไทย สาขาวรรณสรณ์</h5>
 
-<? if($price_discount_remark != ''){?>
-<h5>- <strong> หมายเหตุ (ยอดหัก<font color="#fd0000">*สำหรับโปรโมชั่น</font>) : </strong> <?=$price_discount_remark?></h5>
-<? }?>
 <br>
 
   <table class="table borderless" cellspacing="0" width="100%">
@@ -1166,6 +1210,11 @@ if($_GET['id_bill']){
 
 </div>
 
+<div>
+<center>
+  <button type="button" class="btn btn-default close_pay" id="close_pay">Close</button>
+</center>
+</div>
 <?
 
 }mysqli_close($con_ajtongmath_self);?>

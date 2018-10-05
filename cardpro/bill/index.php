@@ -1,6 +1,7 @@
 <?php 
-    session_start();
-    include("ck_session.php");
+session_start();
+error_reporting(E_ALL ^ E_NOTICE);
+include("ck_session.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">

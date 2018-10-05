@@ -10,15 +10,15 @@ $dbname = 'ajtongmath_scho';
 
 //** SERVER **//
 
-$dbuser = "ajtongmath_scho" ; 
+// $dbuser = "ajtongmath_scho" ; 
 
-$dbpass= "72o35XDJ";
+// $dbpass= "72o35XDJ";
 
 //** LOCAL **//
 
-// $dbuser = "root" ; 
+$dbuser = "root" ; 
 
-// $dbpass= "";
+$dbpass= "";
 
 $con_ajtongmath_scho = mysqli_connect($dbserver, $dbuser, $dbpass, $dbname);
 
@@ -43,15 +43,15 @@ $dbname = 'ajtongmath_self';
 
 //** SERVER **//
 
-$dbuser = "ajtongmath_self" ; 
+// $dbuser = "ajtongmath_self" ; 
 
-$dbpass= "5TEwC8yip";
+// $dbpass= "5TEwC8yip";
 
 //** LOCAL **//
 
-// $dbuser = "root" ; 
+$dbuser = "root" ; 
 
-// $dbpass= "";
+$dbpass= "";
 
 $con_ajtongmath_self = mysqli_connect($dbserver, $dbuser, $dbpass, $dbname);
 

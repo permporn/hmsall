@@ -1,61 +1,67 @@
-<?
+<?php
 
-$title = "ระบบจัดการ โรงเรียนคณิตศาสตร์ อ.โต้ง"; 
+$title = "ระบบจัดการ โรงเรียนคณิตศาสตร์ อ.โต้ง";   
 
+//** DB: ajtongmath_scho **//
 
+$dbserver = 'localhost';
 
-$hostname_conn_school = 'localhost';
+$dbname = 'ajtongmath_scho';
 
-$database_conn_school =  'ajtongmath_scho';
+//** SERVER **//
 
-$username_conn_school = "ajtongmath_scho" ; 
+// $dbuser = "ajtongmath_scho" ; 
 
-$password_conn_school =  "72o35XDJ";
+// $dbpass= "72o35XDJ";
 
-/*
+//** LOCAL **//
 
-$hostname_conn_school = "localhost";
+$dbuser = "root" ; 
 
-$database_conn_school = "school";
+$dbpass= "1234";
 
-$username_conn_school = "root";
+$con_ajtongmath_scho = mysqli_connect($dbserver, $dbuser, $dbpass, $dbname);
 
-$password_conn_school = "1234";
+mysqli_query($con_ajtongmath_scho, "SET NAMES UTF8");
 
-*/
+if (!$con_ajtongmath_scho) {
+    echo "Error: Unable to connect to MySQL con_ajtongmath_scho." . PHP_EOL;
+    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+    exit;
+}
 
-$connect_school =  mysql_connect($hostname_conn_school,$username_conn_school,$password_conn_school,"TRUE");
-
-mysql_select_db('ajtongmath_scho',$connect_school);
-
-mysql_query("SET NAMES 'utf8'",$connect_school);
-
-
-
-$hostname_conn_self = 'localhost';
-
-$database_conn_self =  'ajtongmath_self';
-
-$username_conn_self = "ajtongmath_self" ; 
-
-$password_conn_self =  "5TEwC8yip";
-
-/*
-
-$hostname_conn_self = "localhost";
-
-$database_conn_self = "selfdb";
-
-$username_conn_self = "root";
-
-$password_conn_self = "1234";*/
+// echo "Success: A proper connection to MySQL was made! The my_db database is great." . PHP_EOL;
+// echo "Host information: " . mysqli_get_host_info($con_ajtongmath_scho) . PHP_EOL;
 
 
+//** DB: ajtongmath_self **//
 
-$connect_self = mysql_connect($hostname_conn_self,$username_conn_self,$password_conn_self,"TRUE");
+$dbserver = 'localhost';
 
-mysql_select_db('ajtongmath_self',$connect_self);
+$dbname = 'ajtongmath_self';
 
-mysql_query("SET NAMES 'utf8'",$connect_self);
+//** SERVER **//
+
+// $dbuser = "ajtongmath_self" ; 
+
+// $dbpass= "5TEwC8yip";
+
+//** LOCAL **//
+
+$dbuser = "root" ; 
+
+$dbpass= "1234";
+
+$con_ajtongmath_self = mysqli_connect($dbserver, $dbuser, $dbpass, $dbname);
+
+mysqli_query($con_ajtongmath_self, "SET NAMES UTF8");
+
+if (!$con_ajtongmath_self) {
+    echo "Error: Unable to connect to MySQL con_ajtongmath_self." . PHP_EOL;
+    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+    exit;
+}
 
 ?>
