@@ -1211,7 +1211,7 @@ if($_GET['id_bill']){
 </table>
 
 <br>
-<center><button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button></center>
+<center><button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button><button type="button" class="btn btn-default close_pay" id="close_pay">Close</button></center>
 <br>
 </div>
 <?
