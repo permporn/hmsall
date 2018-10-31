@@ -782,11 +782,11 @@ function finish(id){
 
             <td><?=$objResult_bill['branch_name'];?></td>
 
-            <td><?=number_format($objResult_bill['price_self']-$objResult_bill['price_discount']);?></td>
+            <td><?=number_format($objResult_bill['price_self']);?></td>
 
             
 
-            <!-- user -->
+            <!-- user -$objResult_bill['price_discount']-->
 
             <? if($session_status == 'admin' || $session_status == 'manager_franchise' || $session_status == 'user_franchise' || $session_status == 'admin_hms' || $session_status == 'pre_end'){ ?>
 

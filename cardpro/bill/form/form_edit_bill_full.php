@@ -42,13 +42,9 @@ include('../config/config_multidb.php');
 
 function insertPayPromotion(id){
 
-    if(show_alert('ยืนยันการบันทึก') != false){
+    //if(show_alert('ยืนยันการบันทึก') != false){
 
     $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
-
-    var pay = $('#pay_promotion').val();
-
-    var remark = $('#remark_promotion').val();
 
     var request = $.ajax({
 
@@ -56,35 +52,87 @@ function insertPayPromotion(id){
 
         method: "GET",
 
-        data: { id : id , action_type : "insertPayPromotion", pay : pay, remark : remark}
+        data: {action_type : "get_type"}
 
     });
 
     request.done(function( result ) {
 
-        $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
+      var datas = JSON.parse(result);
 
-        $.ajax({
+      var d = [];
 
-            type: "GET",
+      var num = 0;
 
-            url: "form/form_edit_bill_full.php",
+      for(var i = 0 ; i <  datas.length ; i ++ ){
 
-            data: {id_bill : id , type : "1" , test : ""},
+        var price_discount = [];
 
-            success: function(data){
+        var pay_box = "pay_promotion_"+datas[i];
 
-                 $(".header").hide();
+        var pay = $("#" + pay_box).val();
 
-                 $("#data-table").html(data);
+        var pay_full_box = "pay_promotion_full_"+datas[i];
 
-            } 
+        var pay_full = $("#" + pay_full_box).val();
 
-        });
+        var remark_box = "remark_promotion_"+datas[i];
+
+        var remark = $("#" + remark_box).val();
+
+        if(typeof pay !== "undefined"){
+
+          price_discount['name'] = datas[i]; 
+          price_discount['price_discount'] = pay; 
+          price_discount['remark']= remark; 
+          price_discount['price_discount_full']= pay_full;
+
+          //d.push(price_discount);
+
+          var requests = $.ajax({
+
+              url: "report.php",
+
+              method: "GET",
+
+              data: { id : id , action_type : "insertPayPromotion", name : price_discount['name'], pay : price_discount['price_discount'],  pay_full : price_discount['price_discount_full'], remark : price_discount['remark'] , num : num},
+
+              dataType: "html"
+          });
+          num++;
+
+          requests.done(function( result ) {
+            //console.log(result);
+          });
+                  
+        }  
+                
+      }  
+
+      $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
+
+      $.ajax({
+
+          type: "GET",
+
+          url: "form/form_edit_bill_full.php",
+
+          data: {id_bill : id , type : "1" , test : ""},
+
+          success: function(data){
+
+               $(".header").hide();
+
+               $("#data-table").html(data);
+          } 
+
+      });
 
     });
 
-    }
+    request.fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
+    }); 
 
 }
 
@@ -296,8 +344,6 @@ if($_GET['id_bill']){
 
                     bill.price_discount, 
 
-                    bill.price_discount_remark, 
-
                     bill.price_self_type, 
 
                     bill.price_self, 
@@ -393,8 +439,6 @@ if($_GET['id_bill']){
     $set_type_self = $objResult_bill['set_type_self'];
 
     $price_discount = $objResult_bill['price_discount'];
-
-    $price_discount_remark = $objResult_bill['price_discount_remark'];
 
     $sum_all_type = 0;
 
@@ -1065,31 +1109,67 @@ if($_GET['id_bill']){
         $objResult['bill_number'] = $bill_number;
 
     }?>
+
+      <tr>
+
+        <td colspan="6"><center><strong>ยอดรวม</strong></center></td>
+
+        <td colspan="3" class="text-right"><font color="#fd0000"><?=number_format($objResult[$id_type_self][$branch]['sum_all_full'] , 2)?></font></td>
+
+        <td colspan="3" class="text-right"><font color="#fd0000"><?=number_format($objResult[$id_type_self][$branch]['sum_all_type'] , 2)?></font></td>
+
+      </tr>
       
       <tr>
 
-        <td colspan="6"><center><strong>ยอดสุทธิ</strong></center></td>
+        <td colspan="6"><center><strong><font color="#fd0000">ส่วนลดพิเศษ</font></strong></center></td>
+        <?
 
-        <td colspan="3" class="text-right"><?=number_format($objResult[$id_type_self][$branch]['sum_all_full'] , 2)?></td>
+        $price_dis = "[".$price_discount."]";
 
-        <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format($objResult[$id_type_self][$branch]['sum_all_type'] , 2)?></font></strong></td>
+        $manage = json_decode($price_dis);
 
+        foreach ($manage as $key => $object) {
+
+           if($name_type_self == $object->name){
+              //echo $object->name . "<br/>";
+
+        ?>
+        <td colspan="3" class="text-right">
+        <input type="text" id="pay_promotion_full_<?=$name_type_self?>" name="pay_promotion_<?=$name_type_self?>" class="form-control text-right" placeholder="0" value="<?=$object->pay_full?>" />
+        <font color="#fd0000">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม</font>
+        </td>
+        <td colspan="3" class="text-right">
+        <input type="text" id="pay_promotion_<?=$name_type_self?>" name="pay_promotion_<?=$name_type_self?>" class="form-control text-right" placeholder="0" value="<?=$object->pay?>" />
+        <font color="#fd0000">*ส่วนลดยอดชำระ กรุณากรอกตัวเลขจำนวนเต็ม</font>
+        </td>
       </tr>
 
+      <tr>
+        <td colspan="6"><center><strong></strong></center></td>
+
+        <td colspan="6" class="text-right">
+          <textarea id="remark_promotion_<?=$name_type_self?>" name="remark_promotion_<?=$name_type_self?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$object->remark?></textarea><font color="#fd0000">*กรอกรายละเอียด หรือหมายเหตุสำหรับส่วนลดพิเศษ</font>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="6"><center><strong><font color="#fd0000">ยอดสุทธิ</font></strong></center></td>        
+        <td colspan="3" class="text-right"><strong><font color="#fd0000">
+          <?=number_format($objResult[$id_type_self][$branch]['sum_all_full']-$object->pay_full, 2)?></font></strong></td>
+        <td colspan="3" class="text-right"><strong><font color="#fd0000">
+          <?=number_format($objResult[$id_type_self][$branch]['sum_all_type']-$object->pay, 2)?></font></strong></td>
+
+      </tr>
+      <? 
+        }
+      }
+      ?>
     </tbody>
 
   </table>
 
  <? } }
-
-
-
-  //print_r($objResult);
-
- //echo "<pre>";print_r($objResult);
-
-
-
 ?>
 
 <h4>สรุปรายการทั้งหมด</h4>
@@ -1111,109 +1191,28 @@ if($_GET['id_bill']){
 
   </tr>
   <tr>
-    <td colspan="9"><center><strong>ยอดหัก <font color="#fd0000">*สำหรับโปรโมชั่น</font></strong></center></td>
+    <td colspan="9"><center><strong><font color="#fd0000">ส่วนลดพิเศษ</font></strong></center></td>
 
     <td colspan="3" class="text-right">
-      <input type="text" id="pay_promotion" name="pay_promotion" class="form-control text-right" placeholder="0" value="<?=$price_discount?>" />
-      <strong><font color="#fd0000">*ยอดที่หัก กรุณากรอกตัวเลขจำนวนเต็ม</font></strong>
+      <input type="text" id="pay_promotion_all" name="pay_promotion_all" class="form-control text-right" placeholder="0" value="<?=$price_discount?>" />
+      <font color="#fd0000">*ยอดที่หัก กรุณากรอกตัวเลขจำนวนเต็ม</font>
       <br><br>
-      <textarea id="remark_promotion" name="remark_promotion" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$price_discount_remark?></textarea><strong><font color="#fd0000">*กรอกรายละเอียดสำหรับโปรโมชั่น</font></strong>
+      <textarea id="remark_promotion_all" name="remark_promotion_all" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$price_discount_remark?></textarea><font color="#fd0000">*กรอกรายละเอียดสำหรับโปรโมชั่น</font>
       <br>
-      <button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button>
     </td>
   </tr>
   <tr>
 
     <td colspan="9"><center><strong>ยอดสุทธิ</strong></center></td>
-
-    <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all-$price_discount) , 2)?></font></strong></td>
+    <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all) , 2)?></font></strong></td>
 
   </tr>
 
 </table>
 
-
-
-</div>
-
-<div class="col-sm-12">
-
-  (โปรดตรวจสอบความถูกต้องของรายการในเอกสารฉบับนี้ภายใน 7 วันมิฉะนั้นจะถือว่าสมบูรณ์)
-
-  <br>
-
-<h5> - ชำระเงินได้ที่ บัญชี บริษัท เอช.เอ็ม.เอส. กรุ๊ป จำกัด<font color="#1758ff"> <strong>เลขบัญชี 880-0-11081-9 </strong></font>ธนาคารกรุงไทย สาขาวรรณสรณ์</h5>
-
 <br>
-
-  <table class="table borderless" cellspacing="0" width="100%">
-
-    <tr>
-
-      <td class="col-md-8" colspan="2"></td>
-
-      <td class="col-md-2">
-
-        <table class="table">
-
-        <tr>
-
-          <td><center>ผู้มีอำนาจลงนาม  ___________________</center></td>
-
-        </tr>
-
-        <tr>
-
-          <td><center>(.........../.........../...........)</center></td>
-
-        </tr>
-
-        <!-- <tr>
-
-          <td><center>............../............../..............</center></td>
-
-        </tr> -->
-
-        </table>
-
-      </td>
-
-      <td class="col-md-2">
-
-        <table class="table">
-
-        <tr>
-
-          <td><center>ผู้รับเงิน  ___________________</center></td>
-
-        </tr>
-
-        <tr>
-
-          <td><center>(.........../.........../...........)</center></td>
-
-        </tr>
-
-        <!-- <tr>
-
-          <td><center>............../............../..............</center></td>
-
-        </tr> -->
-
-        </table>
-
-      </td>
-
-    </tr>
-
-  </table>
-
-</div>
-
-<div>
-<center>
-  <button type="button" class="btn btn-default close_pay" id="close_pay">Close</button>
-</center>
+<center><button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button></center>
+<br>
 </div>
 <?
 

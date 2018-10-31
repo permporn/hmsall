@@ -6,22 +6,63 @@
 
   error_reporting(~E_NOTICE);
 
+if($_GET['action_type'] == "get_type"){
+
+  $strSQL_bill = "SELECT * FROM type_self WHERE status_percent = 1"; 
+
+  $objQuery_bill = mysqli_query($con_ajtongmath_self,$strSQL_bill) or die ("Error Query [".$strSQL_bill."]");
+
+  $a = array();
+
+  while($objResult_bill = mysqli_fetch_array($objQuery_bill)){
+
+     array_push($a , $objResult_bill['type_name']);
+  }
+
+  print_r(json_encode($a));
+
+}
+
+
 
 if($_GET['action_type'] == "insertPayPromotion"){
 
   $id = $_GET['id'];
 
+  $name = $_GET['name'];
+
   $pay = $_GET['pay'];
+
+  $pay_full = $_GET['pay_full'];
 
   $remark = $_GET['remark'];
 
-  //echo $id.",".$pay.",".$remark;
+  $num = $_GET['num']*1;
+
+  $text_pay = '';
 
   if($id != ''){
 
+    $strSQL_bill = "SELECT * FROM bill WHERE id ='".$id."'"; 
+
+    $objQuery_bill = mysqli_query($con_ajtongmath_self,$strSQL_bill) or die ("Error Query [".$strSQL_bill."]");
+
+    $objResult_bill = mysqli_fetch_array($objQuery_bill); 
+
+    $price_discount = $objResult_bill['price_discount'];
+
+    if($num > 0){
+
+      $text_pay .= $price_discount.',{"name":"'.$name.'","pay":"'.$pay.'","pay_full":"'.$pay_full.'","remark":"'.$remark.'"}';
+
+    }else{
+
+      $text_pay .= '{"name":"'.$name.'","pay":"'.$pay.'","pay_full":"'.$pay_full.'","remark":"'.$remark.'"}';
+    }
+
     $strSQL_update = "UPDATE bill SET"; 
 
-    $strSQL_update .=" price_discount   = '".$pay."'";
+    $strSQL_update .=" price_discount   = '".$text_pay."'";
 
     $strSQL_update .=",price_discount_remark   = '".$remark."'";
 
@@ -30,22 +71,15 @@ if($_GET['action_type'] == "insertPayPromotion"){
     $objQuery_update = mysqli_query($con_ajtongmath_self,$strSQL_update) or die ("Error Query [".$strSQL_update."]");
 
       if(!$objQuery_update)
-
       {
 
           echo "fail!!  : $objQuery_update (report.php)";
 
       }else{
 
-          echo "บันทึกเรียบร้อยแล้ว-".$strSQL_update ;//$strSQL_update;//
-
+          echo "บันทึกเรียบร้อยแล้ว - ".$strSQL_update; 
       }
-
-   }else{
-
-      echo "ไม่สามารถลบได้";
-
-   }
+  }
 
 }
    
