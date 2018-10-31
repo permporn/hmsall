@@ -448,7 +448,7 @@ if($_GET['id_bill']){
 
     <div class="col-sm-12">
 
-    <div id="loading"></div>
+   
 
     <table class="table borderless" cellspacing="0" width="100%">
 
@@ -1119,13 +1119,11 @@ if($_GET['id_bill']){
         <td colspan="3" class="text-right"><font color="#fd0000"><?=number_format($objResult[$id_type_self][$branch]['sum_all_type'] , 2)?></font></td>
 
       </tr>
-      
-      <tr>
-
-        <td colspan="6"><center><strong><font color="#fd0000">ส่วนลดพิเศษ</font></strong></center></td>
-        <?
+      <?php
 
         $price_dis = "[".$price_discount."]";
+
+        if($price_discount){
 
         $manage = json_decode($price_dis);
 
@@ -1135,6 +1133,8 @@ if($_GET['id_bill']){
               //echo $object->name . "<br/>";
 
         ?>
+      <tr>
+        <td colspan="6"><center><strong><font color="#fd0000">ส่วนลดพิเศษ</font></strong></center></td>
         <td colspan="3" class="text-right">
         <input type="text" id="pay_promotion_full_<?=$name_type_self?>" name="pay_promotion_<?=$name_type_self?>" class="form-control text-right" placeholder="0" value="<?=$object->pay_full?>" />
         <font color="#fd0000">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม</font>
@@ -1161,10 +1161,45 @@ if($_GET['id_bill']){
           <?=number_format($objResult[$id_type_self][$branch]['sum_all_type']-$object->pay, 2)?></font></strong></td>
 
       </tr>
-      <? 
+        <?php
+          }
         }
+      }else{
+        ?>
+
+      <tr>
+        <td colspan="6"><center><strong><font color="#fd0000">ส่วนลดพิเศษ</font></strong></center></td>
+        <td colspan="3" class="text-right">
+        <input type="text" id="pay_promotion_full_<?=$name_type_self?>" name="pay_promotion_<?=$name_type_self?>" class="form-control text-right" placeholder="0" value="" />
+        <font color="#fd0000">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม</font>
+        </td>
+        <td colspan="3" class="text-right">
+        <input type="text" id="pay_promotion_<?=$name_type_self?>" name="pay_promotion_<?=$name_type_self?>" class="form-control text-right" placeholder="0" value="" />
+        <font color="#fd0000">*ส่วนลดยอดชำระ กรุณากรอกตัวเลขจำนวนเต็ม</font>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="6"><center><strong></strong></center></td>
+
+        <td colspan="6" class="text-right">
+          <textarea id="remark_promotion_<?=$name_type_self?>" name="remark_promotion_<?=$name_type_self?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"></textarea><font color="#fd0000">*กรอกรายละเอียด หรือหมายเหตุสำหรับส่วนลดพิเศษ</font>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="6"><center><strong><font color="#fd0000">ยอดสุทธิ</font></strong></center></td>        
+        <td colspan="3" class="text-right"><strong><font color="#fd0000">
+          <?=number_format($objResult[$id_type_self][$branch]['sum_all_full'], 2)?></font></strong></td>
+        <td colspan="3" class="text-right"><strong><font color="#fd0000">
+          <?=number_format($objResult[$id_type_self][$branch]['sum_all_type'], 2)?></font></strong></td>
+
+      </tr>
+
+      <? 
       }
       ?>
+    
     </tbody>
 
   </table>
@@ -1211,7 +1246,10 @@ if($_GET['id_bill']){
 </table>
 
 <br>
-<center><button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button><button type="button" class="btn btn-default close_pay" id="close_pay">Close</button></center>
+
+<center><div id="loading"></div>
+  <button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button>
+  <button type="button" class="btn btn-default close_pay" id="close_pay">Close</button></center>
 <br>
 </div>
 <?
