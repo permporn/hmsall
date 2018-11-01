@@ -877,12 +877,13 @@ if($_GET['id_bill']){
 
         $objResult_bill_percent = mysqli_fetch_array($objQuery_bill_percent);
 
-        //หักส่วนลด รายครู โดย loop ส่วนลด
-        $price_dis = "[".$price_discount."]";
 
         $objResult_pay_teacher[$name_type_self][$teacher_] = 0;
 
+        //หักส่วนลด รายครู โดย loop ส่วนลด
         if($price_discount){
+
+          $price_dis = "[".$price_discount."]";
 
           $manage = json_decode($price_dis);
 
