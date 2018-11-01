@@ -356,6 +356,8 @@ if($_GET['id_bill']){
 
                           bill.price_self,
 
+                          bill.price_self_update,
+
                           bill.sent_bill_s_date,
 
                           bill.sent_bill_e_date,
@@ -438,10 +440,7 @@ if($_GET['id_bill']){
 
     $sum_by_branch = 0;
 
-
     $branch_name = $objResult_bill['branch_name'];
-
-
 
     if ($price_self == "self_amount"){
 
@@ -451,6 +450,13 @@ if($_GET['id_bill']){
 
     $colunm = "subject_real_price";
 
+    }
+
+    $price_self_update = $objResult_bill['price_self_update'];
+
+    if($price_self_update > 0){
+
+        $price_self = $price_self_update;
     }
 
 

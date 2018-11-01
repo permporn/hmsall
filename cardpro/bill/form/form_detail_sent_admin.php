@@ -38,8 +38,6 @@ $('table#datatable').DataTable( {
 
 $(function() {
 
-
-
       $('.payment-hidden').hide();
 
       $('.bill-hidden').hide();
@@ -49,8 +47,6 @@ $(function() {
       $('.bill_full').hide();
 
       var id = $("#id").val();
-
-
 
       $.ajax({
 
@@ -87,12 +83,9 @@ $(function() {
                $(".header").hide();
 
                $("#bill_full").html(data);
-
           } 
 
       });
-
-      
 
     $('#modal_sent_date_start').datepicker({
 
@@ -115,8 +108,6 @@ $(function() {
     });
 
  });
-
-
 
 var $imageupload = $('.imageupload');
 
@@ -312,13 +303,7 @@ $('.btn_insert_sent_admin').click(function(){
 
 <?php
 
-  
-
-//echo $_GET['id_bill'];
-
 if($_GET['id_bill']){
-
-
 
     $strSQL_bill ="SELECT staff.stname, 
 
@@ -359,6 +344,8 @@ if($_GET['id_bill']){
                           bill.price_self_type, 
 
                           bill.price_self, 
+
+                          bill.price_self_update,
 
                           bill.status , 
 
@@ -438,11 +425,7 @@ if($_GET['id_bill']){
 
     $payment_remark_admin = $objResult_bill['payment_remark_admin'];
 
-
-
     $branch_name = $objResult_bill['branch_name'];
-
-
 
     if ($price_self_type == "self_amount"){
 
@@ -454,145 +437,12 @@ if($_GET['id_bill']){
 
     }
 
+    $price_self_update = $objResult_bill['price_self_update'];
 
+    if($price_self_update > 0){
 
-    // $pay_array = explode(",", $pay);
-
-
-
-    // for($i = 0 ; $i < count($pay_array); $i++) {
-
-    //   if($i == 0){
-
-    //      $pay = "'".$pay_array[$i]."'";
-
-    //   }else{
-
-    //      $pay .= ",'".$pay_array[$i]."'";
-
-    //   }
-
-    // }
-
-    
-
-    // $teacher_array = explode(",", $teacher);
-
-
-
-    // for($j = 0 ; $j < count($teacher_array); $j++) {
-
-
-
-    //   $teacher_ = $teacher_array[$j];
-
-
-
-    //   $sql_teacher[$j] = 
-
-    //                 "SELECT 
-
-    //                   credit.accid,
-
-    //                   credit.amount,
-
-    //                   credit.type_pay,
-
-    //                   credit.date_pay,
-
-    //                   credit.date_regis,
-
-    //                   credit.amount AS self_amount,
-
-    //                   account.status AS branch_id,
-
-    //                   branch.name AS branch_name,
-
-    //                   subject_real.name_subject_real AS name_subject_real,
-
-    //                   subject_real.price AS subject_real_price
-
-    //                   FROM credit
-
-    //                   LEFT JOIN account ON account.accid = credit.accid
-
-    //                   LEFT JOIN branch ON account.status = branch.branchid
-
-    //                   LEFT JOIN subject ON credit.subid = subject.subid
-
-    //                   LEFT JOIN subject_real ON subject.id_subject_real = subject_real.id_subject_real
-
-    //                   WHERE 
-
-    //                   subject.teacherid = $teacher_ AND credit.date_pay BETWEEN '".$s_date."' AND '".$e_date."' AND account.status = $branch";
-
-    //   if($pay){
-
-    //     $sql_teacher[$j] .= " AND credit.type_pay IN ($pay)";
-
-    //   }    
-
-    //   $sql_teacher[$j] .= " AND credit.type_pay != 'test' AND credit.type_pay != 'free' "; 
-
-
-
-    //   $sql_teacher[$j] .=  "AND account.status != 'out'";        
-
-
-
-    //   $strSQL_sum = "SELECT SUM($price_self_type) as sum_amount FROM ( $sql_teacher[$j] ) as sum_amount";
-
-    //   $objQuery_sum = mysql_query($strSQL_sum) or die ("Error Query [".$strSQL_sum."]");
-
-    //   $objResult_sum1 = mysql_fetch_array($objQuery_sum); 
-
-    //   $objResult_sum[$branch][$teacher_] = $objResult_sum1;
-
-
-
-    //   $sql_bill_percent = "SELECT id,  id_set,  teacher_id,  percent , teacher.teachername AS teacher_name
-
-    //                       FROM bill_percent 
-
-    //                       LEFT JOIN teacher ON bill_percent.teacher_id = teacher.teacherid
-
-    //                       WHERE teacher_id = $teacher_ AND id_set = '".$id_set."'";
-
-    //   $objQuery_bill_percent = mysql_query($sql_bill_percent) or die ("Error Query [".$sql_bill_percent."]");
-
-    //   $objResult_bill_percent = mysql_fetch_array($objQuery_bill_percent);
-
-    //   $objResult_pay_teacher = ($objResult_sum1['sum_amount']*$objResult_bill_percent['percent'])/100;
-
-    //   //test pay by teacher
-
-    //   $objResult_pay_print = "sum=".$objResult_sum1['sum_amount']."*".$objResult_bill_percent['percent']."/100= ".$objResult_pay_teacher;
-
-    //   if($objResult_bill_percent['teacher_name'] != ''){
-
-    //     $objResult[] =  array( 
-
-    //                   'name'  => $objResult_bill_percent['teacher_name'] ,
-
-    //                   'sum'   => $objResult_sum1['sum_amount'],
-
-    //                   'percent' => $objResult_bill_percent['percent'],
-
-    //                   'Result'  => $objResult_pay_teacher
-
-    //                   );
-
-    //     $sum_by_branch += $objResult_pay_teacher;
-
-    //   }
-
-    // }
-
- // print_r($objResult);
-
- 
-
-
+        $price_self = $price_self_update;
+    }
 
 ?>
 
@@ -603,8 +453,6 @@ if($_GET['id_bill']){
 <input type="hidden" name="number_bill" id="number_bill" value="<?=$number_bill?>">
 
 <input type="hidden" name="id_account_self" id="id_account_self" value="<?=$id_account_self?>">
-
-  
 
   <!-- bootstrap-imageupload. -->
 
@@ -662,8 +510,6 @@ if($_GET['id_bill']){
 
         </div>
 
-
-
         <div class="form-group col-sm-12">
 
               <label for="" class="col-sm-3 control-label"> ยอดชำระรวม</label>
@@ -673,8 +519,6 @@ if($_GET['id_bill']){
               </div>
 
         </div>
-
-
 
         <div class="form-group col-sm-12">
 
@@ -692,8 +536,6 @@ if($_GET['id_bill']){
 
         </div>
 
-
-
         <div class="form-group col-sm-12">
 
               <label for="" class="col-sm-3 control-label"></label>
@@ -707,8 +549,6 @@ if($_GET['id_bill']){
               </div>
 
         </div>
-
-
 
         <div class="form-group col-sm-12">
 
@@ -770,8 +610,6 @@ if($_GET['id_bill']){
 
         </div>
 
-
-
         <div class="form-group col-sm-12">
 
             <label for="" class="col-sm-12 control-label"><h4><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> แจ้งการจัดส่งใบเสร็จ - สำหรับเจ้าหน้าที่ :</h4></label>
@@ -805,8 +643,6 @@ if($_GET['id_bill']){
         </div>
 
   </div>
-
-
 
 <div class="panel-footer">
 

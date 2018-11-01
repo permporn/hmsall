@@ -38,8 +38,6 @@ $('table#datatable').DataTable( {
 
 $(function() {
 
-
-
       $('.payment-hidden').hide();
 
       $('.bill-hidden').hide();
@@ -90,8 +88,6 @@ $(function() {
 
       });
 
-      
-
     $('#date_start').datepicker({
 
       autoclose: true,
@@ -103,8 +99,6 @@ $(function() {
     });
 
  });
-
-
 
 var $imageupload = $('.imageupload');
 
@@ -202,8 +196,6 @@ $('.btn_get_bill').click(function(){
 
   var date_start = $('#date_start').val();
 
-
-
   $.ajax({
 
       type: "GET",
@@ -298,13 +290,7 @@ $('.btn_get_bill').click(function(){
 
 <?php
 
-  
-
-//echo $_GET['id_bill'];
-
 if($_GET['id_bill']){
-
-
 
     $strSQL_bill ="SELECT staff.stname, 
 
@@ -343,6 +329,8 @@ if($_GET['id_bill']){
                           bill.price_self_type, 
 
                           bill.price_self,
+
+                          bill.price_self_update,
 
                           bill.payment_date_admin,
 
@@ -466,10 +454,12 @@ if($_GET['id_bill']){
 
     $payment_id_staff_admin = $objResult_bill['payment_id_staff_admin'];
 
- 
+    $price_self_update = $objResult_bill['price_self_update'];
 
+    if($price_self_update > 0){
 
-
+        $price_self = $price_self_update;
+    }
 ?>
 
 <form id="form-payment-admin" method="GET">

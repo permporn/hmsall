@@ -1,10 +1,10 @@
 <?php
 
-  session_start();
+session_start();
 
-  include('config/config_multidb.php');
+include('config/config_multidb.php');
 
-  error_reporting(~E_NOTICE);
+error_reporting(~E_NOTICE);
 
 if($_GET['action_type'] == "get_type"){
 
@@ -19,7 +19,20 @@ if($_GET['action_type'] == "get_type"){
      array_push($a , $objResult_bill['type_name']);
   }
 
-  print_r(json_encode($a));
+  $strSQL_tc = "SELECT * FROM teacher WHERE status_teacher = 1"; 
+
+  $objQuery_tc = mysqli_query($con_ajtongmath_self,$strSQL_tc) or die ("Error Query [".$strSQL_tc."]");
+
+  $b = array();
+
+  while($objResult_tc = mysqli_fetch_array($objQuery_tc)){
+
+     array_push($b , $objResult_tc['teacherid']);
+  }
+
+  $all = array($a , $b);
+
+  print_r(json_encode($all));
 
 }
 
@@ -33,11 +46,13 @@ if($_GET['action_type'] == "insertPayPromotion"){
 
   $pay = $_GET['pay'];
 
-  $pay_full = $_GET['pay_full'];
+  $id_teach = $_GET['id_teach'];
 
   $remark = $_GET['remark'];
 
   $num = $_GET['num']*1;
+
+  $sum_all_save = $_GET['sum_all_save'];
 
   $text_pay = '';
 
@@ -53,18 +68,22 @@ if($_GET['action_type'] == "insertPayPromotion"){
 
     if($num > 0){
 
-      $text_pay .= $price_discount.',{"name":"'.$name.'","pay":"'.$pay.'","pay_full":"'.$pay_full.'","remark":"'.$remark.'"}';
+      $text_pay .= $price_discount.',{"name":"'.$name.'","pay":"'.$pay.'","id_teach":"'.$id_teach.'","remark":"'.$remark.'"}';
 
     }else{
 
-      $text_pay .= '{"name":"'.$name.'","pay":"'.$pay.'","pay_full":"'.$pay_full.'","remark":"'.$remark.'"}';
+      $text_pay .= '{"name":"'.$name.'","pay":"'.$pay.'","id_teach":"'.$id_teach.'","remark":"'.$remark.'"}';
     }
 
     $strSQL_update = "UPDATE bill SET"; 
 
-    $strSQL_update .=" price_discount   = '".$text_pay."'";
+    $strSQL_update .=" price_self_update   = '".$sum_all_save."'";
+
+    $strSQL_update .=",price_discount   = '".$text_pay."'";
 
     $strSQL_update .=",price_discount_remark   = '".$remark."'";
+
+    $strSQL_update .=",update_at   = '".date("Y-m-d H:i:s")."'";
 
     $strSQL_update .=" WHERE id  = '".$id ."'";
 

@@ -38,8 +38,6 @@ $('table#datatable').DataTable( {
 
 $(function() {
 
-
-
       $('.payment-hidden').hide();
 
       $('.bill-hidden').hide();
@@ -49,8 +47,6 @@ $(function() {
       $('.bill_full').hide();
 
       var id = $("#id").val();
-
-
 
       $.ajax({
 
@@ -92,8 +88,6 @@ $(function() {
 
       });
 
-      
-
     $('#modal_sent_date_start').datepicker({
 
       autoclose: true,
@@ -115,8 +109,6 @@ $(function() {
     });
 
  });
-
-
 
 var $imageupload = $('.imageupload');
 
@@ -308,13 +300,7 @@ $('.btn_insert_cancel_bill').click(function(){
 
 <?php
 
-  
-
-//echo $_GET['id_bill'];
-
 if($_GET['id_bill']){
-
-
 
     $strSQL_bill ="SELECT staff.stname, 
 
@@ -355,6 +341,8 @@ if($_GET['id_bill']){
                           bill.price_self_type, 
 
                           bill.price_self, 
+
+                          bill.price_self_update,
 
                           bill.status , 
 
@@ -436,7 +424,12 @@ if($_GET['id_bill']){
 
     $branch_name = $objResult_bill['branch_name'];
 
+    $price_self_update = $objResult_bill['price_self_update'];
 
+    if($price_self_update > 0){
+
+        $price_self = $price_self_update;
+    }
 
 ?>
 
