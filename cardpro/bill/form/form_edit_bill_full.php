@@ -899,6 +899,10 @@ if($_GET['id_bill']){
 
         $objResult_pay_teacher[$name_type_self][$teacher_] = 0;
 
+        $objResult[$id_type_self][$branch]['sum_all_type'] = 0;
+
+        $objResult[$id_type_self][$branch]['sum_all_full'] = 0;
+
         //หักส่วนลด รายครู โดย loop ส่วนลด
         if($price_discount){
 
@@ -921,6 +925,7 @@ if($_GET['id_bill']){
             }
           }
         }else{
+
           //sum หัก percent ราย ครู ex: (sum_amount-discount)-20%
           $objResult_pay_teacher[$name_type_self][$teacher_] = (($objResult_sum1['sum_amount'])*$objResult_bill_percent['percent'])/100;
 
@@ -951,8 +956,11 @@ if($_GET['id_bill']){
             }
 
           }
-
         }
+
+        //echo "ch=".$ch;
+
+        
 
         // ถ้า $ch ไม่เท่ากับ t ไม่ใช่ยอดเว้นสาขา ช่วง 3 เดือนแรก ให้ทำการคิดเงิน loop บวกเงินทั้งหมด
         if($ch != "t" ){
@@ -960,8 +968,11 @@ if($_GET['id_bill']){
           $sum_all_type += $objResult_pay_teacher[$name_type_self][$teacher_];
 
           $sum_all += $objResult_pay_teacher[$name_type_self][$teacher_];
-
         }
+
+        // echo "$sum_all_type=".$sum_all_type;
+        // echo "$sum_all=".$sum_allsum_all;
+
 
         //status_surcharge : none=0,คิดเงินเพิ่ม=1,ส่วนลด=2
         $num_rows_all[$id_type_self] = $num_rows;
@@ -1053,9 +1064,11 @@ if($_GET['id_bill']){
               
               <?php
 
+              if($ch != "t"){
+
                 $price_dis = "[".$price_discount."]";
 
-                if($price_discount && $ch !== 't'){
+                if($price_discount){
 
                   $manage = json_decode($price_dis);
 
@@ -1070,13 +1083,11 @@ if($_GET['id_bill']){
                 }else{ ?>
                   <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="" /><font color="#fd0000" class="aa">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม.</font>
                       <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"></textarea>
-            <?  } ?>
+            <?  }}?>
             </td>
 
             <? if($ch == "t"){?> 
               <td colspan="2" class="text-right"><?=number_format(0 , 2)?>
-              <!-- <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="" /><font color="#fd0000">* ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม</font>
-              <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$object->remark?></textarea> -->
               </td>
             <? }else{?>
               <td colspan="3" class="text-right"><?=number_format($objResult[$id_type_self][$branch][$teacher_]['pay_sum_by%'] , 2)?></td>
@@ -1085,25 +1096,7 @@ if($_GET['id_bill']){
           </tr> 
         <?
         }
-
-        // gen รหัส bill รวม ต้องแก้ไขอีกที ต้องคิดจากตาราง bill_number
-        // $strSQL_branch = "SELECT * FROM branch WHERE branchid =".$branch; 
-
-        // $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-
-        // $objResult_branch = mysqli_fetch_array($objQuery_branch); 
-
-        // $h = 4;//จำนวนหลัก
-
-        // $year = substr(date('Y'),2,2);
-
-        // $bill_number = $objResult_branch['branch_number']."/".$year.sprintf("%0".$h."d",$id_bill);;
-
-        // //echo $bill_number.",";
-
-        // $objResult['bill_number'] = $bill_number;
-
-    }?>
+      }?>
 
       <tr>
 
