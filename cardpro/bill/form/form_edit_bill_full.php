@@ -960,7 +960,7 @@ if($_GET['id_bill']){
 
         //echo "ch=".$ch;
 
-        
+
 
         // ถ้า $ch ไม่เท่ากับ t ไม่ใช่ยอดเว้นสาขา ช่วง 3 เดือนแรก ให้ทำการคิดเงิน loop บวกเงินทั้งหมด
         if($ch != "t" ){
@@ -1081,7 +1081,7 @@ if($_GET['id_bill']){
                     <? }
                   }
                 }else{ ?>
-                  <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="" /><font color="#fd0000" class="aa">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม.</font>
+                  <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="0" /><font color="#fd0000" class="aa">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม.</font>
                       <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"></textarea>
             <?  }}?>
             </td>
