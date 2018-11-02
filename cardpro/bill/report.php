@@ -101,6 +101,34 @@ if($_GET['action_type'] == "insertPayPromotion"){
   }
 
 }
+
+if($_GET['action_type'] == "updatePayPromotion"){
+
+  $id = $_GET['id'];
+
+  $sum_all_save = $_GET['sum_all_save'];
+
+  $strSQL_update = "UPDATE bill SET"; 
+
+  $strSQL_update .=" price_self_update   = '".$sum_all_save."'";
+
+  $strSQL_update .=",update_at   = '".date("Y-m-d H:i:s")."'";
+
+  $strSQL_update .=" WHERE id  = '".$id ."'";
+
+  $objQuery_update = mysqli_query($con_ajtongmath_self,$strSQL_update) or die ("Error Query [".$strSQL_update."]");
+
+    if(!$objQuery_update)
+    {
+
+        echo "fail!!  : $objQuery_update (report.php)";
+
+    }else{
+
+        echo "บันทึกเรียบร้อยแล้ว - ".$strSQL_update; 
+    }
+
+}
    
 
 if($_GET['action_type'] == "deleteSetting_course"){

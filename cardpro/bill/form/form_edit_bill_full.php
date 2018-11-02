@@ -6,7 +6,7 @@ include("../ck_session.php");
 
 include('../config/config_multidb.php');
 
-error_reporting(~E_NOTICE);
+//error_reporting(~E_NOTICE);
 
 ?>
 
@@ -112,7 +112,8 @@ function insertPayPromotion(id){
                     
           }
         }
-      }  
+      } 
+
       // reload
       $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
 
@@ -126,9 +127,27 @@ function insertPayPromotion(id){
 
           success: function(data){
 
-               $(".header").hide();
+              $(".header").hide();
 
-               $("#data-table").html(data);
+              $("#data-table").html(data);
+
+              var sum_all_save = $("#sum_all_save").val();
+
+                var requests = $.ajax({
+
+                  url: "report.php",
+
+                  method: "GET",
+
+                  data: { 
+                    id : id , 
+                    action_type : "updatePayPromotion", 
+                    sum_all_save : sum_all_save
+                  },
+
+                  dataType: "html"
+
+              });  
           } 
 
       });
@@ -1057,8 +1076,8 @@ if($_GET['id_bill']){
 
             <? if($ch == "t"){?> 
               <td colspan="2" class="text-right"><?=number_format(0 , 2)?>
-              <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="" /><font color="#fd0000">* ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม</font>
-              <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$object->remark?></textarea>
+              <!-- <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="" /><font color="#fd0000">* ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม</font>
+              <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$object->remark?></textarea> -->
               </td>
             <? }else{?>
               <td colspan="3" class="text-right"><?=number_format($objResult[$id_type_self][$branch][$teacher_]['pay_sum_by%'] , 2)?></td>
