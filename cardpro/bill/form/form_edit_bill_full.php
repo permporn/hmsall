@@ -1055,7 +1055,7 @@ if($_GET['id_bill']){
 
                 $price_dis = "[".$price_discount."]";
 
-                if($price_discount){
+                if($price_discount && $ch !== 't'){
 
                   $manage = json_decode($price_dis);
 
@@ -1070,8 +1070,7 @@ if($_GET['id_bill']){
                 }else{ ?>
                   <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="" /><font color="#fd0000" class="aa">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม.</font>
                       <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"></textarea>
-              <?  }
-              ?>
+            <?  } ?>
             </td>
 
             <? if($ch == "t"){?> 
