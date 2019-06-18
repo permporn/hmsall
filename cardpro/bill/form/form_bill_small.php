@@ -6,11 +6,7 @@ include("../ck_session.php");
 
 include('../config/config_multidb.php');
 
-?>
-
-
-
-<?php
+error_reporting(~E_NOTICE);
 
 function num2wordsThai($num){  
 
@@ -176,6 +172,7 @@ if($_GET['id_bill']){
 
                     bill.price_discount_remark, 
 
+                    bill.price_self_update,
 
                     bill.price_self_type, 
 
@@ -221,8 +218,6 @@ if($_GET['id_bill']){
 
     $objResult_bill = mysqli_fetch_array($objQuery_bill); 
 
-    //echo $strSQL_bill;
-
     $id = $objResult_bill['id'];
 
     $id_bill = $objResult_bill['id_bill'];
@@ -245,8 +240,6 @@ if($_GET['id_bill']){
 
     $price_self_type = $objResult_bill['price_self_type'];
 
-    $price_self = $objResult_bill['price_self'];
-
     $status = $objResult_bill['status_bill'];
 
     $create_at = $objResult_bill['create_at'];
@@ -255,9 +248,7 @@ if($_GET['id_bill']){
 
     $branch_sub_name = $objResult_bill['branch_sub_name'];
 
-
-
-   $customer_name= $objResult_bill['customer_name'];
+    $customer_name= $objResult_bill['customer_name'];
 
     $branch_address= $objResult_bill['branch_address'];
 
@@ -271,7 +262,11 @@ if($_GET['id_bill']){
 
     $branch_name = $objResult_bill['branch_name'];
 
+    $price_discount = $objResult_bill['price_discount'];
 
+    $price_discount_remark = $objResult_bill['price_discount_remark'];
+
+    $price_self = $objResult_bill['price_self'];
 
     if ($price_self == "self_amount"){
 
@@ -283,254 +278,18 @@ if($_GET['id_bill']){
 
     }
 
-    $price_discount = $objResult_bill['price_discount'];
+    $price_self_update = $objResult_bill['price_self_update'];
 
-    $price_discount_remark = $objResult_bill['price_discount_remark'];
+    if($price_self_update > 0){
 
-
-
-
-    // $pay_array = explode(",", $pay);
-
-
-
-    // for($i = 0 ; $i < count($pay_array); $i++) {
-
-    //   if($i == 0){
-
-    //      $pay = "'".$pay_array[$i]."'";
-
-    //   }else{
-
-    //      $pay .= ",'".$pay_array[$i]."'";
-
-    //   }
-
-    // }
-
-    
-
-    // $teacher_array = explode(",", $teacher);
-
-
-
-    // for($j = 0 ; $j < count($teacher_array); $j++) {
-
-
-
-    //   $teacher_ = $teacher_array[$j];
-
-
-
-    //   $sql_teacher[$j] = 
-
-    //                 "SELECT 
-
-    //                   credit.accid,
-
-    //                   credit.amount,
-
-    //                   credit.type_pay,
-
-    //                   credit.date_pay,
-
-    //                   credit.date_regis,
-
-    //                   credit.amount AS self_amount,
-
-    //                   account.status AS branch_id,
-
-    //                   branch.name AS branch_name,
-
-    //                   subject_real.name_subject_real AS name_subject_real,
-
-    //                   subject_real.price AS subject_real_price
-
-    //                   FROM credit
-
-    //                   LEFT JOIN account ON account.accid = credit.accid
-
-    //                   LEFT JOIN branch ON account.status = branch.branchid
-
-    //                   LEFT JOIN subject ON credit.subid = subject.subid
-
-    //                   LEFT JOIN subject_real ON subject.id_subject_real = subject_real.id_subject_real
-
-    //                   WHERE 
-
-    //                   subject.teacherid = $teacher_ AND credit.date_pay BETWEEN '".$s_date."' AND '".$e_date."' AND account.status = $branch";
-
-    //   if($pay){
-
-    //     $sql_teacher[$j] .= " AND credit.type_pay IN ($pay)";
-
-    //   }    
-
-    //   $sql_teacher[$j] .= " AND credit.type_pay != 'test' AND credit.type_pay != 'free' "; 
-
-
-
-    //   $sql_teacher[$j] .=  " AND account.status != 'out'";   
-
-      
-
-    //   //print_r($sql_teacher[$j]);
-
-
-
-    //   $strSQL_sum = "SELECT SUM($price_self_type) as sum_amount FROM ( $sql_teacher[$j] ) as sum_amount";
-
-    //   $objQuery_sum = mysqli_query($con_ajtongmath_self,$strSQL_sum) or die ("Error Query [".$strSQL_sum."]");
-
-    //   $objResult_sum1 = mysqli_fetch_array($objQuery_sum); 
-
-    //   $objResult_sum[$branch][$teacher_] = $objResult_sum1;
-
-
-
-    //   $sql_bill_percent = "SELECT id,  id_set,  teacher_id,  percent , teacher.teachername AS teacher_name
-
-    //                       FROM bill_percent 
-
-    //                       LEFT JOIN teacher ON bill_percent.teacher_id = teacher.teacherid
-
-    //                       WHERE teacher_id = $teacher_ AND id_set = '".$id_set."'";
-
-    //   $objQuery_bill_percent = mysqli_query($con_ajtongmath_self,$sql_bill_percent) or die ("Error Query [".$sql_bill_percent."]");
-
-    //   $objResult_bill_percent = mysqli_fetch_array($objQuery_bill_percent);
-
-    //   $objResult_pay_teacher = ($objResult_sum1['sum_amount']*$objResult_bill_percent['percent'])/100;
-
-    //   //test pay by teacher
-
-    //   $objResult_pay_print = "sum=".$objResult_sum1['sum_amount']."*".$objResult_bill_percent['percent']."/100= ".$objResult_pay_teacher;
-
-    //   if($objResult_bill_percent['teacher_name'] != ''){
-
-    //     $objResult[] =  array( 
-
-    //                   'name'  => $objResult_bill_percent['teacher_name'] ,
-
-    //                   'sum'   => $objResult_sum1['sum_amount'],
-
-    //                   'percent' => $objResult_bill_percent['percent'],
-
-    //                   'Result'  => $objResult_pay_teacher
-
-    //                   );
-
-    //     $sum_by_branch += $objResult_pay_teacher;
-
-    //   }
-
-    // }
-
-
-
-    // $sql = 
-
-    //                 "SELECT 
-
-    //                   credit.accid,
-
-    //                   credit.type_pay,
-
-    //                   credit.date_pay,
-
-    //                   credit.date_regis,
-
-    //                   credit.amount AS self_amount,
-
-    //                   account.status AS branch_id,
-
-    //                   account.username AS username,
-
-    //                   branch.name AS branch_name,
-
-    //                   subject_real.name_subject_real AS name_subject_real,
-
-    //                   subject_real.price AS subject_real_price,
-
-    //                   subject.subname AS name_subject,
-
-    //                   staff.username AS staff_name,
-
-    //                   student.name AS student_name,
-
-    //                   teacher.teachername AS teacher_name
-
-    //                   FROM credit
-
-    //                   LEFT JOIN account ON account.accid = credit.accid
-
-    //                   LEFT JOIN branch ON account.status = branch.branchid
-
-    //                   LEFT JOIN subject ON credit.subid = subject.subid
-
-    //                   LEFT JOIN subject_real ON subject.id_subject_real = subject_real.id_subject_real
-
-    //                   LEFT JOIN staff ON credit.staffid = staff.stid
-
-    //                   LEFT JOIN student ON account.studentid = student.studentid
-
-    //                   LEFT JOIN teacher ON subject.teacherid = teacher.teacherid
-
-    //                   WHERE 
-
-    //                   subject.teacherid IN ($teacher) AND credit.date_pay BETWEEN '".$s_date."' AND '".$e_date."' AND account.status = $branch";
-
-    //   if($pay){
-
-    //     $sql .= " AND credit.type_pay IN ($pay)";
-
-    //   }    
-
-    //   $sql .= " AND credit.type_pay != 'test' AND credit.type_pay != 'free' "; 
-
-
-
-    //   $sql .=  " AND account.status != 'out' ";
-
-      
-
-    //   $sql .=  " ORDER BY  `teacher`.`teacherid` ASC , credit.date_pay ASC"; 
-
-
-
-    //   $objQuery_all = mysqli_query($con_ajtongmath_self,$sql) or die ("Error Query [".$sql."]");
-
-
-
-    //   $strSQL_sum_all = "SELECT SUM($price_self_type) as sum_all FROM ( $sql ) as sum_all";
-
-    //   $objQuery_sum_all = mysqli_query($con_ajtongmath_self,$strSQL_sum_all) or die ("Error Query [".$strSQL_sum_all."]");
-
-    //   $objResult_sum_all = mysqli_fetch_array($objQuery_sum_all); 
-
-       
-
-      //echo $sql;
-
-      //print_r($objResult);
-
- 
-
-
+        $price_self = $price_self_update;
+    }
 
 ?>
 
 <page size="A4-1/2">
 
 <table class="table borderless" cellspacing="0" width="100%">
-
-        <!-- <tr>
-
-          <td class="col-md-3"></td>
-
-          <td colspan="3" rowspan="2" class="col-md-6"><center><br><h3>ใบแจ้งชำระเงิน</h3></center></td>
-
-        </tr> -->
 
         <tr>
 
@@ -558,23 +317,11 @@ if($_GET['id_bill']){
 
               </tr>
 
-              <!-- <tr>
-
-                <td>ออกโดย : <?=$staff_name_bill?></td>
-
-              </tr> -->
-
               <tr>
 
                 <td>เลขที่ใบเสร็จ : <?=$no_bill_branch?></td>
 
               </tr>
-
-              <!-- <tr>
-
-                <td>เลขใบเสร็จศูนย์ใหญ่ : <?=$no_bill_all?></td>
-
-              </tr> -->
 
             </table>
 
@@ -600,48 +347,6 @@ if($_GET['id_bill']){
 
       </tr>
 
-        <!-- <tr>
-
-          <td class="text-right" >ชื่อลูกค้า : </td>
-
-          <td class="text-left">ชื่อลูกค้า</td>
-
-        </tr>
-
-        <tr>
-
-          <td class="text-right">ที่อยู่ : </td>
-
-          <td class="text-left">ชื่อลูกค้า</td>
-
-        </tr>
-
-        <tr>
-
-          <td class="text-right">เลขประจำตัวผู้เสียภาษี : </td>
-
-          <td class="text-left">111111111111</td>
-
-        </tr> -->
-
-        <!-- <tr>
-
-          <td></td>
-
-          <td colspan="2" class="text-center">ใบแจ้งชำระเงิน</td>
-
-          <td class="text-right">วันที่ <?=date("d-m-Y", strtotime($s_date));?> ถึง <?=date("d-m-Y", strtotime($e_date));?></td>
-
-        </tr>
-
-        <tr>
-
-          <td colspan="3">ที่ทำงาน HMS สาขา <?=$branch_name?></td>
-
-          <td class="text-right">เลขที่คำขอ <?=$number_bill?></td>
-
-        </tr> -->
-
       </table>
 
       <table id="datatable_book" class="table table-bordered" cellspacing="0" width="100%">
@@ -649,14 +354,6 @@ if($_GET['id_bill']){
         <thead>
 
         <tr>
-
-            <!-- <th class="col-md-6">รายการ</th>
-
-            <th class="col-md-2 text-right">จำนวนเงินทั้งหมด</th>
-
-            <th class="col-md-2"><center>หัก%</center></th>
-
-            <th class="col-md-2 text-right">จ่าย</th> -->
 
             <th class="col-md-1"><center>ลำดับ</center></th>
 
@@ -670,31 +367,13 @@ if($_GET['id_bill']){
 
         <tbody>
 
-          <? //for ($i=0; $i < count($objResult) ; $i++) { ?>
-
-          <!-- <tr>
-
-            <td ><?=$objResult[$i]['name']?></td>
-
-            <td class="text-right"><?=number_format($objResult[$i]['sum'] , 2)?></td>
-
-            <td ><center><?=$objResult[$i]['percent']?></center></td>
-
-            <td class="text-right"><?=number_format($objResult[$i]['Result'] , 2)?></td>
-
-          </tr> -->
-
-          <? //} ?>
-
           <tr>
 
             <td><center>1</center></td>
 
             <td > ค่ารอยัลตี้ฟีส์ วันที่ <?=date("d-m-Y", strtotime($s_date));?> ถึง <?=date("d-m-Y", strtotime($e_date));?></td>
 
-            <!-- <td colspan="2" class="text-right"><?=number_format($sum_by_branch , 2)?></td> -->
-
-            <td colspan="2" class="text-right"><?=number_format(($price_self-$price_discount) , 2)?></td>
+            <td colspan="2" class="text-right"><?=number_format(($price_self) , 2)?></td>
 
           </tr>
 
@@ -702,15 +381,11 @@ if($_GET['id_bill']){
 
           <tr>
 
-            <!-- <td colspan="2" ><center><?=num2wordsThai($sum_by_branch);?>ถ้วน</center></td> -->
-
-            <td colspan="2" ><center><?=num2wordsThai($price_self-$price_discount);?>ถ้วน</center></td>
+            <td colspan="2" ><center><?=num2wordsThai($price_self);?>ถ้วน</center></td>
 
             <td><center>รวมทั้งสิ้น</center></td>
 
-            <!-- <td class="text-right"><font color="#fd0000"> <strong><?=number_format($sum_by_branch , 2)?></strong></font></td> -->
-
-            <td class="text-right"><font color="#fd0000"> <strong><?=number_format(($price_self-$price_discount) , 2)?></strong></font></td>
+            <td class="text-right"><font color="#fd0000"> <strong><?=number_format(($price_self) , 2)?></strong></font></td>
 
           </tr>
 
@@ -748,12 +423,6 @@ if($_GET['id_bill']){
 
             </tr>
 
-            <!-- <tr>
-
-              <td><center></center></td>
-
-            </tr> -->
-
             </table>
 
           </td>
@@ -774,12 +443,6 @@ if($_GET['id_bill']){
 
             </tr>
 
-            <!-- <tr>
-
-              <td><center></center></td>
-
-            </tr> -->
-
             </table>
 
           </td>
@@ -787,82 +450,6 @@ if($_GET['id_bill']){
         </tr>
 
       </table>
-
-      <!-- <table class="table borderless" cellspacing="0" width="100%">
-
-        <tr>
-
-          <td colspan="2">เลขที่คุม 6005-1002-000155 / 00247379 / 24737863</td>
-
-        </tr>
-
-        <tr>
-
-          <td class="col-md-8">เลขทะเบียน 0105559169039 บริษัท เอช.เอ็ม.เอส.กรุ๊ป จำกัด</td>
-
-          <td class="col-md-4">ผู้รับเงิน</td>
-
-        </tr>
-
-        <tr>
-
-          <td class="col-md-8">โปรดเก็บใบเสร็จรับเงินนี้ไว้เป็นหลักฐานแสดงต่อเจ้าหน้าที่เมื่อมาติดต่อ</td>
-
-          <td class="col-md-4">ตำแหน่ง</td>
-
-        </tr>
-
-      </table> -->
-
-      <!-- <br><p> ตารางตั้งค่า % </p>
-
-      <table class="table table-bordered" cellspacing="0" width="100%">
-
-        <thead>
-
-        <tr>
-
-            <!-- <th><center>id_set</center></th> -->
-
-            <!-- <th><center>ขื่อ</center></th>
-
-            <th><center>ได้%</center></th>
-
-        </tr>
-
-        </thead>
-
-        <tbody>
-
-          <? $sql_set = "SELECT id,  id_set,  teacher_id,  percent , teacher.teachername AS teacher_name
-
-                              FROM bill_percent 
-
-                              LEFT JOIN teacher ON bill_percent.teacher_id = teacher.teacherid";
-
-                              //WHERE id_set = '".$id_set."'";
-
-            $objQuery_set = mysqli_query($con_ajtongmath_self,$sql_set) or die ("Error Query [".$sql_set."]");
-
-            $j =0;
-
-            while($objResult_set = mysqli_fetch_array($objQuery_set)){ ?>
-
-              <tr>
-
-              <!-- <td align="center"><? if($j==0){echo $objResult_set['id_set'];}?></td> -->
-
-              <!-- <td align="center"><?=$objResult_set['teacher_name']?></td>
-
-              <td align="center"><?=$objResult_set['percent']?></td>
-
-              </tr>
-
-            <? $j++;}?>
-
-        </tbody>
-
-      </table> -->
 
           </td>
 

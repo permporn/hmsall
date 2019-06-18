@@ -6,35 +6,19 @@ include("../ck_session.php");
 
 include('../config/config_multidb.php');
 
+//error_reporting(~E_NOTICE);
+
 ?>
 
 <style> 
 
-/*.imageupload {
-
-    margin: 20px 0;
-
+.aa {
+    white-space: nowrap;
 }
 
-#printable { display: block; }
-
-
-
-@media print 
-
-{ 
-
-#non-printable { display: none; } 
-
-#printable { display: block; } 
-
-} 
-
-.borderless tr, .borderless td, .borderless th {
-
-    border: none !important;
-
-}*/
+.input_h {
+  height: '50px' !important;
+}
 
 </style>
 
@@ -42,13 +26,9 @@ include('../config/config_multidb.php');
 
 function insertPayPromotion(id){
 
-    if(show_alert('ยืนยันการบันทึก') != false){
+    //if(show_alert('ยืนยันการบันทึก') != false){
 
     $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
-
-    var pay = $('#pay_promotion').val();
-
-    var remark = $('#remark_promotion').val();
 
     var request = $.ajax({
 
@@ -56,35 +36,127 @@ function insertPayPromotion(id){
 
         method: "GET",
 
-        data: { id : id , action_type : "insertPayPromotion", pay : pay, remark : remark}
+        data: {action_type : "get_type"}
 
     });
 
     request.done(function( result ) {
 
-        $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
+      var sum_all_save = $("#sum_all_save").val();
 
-        $.ajax({
+      var datas = JSON.parse(result);
 
-            type: "GET",
+      var type = datas[0];
 
-            url: "form/form_edit_bill_full.php",
+      var teacher = datas[1];
 
-            data: {id_bill : id , type : "1" , test : ""},
+      //console.log(teacher);
 
-            success: function(data){
+      var d = [];
 
-                 $(".header").hide();
+      var num = 0;
 
-                 $("#data-table").html(data);
+      for(var i = 0 ; i <  type.length ; i ++ ){
 
-            } 
+        for(var j = 0 ; j <  teacher.length ; j ++ ){
 
-        });
+        var price_discount = [];
+
+        var price_discount_all = [];
+
+        //ex id input :pay_promotion_self_idteach_8 
+
+        var pay_box = "pay_promotion_"+type[i]+"_idteach_"+teacher[j];
+
+        var pay = $("#" + pay_box).val();
+
+        //ex id input :remark_promotion_self_idteach_1
+
+        var remark_box = "remark_promotion_"+type[i]+"_idteach_"+teacher[j];
+
+        var remark = $("#" + remark_box).val();
+
+          if(typeof pay !== "undefined"){
+
+            price_discount['name'] = type[i]; 
+            price_discount['price_discount'] = pay; 
+            price_discount['remark']= remark;
+            price_discount['id_teach'] = teacher[j];  
+
+            //console.log(price_discount);
+
+            var requests = $.ajax({
+
+                url: "report.php",
+
+                method: "GET",
+
+                data: { 
+                  id : id , 
+                  action_type : "insertPayPromotion", 
+                  name : price_discount['name'], 
+                  pay : price_discount['price_discount'],  
+                  id_teach : price_discount['id_teach'], 
+                  remark : price_discount['remark'] , 
+                  num : num,
+                  sum_all_save : sum_all_save
+                },
+
+                dataType: "html"
+            });
+            num++;
+
+            requests.done(function( result ) {
+              //console.log(result);
+            });
+                    
+          }
+        }
+      } 
+
+      // reload
+      $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
+
+      $.ajax({
+
+          type: "GET",
+
+          url: "form/form_edit_bill_full.php",
+
+          data: {id_bill : id , type : "1" , test : ""},
+
+          success: function(data){
+
+              $(".header").hide();
+
+              $("#data-table").html(data);
+
+              var sum_all_save = $("#sum_all_save").val();
+
+                var requests = $.ajax({
+
+                  url: "report.php",
+
+                  method: "GET",
+
+                  data: { 
+                    id : id , 
+                    action_type : "updatePayPromotion", 
+                    sum_all_save : sum_all_save
+                  },
+
+                  dataType: "html"
+
+              });  
+          } 
+
+      });
 
     });
 
-    }
+    request.fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
+    }); 
 
 }
 
@@ -243,10 +315,7 @@ if($num != ''){
       return "ศูนย์บาท";
 
     } 
-
 }   
-
-
 
 if($_GET['id_bill']){
 
@@ -264,8 +333,7 @@ if($_GET['id_bill']){
 
     }
 
-
-
+    // bill
     $strSQL_bill ="SELECT 
 
                     bill.id, 
@@ -295,8 +363,6 @@ if($_GET['id_bill']){
                     bill.pay, 
 
                     bill.price_discount, 
-
-                    bill.price_discount_remark, 
 
                     bill.price_self_type, 
 
@@ -341,8 +407,6 @@ if($_GET['id_bill']){
     $objQuery_bill = mysqli_query($con_ajtongmath_self,$strSQL_bill) or die ("Error Query [".$strSQL_bill."]");
 
     $objResult_bill = mysqli_fetch_array($objQuery_bill); 
-
-
 
     $id = $objResult_bill['id'];
 
@@ -394,17 +458,11 @@ if($_GET['id_bill']){
 
     $price_discount = $objResult_bill['price_discount'];
 
-    $price_discount_remark = $objResult_bill['price_discount_remark'];
-
     $sum_all_type = 0;
 
     ?>
 
-
-
     <div class="col-sm-12">
-
-    <div id="loading"></div>
 
     <table class="table borderless" cellspacing="0" width="100%">
 
@@ -427,8 +485,6 @@ if($_GET['id_bill']){
           <td class="col-md-2" rowspan="4" >
 
             <h3><?=$header_title?></h3>
-
-
 
             <table class="table" cellspacing="0" width="100%" border="1">
 
@@ -488,21 +544,14 @@ if($_GET['id_bill']){
 
   <div class="col-sm-12">
 
-
-
     <?
-
-    
+    // เซตการตั้งค่าหัก % ของแต่ละประเถท
 
     $manage = (array) json_decode($set_type_self);
-
-    //print_r($manage);
 
     $k = 0;
 
     for($j=0;$j<count($manage);$j++){
-
-      //echo $j."<br>";
 
       $data_type_self[$k]['name'] = $manage[$j]->name;
 
@@ -522,11 +571,11 @@ if($_GET['id_bill']){
 
     }
 
+    // เซตของครู
     $teacher_array = explode(",",$teacher);
 
+    // เซตขประเภทของการ gen ใบเสร็จ
     $pay_array = explode(",",$pay);
-
-
 
     for($i = 0 ; $i < count($pay_array); $i++) {
 
@@ -542,41 +591,29 @@ if($_GET['id_bill']){
 
     }
 
+    // loop ตามประเภทเรียน เช่น self broadcasting เพื่อแสดงสรุปรายการของแต่ละประเภท
+
     for ($l=0; $l < count($data_type_self); $l++) {
-
-
 
       $id_type_self = $data_type_self[$l]['id'];
 
-    
-
       $name_type_self = $data_type_self[$l]['name'];
-
-
 
       $branch_id_type_self = $data_type_self[$l]['branch_id'];
 
-
-
       $branch_id_a[$l]['branch_id_type_self']= explode(",",$branch_id_type_self);
 
+      $id_bill = $id_bill+1;
 
+      $ch_surcharge_1 = '';
 
-       $id_bill = $id_bill+1;
+      $ch_surcharge_2 = '';
 
+      $ch = '';
 
+      $sum_all_full = 0;
 
-       $ch_surcharge_1 = '';
-
-       $ch_surcharge_2 = '';
-
-       $ch = '';
-
-       $sum_all_full = 0;
-
-
-
-       $sql_type = 
+      $sql_type = 
 
                   "SELECT 
 
@@ -639,37 +676,24 @@ if($_GET['id_bill']){
           if($pay){
 
             $sql_type .= " AND credit.type_pay IN ($pay)";
-
           }    
 
           $sql_type .= " AND credit.type_pay != 'test' AND credit.type_pay != 'free' "; 
 
-
-
           $sql_type .=  " AND account.status != 'out' ";
-
-
 
           $sql_type .=  " AND credit.type_self = ".$data_type_self[$l]['id'];
 
-          
-
-          $sql_type .=  " ORDER BY  `teacher`.`teacherid` ASC , credit.date_pay ASC"; 
-
-          
+          $sql_type .=  " ORDER BY  `teacher`.`teacherid` ASC , credit.date_pay ASC";         
 
           $objQuery_type = mysqli_query($con_ajtongmath_self,$sql_type) or die ("Error Query [".$sql_type."]");
 
-
-
           $num_rows = mysqli_num_rows($objQuery_type);
-
-
 
           if($num_rows > 0){      
       ?>
 
-       <h4>สรุปรายการ <?=$name_type_self;?></h4>
+      <h4>สรุปรายการ <?=$name_type_self;?></h4>
 
       <table id="datatable_book" class="table table-bordered" cellspacing="0" width="100%">
 
@@ -711,9 +735,9 @@ if($_GET['id_bill']){
 
           $k= 1;
 
-          while($objResult_type = mysqli_fetch_array($objQuery_type)){ 
+          //ถ้าไม่มีชื่อวิชาจริงก็จะแสดงชื่อวิชาเลย
 
-              
+          while($objResult_type = mysqli_fetch_array($objQuery_type)){ 
 
               if($objResult_type['name_subject_real'] !=''){
 
@@ -724,8 +748,7 @@ if($_GET['id_bill']){
                 $subject = $objResult_type['name_subject'];
 
               }
-
-               ?>
+          ?>
 
           <tr>
 
@@ -764,10 +787,8 @@ if($_GET['id_bill']){
               }else if($type_pay == 'transfer'){
 
                   $type_pay_text = "transfer";
-
               }
-
-              ?>
+            ?>
 
             <td><?=$type_pay_text?></td>
 
@@ -781,16 +802,17 @@ if($_GET['id_bill']){
 
           <td colspan="6" ><center>ยอดตั้งแต่วันที่  : <?=date("d-m-Y", strtotime($s_date));?> ถึง <?=date("d-m-Y", strtotime($e_date));?></center></td>
 
-          <td colspan="3" class="text-right">ยอดเต็ม</td>
+          <td colspan="4" class="text-right">ยอดเต็ม</td>
 
-          <td colspan="3" class="text-right">ยอดชำระ</td>
+          <td colspan="2" class="text-right">ยอดชำระ</td>
 
         </tr>
 
       <?
 
-        //
         $sum_all_type =0;
+
+        // loop คำนวณรายครู โดย loop มาจาก setting
 
         for($j = 0 ; $j < count($teacher_array); $j++) {
 
@@ -837,7 +859,6 @@ if($_GET['id_bill']){
                         WHERE 
 
                         subject.teacherid = $teacher_ AND branch.branchid = $branch AND credit.date_pay BETWEEN '".$s_date."' AND '".$e_date."'";
-
         if($pay){
 
           $sql_teacher[$j] .= " AND credit.type_pay IN ($pay)";
@@ -846,17 +867,11 @@ if($_GET['id_bill']){
 
         $sql_teacher[$j] .= " AND credit.type_pay != 'test' AND credit.type_pay != 'free' ";
 
-
-
         $sql_teacher[$j] .=  " AND account.status != 'out'";
-
-
 
         $sql_teacher[$j] .=  " AND credit.type_self = ".$id_type_self;   
 
-        
-
-        //sum all
+        //sum all รายครู
 
         $strSQL_sum = "SELECT SUM($price_self_type) as sum_amount FROM ( $sql_teacher[$j] ) as sum_amount";
 
@@ -864,18 +879,11 @@ if($_GET['id_bill']){
 
         $objResult_sum1 = mysqli_fetch_array($objQuery_sum);
 
-        
-
         $result_c = mysqli_query($con_ajtongmath_self,$sql_teacher[$j]) or die ("Error Query [".$strSQL_sum."]");
 
         $num_rows = mysqli_num_rows($result_c);
 
-
-
-        $objResult_sum[$id_type_self][$branch][$teacher_] = $objResult_sum1;
-
-        // เงื่อนไขหัก teacher%
-
+        // เงื่อนไขหัก% ของแต่ละครู
         $sql_bill_percent = "SELECT id,  id_set,  teacher_id,  percent , teacher.teachername AS teacher_name
 
                           FROM bill_percent 
@@ -888,32 +896,59 @@ if($_GET['id_bill']){
 
         $objResult_bill_percent = mysqli_fetch_array($objQuery_bill_percent);
 
-        //sum หัก percent ราย ครู
 
-        $objResult_pay_teacher[$teacher_] = ($objResult_sum1['sum_amount']*$objResult_bill_percent['percent'])/100;
+        $objResult_pay_teacher[$name_type_self][$teacher_] = 0;
 
+        $objResult[$id_type_self][$branch]['sum_all_type'] = 0;
 
+        $objResult[$id_type_self][$branch]['sum_all_full'] = 0;
 
-        $sum_all_full += $objResult_sum1['sum_amount'];
+        //หักส่วนลด รายครู โดย loop ส่วนลด
+        if($price_discount){
 
-        //test pay by teacher
+          $price_dis = "[".$price_discount."]";
 
-        $objResult_pay_print = "sum=".$objResult_sum1['sum_amount']."*".$objResult_bill_percent['percent']."/100= ".$objResult_pay_teacher[$teacher_];
+          $manage = json_decode($price_dis);
 
+          foreach ($manage as $key => $object) {
 
+            if($name_type_self == $object->name && $teacher_ == $object->id_teach ){
 
-        //status_branch : 1=เฉพาะ,2=ยกเว้น,0=none
+              //sum หัก percent ราย ครู ex: (sum_amount-discount)-20%
+              $objResult_pay_teacher[$name_type_self][$teacher_] = (($objResult_sum1['sum_amount']-($object->pay*1))*$objResult_bill_percent['percent'])/100;
+
+              // sum รายครู
+              $sum_all_full += $objResult_sum1['sum_amount'];
+
+              //test pay by teacher
+              $objResult_pay_print = "sum=(".$objResult_sum1['sum_amount']."-".$object->pay.")*".$objResult_bill_percent['percent']."/100= ".$objResult_pay_teacher[$name_type_self][$teacher_];
+            }
+          }
+        }else{
+
+          //sum หัก percent ราย ครู ex: (sum_amount-discount)-20%
+          $objResult_pay_teacher[$name_type_self][$teacher_] = (($objResult_sum1['sum_amount'])*$objResult_bill_percent['percent'])/100;
+
+          // sum รายครู
+          $sum_all_full += $objResult_sum1['sum_amount'];
+
+          //test pay by teacher
+          $objResult_pay_print = "sum=(".$objResult_sum1['sum_amount'].")*".$objResult_bill_percent['percent']."/100= ".$objResult_pay_teacher[$name_type_self][$teacher_];
+
+        }
+
+        // echo "---------------------------------------------<br>";
+
+        // echo $objResult_pay_print;
 
         $ch = '';
 
+        // status_branch : 1=เฉพาะ,2=ยกเว้น,0=none ยอดเว้นสาขา ช่วง 3 เดือนแรก
         if($data_type_self[$l]['status_branch'] == 2){
 
           for ($i=0; $i < count($branch_id_a[$l]['branch_id_type_self']); $i++) { 
 
-            //echo $branch_id_a[$l]['branch_id_type_self'][$i]." == ".$branch."&&". $teacher_." == 1";
-
-            //ยกเว้น ครูโต้ง ครูเซ้ง ครูวิธาน ช่วง 3 เดือนแรก
-
+            //ยกเว้น ครูโต้ง ครูเซ้ง ครูวิธาน ช่วง 3 เดือนแรก ถ้าเข้าเงื่อนไขให้ $ch = "t"
             if($branch_id_a[$l]['branch_id_type_self'][$i] == $branch && ($teacher_ == 1 || $teacher_ == 2 || $teacher_ == 8)){
 
               $ch = "t";
@@ -921,27 +956,25 @@ if($_GET['id_bill']){
             }
 
           }
-
         }
 
-        // ถ้า $ch ไม่เท่ากับ t
-        if($ch != "t"){
+        //echo "ch=".$ch;
 
-          //$sum_all_type[$id_type_self] += $objResult_pay_teacher[$teacher_];
 
-          //$objResult['sum_all'] += $objResult_pay_teacher[$teacher_];
 
-          $sum_all_type += $objResult_pay_teacher[$teacher_];
+        // ถ้า $ch ไม่เท่ากับ t ไม่ใช่ยอดเว้นสาขา ช่วง 3 เดือนแรก ให้ทำการคิดเงิน loop บวกเงินทั้งหมด
+        if($ch != "t" ){
 
-          $sum_all += $objResult_pay_teacher[$teacher_];
+          $sum_all_type += $objResult_pay_teacher[$name_type_self][$teacher_];
 
-          //$objResult['sum_all'] = $sum_all;
-
+          $sum_all += $objResult_pay_teacher[$name_type_self][$teacher_];
         }
-        
+
+        // echo "$sum_all_type=".$sum_all_type;
+        // echo "$sum_all=".$sum_allsum_all;
+
 
         //status_surcharge : none=0,คิดเงินเพิ่ม=1,ส่วนลด=2
-
         $num_rows_all[$id_type_self] = $num_rows;
 
         if($num_rows_all[$id_type_self] > 0){
@@ -956,27 +989,25 @@ if($_GET['id_bill']){
 
           }
 
+          // status_surcharge=2 -> คิดส่วนลด
           if($ch_surcharge_2 == "t"){
 
-             $sum_all_type =   -($data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self]);
+             $sum_all_type =  $sum_all_type -($data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self]);
 
-             $objResult_pay_teacher[$teacher_] = $objResult_pay_teacher[$teacher_] -($data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self]);
+             $objResult_pay_teacher[$name_type_self][$teacher_] = $objResult_pay_teacher[$name_type_self][$teacher_] -($data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self]);
 
              $surcharge_text = "-";
 
              $sum_all -= $data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self];
 
-             //echo  $objResult_pay_teacher[$teacher_].",";
-
+          // status_surcharge=1 -> คิดเงินเพิ่ม
           }if($ch_surcharge_1 == "t"){
 
              $sum_all_type =  $sum_all_type +($data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self]);
 
-             $objResult_pay_teacher[$teacher_] = $objResult_pay_teacher[$teacher_] +($data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self]);
+             $objResult_pay_teacher[$name_type_self][$teacher_] = $objResult_pay_teacher[$name_type_self][$teacher_] +($data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self]);
 
              $sum_all += $data_type_self[$l]['surcharge']*$num_rows_all[$id_type_self];
-
-             //echo  $objResult_pay_teacher[$teacher_].",";
 
              $surcharge_text = "+";
 
@@ -984,9 +1015,9 @@ if($_GET['id_bill']){
 
         }
 
-        // เอาเฉพาะที่มีค่า
+        // เอาเฉพาะ sum ที่มีค่า
 
-        if($objResult_pay_teacher[$teacher_] != 0){
+        if($objResult_pay_teacher[$name_type_self][$teacher_] != 0){
 
           $objResult[$id_type_self][$branch][$teacher_]['id_type_self'] = $id_type_self;
 
@@ -1006,18 +1037,16 @@ if($_GET['id_bill']){
 
           $objResult[$id_type_self][$branch][$teacher_]['pay_sum_by%_text'] = $objResult_pay_print;
 
-          $objResult[$id_type_self][$branch][$teacher_]['pay_sum_by%'] = $objResult_pay_teacher[$teacher_];
+          $objResult[$id_type_self][$branch][$teacher_]['pay_sum_by%'] = $objResult_pay_teacher[$name_type_self][$teacher_];
 
           $objResult[$id_type_self][$branch]['sum_all_type'] = $sum_all_type;
 
           $objResult[$id_type_self][$branch]['sum_all_full'] = $sum_all_full;
 
-          //$objResult['sum_all'] = $objResult[$id_type_self][$branch]['sum_all_type'];
-
           ?>
 
           <tr>
-
+            <!-- สรุปยอดแต่ละครู -->
             <td colspan="6"><center>
 
               สรุปยอด <?=$objResult[$id_type_self][$branch][$teacher_]['teacher']?> 
@@ -1027,69 +1056,62 @@ if($_GET['id_bill']){
               <? if($ch_surcharge_2 == "t" || $ch_surcharge_1 == "t"){ echo " ".$surcharge_text ." ". $data_type_self[$l]['surcharge']."บ./คอร์ส"; }?>
 
             </center></td>
+      
+            <!-- กรอกส่วนลด และหมายเหตุ รายครู -->
+            <td colspan="4" class="text-right">
 
-            <td colspan="3" class="text-right"><?=number_format($objResult[$id_type_self][$branch][$teacher_]['pay_sum'] , 2)?></td>
+              <?=number_format($objResult[$id_type_self][$branch][$teacher_]['pay_sum'] , 2)?>
+              
+              <?php
+
+              if($ch != "t"){
+
+                $price_dis = "[".$price_discount."]";
+
+                if($price_discount){
+
+                  $manage = json_decode($price_dis);
+
+                  foreach ($manage as $key => $object) {
+
+                     if($name_type_self == $object->name && $teacher_ == $object->id_teach ){
+                     ?>
+                      <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="<?=$object->pay?>" /><font color="#fd0000" class="aa">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม.</font>
+                      <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$object->remark?></textarea>
+                    <? }
+                  }
+                }else{ ?>
+                  <input type="text" id="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="pay_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" class="form-control text-right input_h" placeholder="0" value="0" /><font color="#fd0000" class="aa">*ส่วนลดยอดเต็ม  กรุณากรอกตัวเลขจำนวนเต็ม.</font>
+                      <textarea id="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" name="remark_promotion_<?=$name_type_self?>_idteach_<?=$teacher_?>" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"></textarea>
+            <?  }}?>
+            </td>
 
             <? if($ch == "t"){?> 
-
-            <td colspan="3" class="text-right"><?=number_format(0 , 2)?></td>
-
+              <td colspan="2" class="text-right"><?=number_format(0 , 2)?>
+              </td>
             <? }else{?>
-
-            <td colspan="3" class="text-right"><?=number_format($objResult[$id_type_self][$branch][$teacher_]['pay_sum_by%'] , 2)?></td>
-
+              <td colspan="3" class="text-right"><?=number_format($objResult[$id_type_self][$branch][$teacher_]['pay_sum_by%'] , 2)?></td>
             <? }?>
 
           </tr> 
-
         <?
-
         }
+      }?>
 
-        // gen รหัส bill รวม ต้องแก้ไขอีกที ต้องคิดจากตาราง bill_number
-
-        $strSQL_branch = "SELECT * FROM branch WHERE branchid =".$branch; 
-
-        $objQuery_branch = mysqli_query($con_ajtongmath_self,$strSQL_branch) or die ("Error Query [".$strSQL_branch."]");
-
-        $objResult_branch = mysqli_fetch_array($objQuery_branch); 
-
-        $h = 4;//จำนวนหลัก
-
-        $year = substr(date('Y'),2,2);
-
-        $bill_number = $objResult_branch['branch_number']."/".$year.sprintf("%0".$h."d",$id_bill);;
-
-        //echo $bill_number.",";
-
-        $objResult['bill_number'] = $bill_number;
-
-    }?>
-      
       <tr>
 
-        <td colspan="6"><center><strong>ยอดสุทธิ</strong></center></td>
+        <td colspan="6"><center><strong>ยอดรวม</strong></center></td>
 
-        <td colspan="3" class="text-right"><?=number_format($objResult[$id_type_self][$branch]['sum_all_full'] , 2)?></td>
+        <td colspan="4" class="text-right"><font color="#fd0000">(ยังไม่หักส่วนลด) <?=number_format($objResult[$id_type_self][$branch]['sum_all_full'] , 2)?></font></td>
 
-        <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format($objResult[$id_type_self][$branch]['sum_all_type'] , 2)?></font></strong></td>
+        <td colspan="2" class="text-right"><font color="#fd0000"><strong><?=number_format($objResult[$id_type_self][$branch]['sum_all_type'] , 2)?></strong></font></td>
 
       </tr>
-
     </tbody>
 
   </table>
 
  <? } }
-
-
-
-  //print_r($objResult);
-
- //echo "<pre>";print_r($objResult);
-
-
-
 ?>
 
 <h4>สรุปรายการทั้งหมด</h4>
@@ -1103,6 +1125,7 @@ if($_GET['id_bill']){
     <td colspan="3" class="text-right"><strong>ยอดชำระ</strong></td>
 
   </tr>
+
   <tr>
 
     <td colspan="9"><center><strong>ยอดรวมทั้งหมด</strong></center></td>
@@ -1110,112 +1133,37 @@ if($_GET['id_bill']){
     <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all) , 2)?></font></strong></td>
 
   </tr>
-  <tr>
-    <td colspan="9"><center><strong>ยอดหัก <font color="#fd0000">*สำหรับโปรโมชั่น</font></strong></center></td>
+
+  <!-- <tr>
+    <td colspan="9"><center><strong><font color="#fd0000">ส่วนลดพิเศษ</font></strong></center></td>
 
     <td colspan="3" class="text-right">
-      <input type="text" id="pay_promotion" name="pay_promotion" class="form-control text-right" placeholder="0" value="<?=$price_discount?>" />
-      <strong><font color="#fd0000">*ยอดที่หัก กรุณากรอกตัวเลขจำนวนเต็ม</font></strong>
+      <input type="text" id="pay_promotion_all" name="pay_promotion_all" class="form-control text-right" placeholder="0" value="<?=$price_discount?>" />
+      <font color="#fd0000">*ยอดที่หัก กรุณากรอกตัวเลขจำนวนเต็ม</font>
       <br><br>
-      <textarea id="remark_promotion" name="remark_promotion" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$price_discount_remark?></textarea><strong><font color="#fd0000">*กรอกรายละเอียดสำหรับโปรโมชั่น</font></strong>
+      <textarea id="remark_promotion_all" name="remark_promotion_all" row="7" cols="20" class="form-control" placeholder="หมายเหตุ"><?=$price_discount_remark?></textarea><font color="#fd0000">*กรอกรายละเอียดสำหรับโปรโมชั่น</font>
       <br>
-      <button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button>
     </td>
-  </tr>
+  </tr> -->
+
   <tr>
 
     <td colspan="9"><center><strong>ยอดสุทธิ</strong></center></td>
-
-    <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all-$price_discount) , 2)?></font></strong></td>
+    <input type="hidden" name="sum_all_save" id="sum_all_save" value="<?=$sum_all?>"/>
+    <td colspan="3" class="text-right"><strong><font color="#fd0000"><?=number_format(($sum_all) , 2)?></font></strong></td>
 
   </tr>
 
 </table>
 
-
-
-</div>
-
-<div class="col-sm-12">
-
-  (โปรดตรวจสอบความถูกต้องของรายการในเอกสารฉบับนี้ภายใน 7 วันมิฉะนั้นจะถือว่าสมบูรณ์)
-
-  <br>
-
-<h5> - ชำระเงินได้ที่ บัญชี บริษัท เอช.เอ็ม.เอส. กรุ๊ป จำกัด<font color="#1758ff"> <strong>เลขบัญชี 880-0-11081-9 </strong></font>ธนาคารกรุงไทย สาขาวรรณสรณ์</h5>
-
 <br>
 
-  <table class="table borderless" cellspacing="0" width="100%">
-
-    <tr>
-
-      <td class="col-md-8" colspan="2"></td>
-
-      <td class="col-md-2">
-
-        <table class="table">
-
-        <tr>
-
-          <td><center>ผู้มีอำนาจลงนาม  ___________________</center></td>
-
-        </tr>
-
-        <tr>
-
-          <td><center>(.........../.........../...........)</center></td>
-
-        </tr>
-
-        <!-- <tr>
-
-          <td><center>............../............../..............</center></td>
-
-        </tr> -->
-
-        </table>
-
-      </td>
-
-      <td class="col-md-2">
-
-        <table class="table">
-
-        <tr>
-
-          <td><center>ผู้รับเงิน  ___________________</center></td>
-
-        </tr>
-
-        <tr>
-
-          <td><center>(.........../.........../...........)</center></td>
-
-        </tr>
-
-        <!-- <tr>
-
-          <td><center>............../............../..............</center></td>
-
-        </tr> -->
-
-        </table>
-
-      </td>
-
-    </tr>
-
-  </table>
-
-</div>
-
-<div>
-<center>
-  <button type="button" class="btn btn-default close_pay" id="close_pay">Close</button>
-</center>
+<center><div id="loading"></div>
+  <button type="button" onclick="insertPayPromotion(<?=$objResult_bill['id']?>)" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> บันทึก</button>
+  <button type="button" class="btn btn-default close_pay" id="close_pay">Close</button></center>
+<br>
 </div>
 <?
-
-}mysqli_close($con_ajtongmath_self);?>
+}
+mysqli_close($con_ajtongmath_self);?>
 

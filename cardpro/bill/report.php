@@ -1,51 +1,132 @@
 <?php
 
-  session_start();
+session_start();
 
-  include('config/config_multidb.php');
+include('config/config_multidb.php');
 
-  error_reporting(~E_NOTICE);
+error_reporting(~E_NOTICE);
+
+if($_GET['action_type'] == "get_type"){
+
+  $strSQL_bill = "SELECT * FROM type_self WHERE status_percent = 1"; 
+
+  $objQuery_bill = mysqli_query($con_ajtongmath_self,$strSQL_bill) or die ("Error Query [".$strSQL_bill."]");
+
+  $a = array();
+
+  while($objResult_bill = mysqli_fetch_array($objQuery_bill)){
+
+     array_push($a , $objResult_bill['type_name']);
+  }
+
+  $strSQL_tc = "SELECT * FROM teacher WHERE status_teacher = 1"; 
+
+  $objQuery_tc = mysqli_query($con_ajtongmath_self,$strSQL_tc) or die ("Error Query [".$strSQL_tc."]");
+
+  $b = array();
+
+  while($objResult_tc = mysqli_fetch_array($objQuery_tc)){
+
+     array_push($b , $objResult_tc['teacherid']);
+  }
+
+  $all = array($a , $b);
+
+  print_r(json_encode($all));
+
+}
+
 
 
 if($_GET['action_type'] == "insertPayPromotion"){
 
   $id = $_GET['id'];
 
+  $name = $_GET['name'];
+
   $pay = $_GET['pay'];
+
+  $id_teach = $_GET['id_teach'];
 
   $remark = $_GET['remark'];
 
-  //echo $id.",".$pay.",".$remark;
+  $num = $_GET['num']*1;
+
+  $sum_all_save = $_GET['sum_all_save'];
+
+  $text_pay = '';
 
   if($id != ''){
 
+    $strSQL_bill = "SELECT * FROM bill WHERE id ='".$id."'"; 
+
+    $objQuery_bill = mysqli_query($con_ajtongmath_self,$strSQL_bill) or die ("Error Query [".$strSQL_bill."]");
+
+    $objResult_bill = mysqli_fetch_array($objQuery_bill); 
+
+    $price_discount = $objResult_bill['price_discount'];
+
+    if($num > 0){
+
+      $text_pay .= $price_discount.',{"name":"'.$name.'","pay":"'.$pay.'","id_teach":"'.$id_teach.'","remark":"'.$remark.'"}';
+
+    }else{
+
+      $text_pay .= '{"name":"'.$name.'","pay":"'.$pay.'","id_teach":"'.$id_teach.'","remark":"'.$remark.'"}';
+    }
+
     $strSQL_update = "UPDATE bill SET"; 
 
-    $strSQL_update .=" price_discount   = '".$pay."'";
+    $strSQL_update .=" price_self_update   = '".$sum_all_save."'";
+
+    $strSQL_update .=",price_discount   = '".$text_pay."'";
 
     $strSQL_update .=",price_discount_remark   = '".$remark."'";
+
+    $strSQL_update .=",update_at   = '".date("Y-m-d H:i:s")."'";
 
     $strSQL_update .=" WHERE id  = '".$id ."'";
 
     $objQuery_update = mysqli_query($con_ajtongmath_self,$strSQL_update) or die ("Error Query [".$strSQL_update."]");
 
       if(!$objQuery_update)
-
       {
 
           echo "fail!!  : $objQuery_update (report.php)";
 
       }else{
 
-          echo "บันทึกเรียบร้อยแล้ว-".$strSQL_update ;//$strSQL_update;//
-
+          echo "บันทึกเรียบร้อยแล้ว - ".$strSQL_update; 
       }
+  }
 
-   }else{
+}
 
-      echo "ไม่สามารถลบได้";
+if($_GET['action_type'] == "updatePayPromotion"){
 
-   }
+  $id = $_GET['id'];
+
+  $sum_all_save = $_GET['sum_all_save'];
+
+  $strSQL_update = "UPDATE bill SET"; 
+
+  $strSQL_update .=" price_self_update   = '".$sum_all_save."'";
+
+  $strSQL_update .=",update_at   = '".date("Y-m-d H:i:s")."'";
+
+  $strSQL_update .=" WHERE id  = '".$id ."'";
+
+  $objQuery_update = mysqli_query($con_ajtongmath_self,$strSQL_update) or die ("Error Query [".$strSQL_update."]");
+
+    if(!$objQuery_update)
+    {
+
+        echo "fail!!  : $objQuery_update (report.php)";
+
+    }else{
+
+        echo "บันทึกเรียบร้อยแล้ว - ".$strSQL_update; 
+    }
 
 }
    

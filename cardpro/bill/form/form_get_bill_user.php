@@ -344,6 +344,8 @@ if($_GET['id_bill']){
 
                           bill.price_self,
 
+                          bill.price_self_update,
+
                           bill.sent_bill_s_date,
 
                           bill.sent_bill_e_date,
@@ -428,8 +430,6 @@ if($_GET['id_bill']){
 
     $branch_name = $objResult_bill['branch_name'];
 
-
-
     if ($price_self == "self_amount"){
 
     $colunm = "self_amount";
@@ -440,11 +440,14 @@ if($_GET['id_bill']){
 
     }
 
+    $price_self_update = $objResult_bill['price_self_update'];
 
+    if($price_self_update > 0){
+
+        $price_self = $price_self_update;
+    }
 
     $pay_array = explode(",", $pay);
-
-
 
     for($i = 0 ; $i < count($pay_array); $i++) {
 

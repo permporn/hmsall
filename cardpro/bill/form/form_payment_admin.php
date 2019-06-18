@@ -456,6 +456,8 @@ if($_GET['id_bill']){
 
                           bill.price_self, 
 
+                          bill.price_self_update,
+
                           bill.status , 
 
                           bill.delete_at, 
@@ -524,7 +526,6 @@ if($_GET['id_bill']){
 
     $sum_by_branch = 0;
 
-
     if ($price_self == "self_amount"){
 
     $colunm = "self_amount";
@@ -535,11 +536,14 @@ if($_GET['id_bill']){
 
     }
 
+    $price_self_update = $objResult_bill['price_self_update'];
 
+    if($price_self_update > 0){
+
+        $price_self = $price_self_update;
+    }
 
     $pay_array = explode(",", $pay);
-
-
 
     for($i = 0 ; $i < count($pay_array); $i++) {
 
@@ -555,19 +559,11 @@ if($_GET['id_bill']){
 
     }
 
-    
-
     $teacher_array = explode(",", $teacher);
-
-
 
     for($j = 0 ; $j < count($teacher_array); $j++) {
 
-
-
       $teacher_ = $teacher_array[$j];
-
-
 
       $sql_teacher[$j] = 
 
@@ -615,11 +611,7 @@ if($_GET['id_bill']){
 
       $sql_teacher[$j] .= " AND credit.type_pay != 'test' AND credit.type_pay != 'free' "; 
 
-
-
       $sql_teacher[$j] .=  "AND account.status != 'out'";        
-
-
 
       $strSQL_sum = "SELECT SUM($price_self_type) as sum_amount FROM ( $sql_teacher[$j] ) as sum_amount";
 
@@ -628,8 +620,6 @@ if($_GET['id_bill']){
       $objResult_sum1 = mysqli_fetch_array($objQuery_sum); 
 
       $objResult_sum[$branch][$teacher_] = $objResult_sum1;
-
-
 
       $sql_bill_percent = "SELECT id,  id_set,  teacher_id,  percent , teacher.teachername AS teacher_name
 
@@ -668,13 +658,6 @@ if($_GET['id_bill']){
       }
 
     }
-
- // print_r($objResult);
-
- 
-
-
-
 ?>
 
 <form id="form-payment-admin" method="GET">
@@ -686,8 +669,6 @@ if($_GET['id_bill']){
 <input type="hidden" name="id_account_self" id="id_account_self" value="<?=$id_account_self?>">
 
 <input type="hidden" name="bill_branch" id="bill_branch" value="<?=$bill_branch?>">
-
-  
 
   <!-- bootstrap-imageupload. -->
 
@@ -739,8 +720,6 @@ if($_GET['id_bill']){
 
         </div>
 
-
-
         <div class="form-group col-sm-12">
 
               <label for="" class="col-sm-3 control-label"> ยอดชำระรวม</label>
@@ -754,18 +733,13 @@ if($_GET['id_bill']){
         </div>
 
 
-
         <div class="form-group col-sm-12">
 
               <label for="" class="col-sm-3 control-label"> ชำระโดย</label>
 
               <div class="col-sm-9"> 
 
-              <label>โอน<!-- <input type="radio" name="modal_payment_type" id="modal_payment_type" value="1" checked="checked" disabled="disabled"> โอน</label> -->
-
-              <!-- <label><input type="radio" name="modal_payment_type" id="modal_payment_type" value="2"> บัตรเคดิต</label></label> 
-
-              <label><input type="radio" name="modal_payment_type" id="modal_payment_type" value="3"> เงินสด</label></label> --> 
+              <label>โอน
 
               </div>
 
@@ -779,9 +753,7 @@ if($_GET['id_bill']){
 
               <div class="col-sm-9">  
 
-              <label>ชำระครบ<!-- <input type="checkbox" name="modal_payment_status" id="modal_payment_status" value="2" checked="checked" disabled="disabled"> ชำระครบ</label> -->
-
-              <!--<label><input type="radio" name="modal_payment_status" id="modal_payment_status" value="7"></label></label>-->
+              <label>ชำระครบ
 
               </div>
 
@@ -831,12 +803,6 @@ if($_GET['id_bill']){
 
                 </select>
 
-             <!--  <input type="radio" name="payment_status" id="payment_status" class="payment_status" value="3"> ยืนยันการชำระ<br>
-
-              <input type="radio" name="payment_status" id="payment_status" class="payment_status" value="2"> การชำระไม่ถูกต้อง<br> -->
-
-              <!--<label><input type="radio" name="modal_payment_status" id="modal_payment_status" value="7"></label></label>-->
-
               </div>
 
       </div>
@@ -854,8 +820,6 @@ if($_GET['id_bill']){
         </div>
 
   </div>
-
-
 
 <div class="panel-footer">
 

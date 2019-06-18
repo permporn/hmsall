@@ -314,19 +314,9 @@ function updateStatusCancal_pay(id){
 
 }
 
-
-
 function updateStatusCancalBill(id){
 
-    //alert(id);
-
-    //if(show_alert('ยืนยันการยกเลิกการตรวจสอบ') != false){
-
-
-
     $("#loading").html("<img src=\"images\/Loading_icon.gif\" width=\"50px\" />");
-
-   // $status = "6";
 
    $.ajax({
 
@@ -652,6 +642,8 @@ function finish(id){
 
                     bill.price_self,
 
+                    bill.price_self_update,
+
                     bill.status,
 
                     bill.price_discount, 
@@ -782,11 +774,16 @@ function finish(id){
 
             <td><?=$objResult_bill['branch_name'];?></td>
 
-            <td><?=number_format($objResult_bill['price_self']-$objResult_bill['price_discount']);?></td>
+            <?php
+            if($objResult_bill['price_self_update'] > 0 ){ ?>
+                <td><?=number_format($objResult_bill['price_self_update']);?></td>
+            <?php               
+            }else{
+            ?>
+            <td><?=number_format($objResult_bill['price_self']);?></td>
+            <?php }?>
 
-            
-
-            <!-- user -->
+            <!-- user -$objResult_bill['price_discount']-->
 
             <? if($session_status == 'admin' || $session_status == 'manager_franchise' || $session_status == 'user_franchise' || $session_status == 'admin_hms' || $session_status == 'pre_end'){ ?>
 
