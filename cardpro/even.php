@@ -16,13 +16,13 @@ include("ck_session.php");
 
 <head>
 
-<link href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="css/jquery.dataTables.min.css" rel="stylesheet">
 
 <?php  include("script_link.php");?>
 
 </head>
 
-<script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
 
 <script>
 
