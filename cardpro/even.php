@@ -144,11 +144,9 @@ function ChkSubmit(result){
 		else{$tblyy = "tblyy";}
 	?>
 	<tr>
-		<td  style="white-space: nowrap;" align="center"><?=DateThai($objResult["date"]);?></td>
-			<td  style="white-space: nowrap;" align="center"><?=$objResult["even"];?></td>
-			<td  style="white-space: nowrap;" align="center">
-			<?=$objResult["name"];?>
-			</td>
+		<td  style="white-space: nowrap;" align="left"><?=DateThai($objResult["date"]);?></td>
+			<td  style="white-space: nowrap;" align="left"><?=$objResult["even"];?></td>
+			<td  style="white-space: nowrap;" align="left"><?=$objResult["name"];?></td>
 			<?php if($objResultSTT["status"]=="Manager"||$objResultSTT["status"]=="ADMIN" || $objResultSTT["status"]=="admin") {?>
 			<td  style="white-space: nowrap;" align="center">
 			<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='saveeven.php?evenid=<?=$objResult["evenid"];?>&type=del';}"><img src="images/delete-2.png"></a>
